@@ -1,0 +1,447 @@
+
+<%- include('../layouts/header.ejs') %>
+
+    <div class="page-wrapper">
+        <header class="header">
+            <div class="header-top">
+                <div class="container">
+                    <div class="header-left">
+                        <div class="header-dropdown">
+                            <a href="#">Usd</a>
+                            <div class="header-menu">
+                                <ul>
+                                    <li><a href="#">Eur</a></li>
+                                    <li><a href="#">Usd</a></li>
+                                </ul>
+                            </div><!-- End .header-menu -->
+                        </div><!-- End .header-dropdown -->
+
+                        <div class="header-dropdown">
+                            <a href="#">Eng</a>
+                            <div class="header-menu">
+                                <ul>
+                                    <li><a href="#">English</a></li>
+                                    <li><a href="#">French</a></li>
+                                    <li><a href="#">Spanish</a></li>
+                                </ul>
+                            </div><!-- End .header-menu -->
+                        </div><!-- End .header-dropdown -->
+                    </div><!-- End .header-left -->
+
+                    <div class="header-right">
+                        <ul class="top-menu">
+                            <li>
+                                <a href="#">Links</a>
+                                <ul>
+                                    <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
+                                    <li><a href="#"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a></li>
+                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="#">Contact Us</a></li>
+                                   
+                                </ul>
+                            </li>
+                        </ul><!-- End .top-menu -->
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-top -->
+
+            <div class="header-middle sticky-header">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+
+                        <a href="#" class="logo">
+                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
+                        </a>
+
+                        <nav class="main-nav">
+                            <ul class="menu sf-arrows">
+                                <li class="megamenu-container active">
+                                    <a href="/" class="sf-with-ul">Home</a>
+
+                                </li>
+                                <li>
+                                    <a href="#" class="sf-with-ul">Product</a>
+
+                                </li>
+                                <li>
+                                    <a href="#" class="sf-with-ul">About</a>
+
+                                </li>
+                                <li>
+                                    <a href="#" class="sf-with-ul">contact</a>
+
+                                    
+                                </li>
+                                <li>
+                                </li>
+                                <li>
+                                </li>
+                            </ul><!-- End .menu -->
+                        </nav><!-- End .main-nav -->
+                    </div><!-- End .header-left -->
+
+                    <div class="header-right">
+                        <div class="header-search">
+                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+                            <form action="#" method="get">
+                                <div class="header-search-wrapper">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." >
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
+                        <div class="dropdown compare-dropdown">
+                            <a href="#" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
+                                <i class="icon-random"></i>
+                            </a>
+
+                            
+                        </div><!-- End .compare-dropdown -->
+
+                        <div class="dropdown cart-dropdown">
+                            <a href="#" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static">
+                                <i class="icon-shopping-cart"></i>
+                                <span class="cart-count">2</span>
+                            </a>
+
+                        </div><!-- End .cart-dropdown -->
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+        </header><!-- End .header -->
+
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Login</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+            	<div class="container">
+            		<div class="form-box">
+            			<div class="form-tab">
+	            			<ul class="nav nav-pills nav-fill" role="tablist">
+							   
+							    <li class="nav-item">
+							        <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
+							    </li>
+							</ul>
+                            <br>
+                            <div>
+                                            
+                                <% if(typeof message != ' undefined ') { %>
+
+                                    <p class="   text-danger     text-center  "><%= message %></p>
+
+                              <%  } %>
+                                  
+                            </div>
+
+							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+							    	<form action="/signUp" method="post" onsubmit="return validateForm()">
+							    		<div class="form-group">
+							    			<label for="register-email-2">User Name *</label>
+							    			<input type="name" class="form-control" id="register-name-2" name="name" >
+							    		</div><!-- End .form-group -->
+
+							    		<div class="form-group">
+							    			<label for="register-password-2">Email *</label>
+							    			<input type="email" class="form-control" id="register-email-2" name="email" >
+							    		</div><!-- End .form-group -->
+
+                                        <div class="form-group">
+							    			<label for="register-password-2">mobile *</label>
+							    			<input type="number" class="form-control" id="register-mobile" name="mobile" >
+							    		</div><!-- End .form-group -->
+                                        
+
+                                        <div class="form-group">
+                                            <label for="register-password-2">Password *</label>
+                                            <input type="password" class="form-control" id="register-password-2" name="password" onkeyup="checkPasswordStrength()">
+                                            <div id="password-strength"></div>
+                                        </div><!-- End .form-group -->
+                                        
+
+                                        <div class="form-group">
+							    			<label for="register-password-2">confirm Password *</label>
+							    			<input type="password" class="form-control" id="cpassword" name="cpassword" >
+							    		</div><!-- End .form-group -->
+
+                                        
+
+							    		<div class="form-footer">
+							    			<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SIGN UP</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+
+			                				<div class="custom-control custom-checkbox">
+												<input type="checkbox" class="custom-control-input" id="register-policy-2" >
+												<label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
+											</div>
+							    		</div>
+
+                                       
+
+                                        
+                                        
+							    	</form>
+							    	<div class="form-choice mt-3 ">
+								    	<div class="row">
+								    		<div class="col-sm-6">
+								    			<a href="/auth/google" class="btn btn-login btn-g">
+								    				<i class="icon-google"></i>
+								    				Login With Google
+								    			</a>
+								    		</div><!-- End .col-6 -->
+								    		<div class="col-sm-6">
+								    			<a href="/signIn" class="btn btn-login  btn-f">
+								    			
+								    				Already registered !
+								    			</a>
+								    		</div><!-- End .col-6 -->
+								    	</div><!-- End .row -->
+							    	</div><!-- End .form-choice -->
+							    </div><!-- .End .tab-pane -->
+							</div><!-- End .tab-content -->
+						</div><!-- End .form-tab -->
+            		</div><!-- End .form-box -->
+            	</div><!-- End .container -->
+            </div><!-- End .login-page section-bg -->
+        </main><!-- End .main -->
+
+        <footer class="footer">
+        	<div class="footer-middle">
+	            <div class="container">
+	            	<div class="row">
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget widget-about">
+	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+
+	            				<div class="social-icons">
+	            					<a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
+	            				</div><!-- End .soial-icons -->
+	            			</div><!-- End .widget about-widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="about.html">About Molla</a></li>
+	            					<li><a href="#">How to shop on Molla</a></li>
+	            					<li><a href="#">FAQ</a></li>
+	            					<li><a href="contact.html">Contact us</a></li>
+	            					<li><a href="login.html">Log in</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Payment Methods</a></li>
+	            					<li><a href="#">Money-back guarantee!</a></li>
+	            					<li><a href="#">Returns</a></li>
+	            					<li><a href="#">Shipping</a></li>
+	            					<li><a href="#">Terms and conditions</a></li>
+	            					<li><a href="#">Privacy Policy</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Sign In</a></li>
+	            					<li><a href="#">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
+	            					<li><a href="#">Track My Order</a></li>
+	            					<li><a href="#">Help</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+	            	</div><!-- End .row -->
+	            </div><!-- End .container -->
+	        </div><!-- End .footer-middle -->
+
+	        <div class="footer-bottom">
+	        	<div class="container">
+	        		<p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+	        		<figure class="footer-payments">
+	        			<img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
+	        		</figure><!-- End .footer-payments -->
+	        	</div><!-- End .container -->
+	        </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById("register-name-2").value;
+            var email = document.getElementById("register-email-2").value;
+            var mobile = document.getElementById("register-mobile").value;
+            var password = document.getElementById("register-password-2").value;
+            var cpassword = document.getElementById("cpassword").value;
+        
+            clearErrorMessages();
+        
+            var isValid = true;
+        
+            if (name.trim() === "") {   
+                displayErrorMessage("register-name-2", "nameError", "Please enter your name.");
+                isValid = false;
+            }
+            if (email.trim() === "") {
+                displayErrorMessage("register-email-2", "emailError", "Please enter your email address.");
+                isValid = false;
+            }
+        
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                displayErrorMessage("register-email-2", "emailError", "Please enter a valid email address.");
+                isValid = false;
+            }
+        
+            if (mobile.trim() === "") {
+                displayErrorMessage("register-mobile", "mobileError", "Please enter your mobile number.");
+                isValid = false;
+            }
+            if (!/^\d{10}$/.test(mobile)) {
+                displayErrorMessage("register-mobile", "mobileError", "Mobile number should have exactly 10 digits.");
+                isValid = false;
+            }
+            if (password.trim() === "") {
+                displayErrorMessage("register-password-2", "passwordError", "Please enter a password.");
+                isValid = false;
+            }
+            if (password.length < 8) {
+                displayErrorMessage("register-password-2", "passwordError", "Password must be at least 8 characters long.");
+                isValid = false;
+            }
+            if (cpassword.trim() === "") {
+                displayErrorMessage("cpassword", "cpasswordError", "Please confirm your password.");
+                isValid = false;
+            }
+            if (password !== cpassword) {
+                displayErrorMessage("cpassword", "cpasswordError", "Passwords do not match. Please enter the same password again.");
+                isValid = false;
+            }
+        
+            return isValid;
+        }
+        
+        function displayErrorMessage(inputId, messageId, message) {
+            var inputField = document.getElementById(inputId);
+            var errorMessage = document.createElement("p");
+            errorMessage.textContent = message;
+            errorMessage.classList.add("error-message");
+            errorMessage.id = messageId;
+            inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
+        }
+        
+        function clearErrorMessages() {
+            var errorMessages = document.querySelectorAll(".error-message");
+            errorMessages.forEach(function(errorMessage) {
+                errorMessage.parentNode.removeChild(errorMessage);
+            });
+        }
+
+
+// ================================================
+// password strength:
+function checkPasswordStrength() {
+    var password = document.getElementById("register-password-2").value;
+    var strengthMeter = document.getElementById("password-strength");
+    var strength = 0;
+
+    // Check length
+    if (password.length >= 4) {
+        strength++; // The password has at least 4 characters
+
+        if (password.length >= 8) {
+            strength++; // The password has at least 8 characters
+        }
+    }
+
+    // Check for uppercase and lowercase letters, numbers, and special characters
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password) && /@/.test(password)) {
+        strength++;
+    }
+
+    // Update strength meter
+    switch (strength) {
+        case 0:
+            strengthMeter.textContent = "";
+            break;
+        case 1:
+            strengthMeter.textContent = "Weak";
+            strengthMeter.className = "weak";
+            break;
+        case 2:
+            strengthMeter.textContent = "Medium";
+            strengthMeter.className = "medium";
+            break;
+        case 3:
+        case 4:
+            strengthMeter.textContent = "Strong";
+            strengthMeter.className = "strong";
+            break;
+        default:
+            strengthMeter.textContent = "";
+    }
+}
+
+
+
+
+        </script>
+            
+            <style>
+                .error-message {
+                    color: rgb(209, 3, 3);
+                }
+
+                
+    #password-strength {
+        margin-top: 5px;
+    }
+
+    .weak {
+        color: red;
+    }
+
+    .medium {
+        color: orange;
+    }
+
+    .strong {
+        color: green;
+    }
+</style>
+    
+    
+
+   
+
+   <%- include('../layouts/footer.ejs') %>

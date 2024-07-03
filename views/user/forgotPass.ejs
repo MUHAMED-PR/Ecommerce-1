@@ -1,0 +1,70 @@
+<%- include('../layouts/header.ejs') %>
+
+<div class="page-wrapper">
+    <!-- Header and other common elements -->
+   
+    
+    <main class="main d-flex justify-content-center align-items-center">
+      <div class="text-center">
+        <% if (messages.error) { %>
+            <div class="alert text-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+        
+        <% if (messages.success) { %>
+            <div class="alert text-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+        
+        <div class="forgot-password-form text-center">
+            
+            <h2>Forgot Password?</h2>
+            <p>Please enter your email address below to <br> reset the password</p>
+            <form action="/forgot-password" method="post">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Email Address" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
+            </form>
+            
+        </div><!-- End .forgot-password-form -->
+    </div>
+    </main><!-- End .main -->
+
+    <!-- Footer and other common elements -->
+</div><!-- End .page-wrapper -->
+
+<style>
+    .main {
+        min-height: 100vh;
+    }
+
+    .forgot-password-form {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .forgot-password-form input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .forgot-password-form button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+
+
+<%- include('../layouts/footer.ejs') %>

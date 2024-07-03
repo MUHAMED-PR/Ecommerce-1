@@ -1,0 +1,239 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+          
+          <nav
+          
+          class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+          id="layout-navbar"
+        >
+          <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+              <i class="bx bx-menu bx-sm"></i>
+            </a>
+          </div>
+
+          <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              
+                <!-- Search -->
+                <div class="navbar-nav align-items-center ">
+                    <div class="nav-item d-flex align-items-center">
+                      <i class="bx bx-search fs-4 lh-0"></i>
+                      <input
+                        type="text"
+                        class="form-control border-0 shadow-none"
+                        placeholder="Search..."
+                        aria-label="Search..."
+                      />
+                    </div>
+                  </div>
+                  <!-- /Search -->
+                  <!-- Button container -->
+                
+           
+            
+
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <!-- Place this tag where you want the button to render. -->
+             
+
+          
+              <!--/ User -->
+            </ul>
+          </div>
+        </nav>
+
+      
+          <!-- / Navbar -->
+          
+          
+        
+            
+    
+          <!-- Content wrapper -->
+          <div class="content-wrapper mt-2 ">
+            <!-- Content -->
+            <div class="table-container">
+                
+                <!-- Basic Bootstrap Table -->
+                <div class="card mt-2 ms-4 me-4">
+                    
+                  <!-- Your table content here -->
+                  <h5 class="card-header">CATEGORIES</h5>
+                <div class="table-responsive text-nowrap">
+
+              <!-- ============ messages ======== -->
+                  <% if (messages.error) { %>
+                    <div class="alert text-danger">
+                        <%= messages.error %>
+                    </div>
+                <% } %>
+                
+                <% if (messages.success) { %>
+                    <div class="alert text-success">
+                        <%= messages.success %>
+                    </div>
+                <% } %>
+
+           <!-- ======================== -->
+                    <a href="/admin/loadaddCategory" class="btn btn-outline-primary   btn-lg "><i class="bi bi-plus-circle"></i> Add Category</a>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Actoin</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      <% category.forEach((category, index) => { %>
+                        <tr>
+                          <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><%= index + 1 %></strong></td>
+                          <td><%= category.categoryName %></td>
+                          <td><%= category.description %></td>
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                              </button>
+                              <div class="dropdown-menu">
+                                <button class="dropdown-item" onclick="editCategory('<%= category._id %>', '<%= category.categoryName %>', '<%= category.description %>')" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
+                                  <i class="bx bx-edit-alt me-1"></i> Edit
+                                </button>
+                                <button class="dropdown-item " id="listingBtn<%= category._id %>" onclick="categoryListing('<%= category._id %>')">
+                                  <!-- <% console.log(category._id,'dfdf'); %> -->
+                                  <% if(category.is_status){  %>
+                                    <span><i class="bx bx-block me-1"></i>Unlisted</span>
+                                    <% }else{  %>
+                                      <span><i class="bx bx-check-circle me-1"></i> Listed</span> 
+                                      <% } %>
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      <% }) %>
+                    </tbody>
+                    
+                  </table>
+                </div>
+                
+
+                </div>
+                <!--/ Basic Bootstrap Table -->
+              
+                
+                
+                
+        
+                <div class="content-backdrop fade"></div>
+            </div>
+            <!-- Content wrapper -->
+          </div>
+          <!-- / Layout page -->
+        </div>
+  
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+      </div>
+      <!-- / Layout wrapper -->
+  
+     
+     <!-- ================================================   -->
+     <script>
+      function editCategory(id, name, description) {
+        // Set the form action URL
+        const form = document.getElementById('editCategoryForm');
+        
+    
+        // Set the input values
+        document.getElementById('categoryId').value = id;
+        console.log(id,'id in ejs page');
+        document.getElementById('categoryName').value = name;
+        document.getElementById('description').value = description;
+      }
+    
+      function categoryListing(categoryId) {
+        console.log(categoryId,'category id in fetch');
+    fetch('/admin/listCategory', {
+        method: 'POST', // Use POST method
+        headers: {
+            'Content-Type': 'application/json' // Set the appropriate headers
+        },
+        body: JSON.stringify({ categoryId: categoryId.trim() }) // Include the body with JSON data
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.category) {
+            const statusButton = document.getElementById(`listingBtn${categoryId}`);
+            console.log(statusButton,'status button');
+            // window.location.href='/admin/category'
+            
+            console.log('statusButton reached......')
+            if (data.category.is_status===true) {
+              // console.log('-*************');
+                statusButton.innerHTML = '<span><i class="bx bx-block me-1"></i>Unlisted</span>';
+                // window.location.href='/admin/category'
+            } else {
+                statusButton.innerHTML = '<span><i class="bx bx-check-circle me-1"></i> Listed</span>';
+                // console.log('&&&&&&&&&&&&');
+                // window.location.href='/admin/category'
+
+            }
+        }
+        
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+    </script>
+    
+
+ <!-- Bootstrap Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <!-- Form for editing category details -->
+              <form id="editCategoryForm" action="/admin/updateCategory" method="POST">
+                  <!-- Input fields for editing category details -->
+                  <input type="hidden" class="form-control" id="categoryId"  name="categoryId" value="" >
+
+                  <div class="mb-3">
+                      <label for="categoryName" class="form-label">Category Name</label>
+                      <input type="text" class="form-control" id="categoryName" name="editName" value="">
+                  </div>
+                  <div class="mb-3">
+                      <label for="description" class="form-label">Description</label>
+                      <input type="text" class="form-control" id="description" name="editDescription" value="">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Update</button>
+              </form>
+          </div>
+         
+      </div>
+  </div>
+</div>
+
+
+<%- include('../layouts/adminFooter.ejs') %>
