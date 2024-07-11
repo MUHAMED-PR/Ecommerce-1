@@ -23,7 +23,7 @@ const orderController = require('../controllers/orderController')
 
 
 
-app.set('views','./views/user')
+app.set('views', './views/user')
 // app.set('views', path.join(__dirname, 'views', 'user'));
 
 // userRoute.use(session({secret:config.sessionSecret}))
@@ -52,57 +52,61 @@ app.set('views','./views/user')
 // //failure
 // userRoute.get('/failure', userController.failureGoogleLogin)
 
-userRoute.get('/',userController.homePage)
-userRoute.get('/signIn',userController.signIn);
-userRoute.get('/signUp',userController.signUp);
-userRoute.get('/logout',userController.logout)
-userRoute.get('/OTP',userController.getOtp)
-userRoute.post('/signUp',userController.insertUser)
-userRoute.post('/home',userController.verifyOTP)
-userRoute.get('/resend',userController.resendOTP)
-userRoute.post('/userlogin',userController.verifyLogin) 
+userRoute.get('/', userController.homePage)
+userRoute.get('/signIn', userController.signIn);
+userRoute.get('/signUp', userController.signUp);
+userRoute.get('/logout', auth.isLogin, userController.logout)
+userRoute.get('/OTP', userController.getOtp)
+userRoute.post('/signUp', userController.insertUser)
+userRoute.post('/home', userController.verifyOTP)
+userRoute.get('/resend', userController.resendOTP)
+userRoute.post('/userlogin', userController.verifyLogin)
 
 //product
-userRoute.get('/productPage',productController.loadProductPage)
-userRoute.get('/productDetails/:productId',productController.loadProductDetails)
-userRoute.get('/searchProduct',productController.searchProduct)
+userRoute.get('/productPage', productController.loadProductPage)
+userRoute.get('/productDetails/:productId', productController.loadProductDetails)
+userRoute.get('/searchProduct', productController.searchProduct)
 
 //forgot password
-userRoute.get('/forgot-password',userController.forgotPassword)
-userRoute.post('/forgot-password',userController.resetPassword)
-userRoute.get('/otpresetPassword',userController.otpResetPassword)
-userRoute.get('/setNewPassword',userController.setNewPassword)
-userRoute.post('/ResetPasswordOTPverify',userController.ResetPasswordOTPverify)
-userRoute.get('/ResetPasswordREsendOTP',userController.ResetPasswordREsendOTP)
-userRoute.post('/changeForgetPassword',userController.changeForgetPassword)
+userRoute.get('/forgot-password', userController.forgotPassword)
+userRoute.post('/forgot-password', userController.resetPassword)
+userRoute.get('/otpresetPassword', userController.otpResetPassword)
+userRoute.get('/setNewPassword', userController.setNewPassword)
+userRoute.post('/ResetPasswordOTPverify', userController.ResetPasswordOTPverify)
+userRoute.get('/ResetPasswordREsendOTP', userController.ResetPasswordREsendOTP)
+userRoute.post('/changeForgetPassword', userController.changeForgetPassword)
 
 
 //cart
-userRoute.get('/cartPage',auth.isLogin,cartController.loadcart)
-userRoute.post('/addToCart',auth.isLogin,cartController.addToCart)
-userRoute.get('/removeCart/:productID',auth.isLogin,cartController.removeCart)
-userRoute.patch('/ProductQuantity',auth.isLogin,cartController.productQuantity)
+userRoute.get('/cartPage', auth.isLogin, cartController.loadcart)
+userRoute.post('/addToCart', auth.isLogin, cartController.addToCart)
+userRoute.get('/removeCart/:productID', auth.isLogin, cartController.removeCart)
+userRoute.patch('/ProductQuantity', auth.isLogin, cartController.productQuantity)
 
 //checkout
-userRoute.get('/checkoutPage',auth.isLogin,userController.loadCheckout)
-userRoute.post('/placeOrder',auth.isLogin,orderController.placeOrder)
+userRoute.get('/checkoutPage', auth.isLogin, userController.loadCheckout)
+//Order Placed
+userRoute.post('/placeOrder', auth.isLogin, orderController.placeOrder)
+userRoute.get('/orderSuccesfulPage', auth.isLogin, orderController.orderSuccessfulPage)
+userRoute.get('/orderDetailsPage',auth.isLogin,orderController.orderDetails)
+userRoute.get('/ordersListed',auth.isLogin,userController.userProfile)
 
 
 //User Profile
-userRoute.get('/userProfile',auth.isLogin,userController.userProfile)
+userRoute.get('/userProfile', auth.isLogin, userController.userProfile)
 //Address
-userRoute.post('/addAddress',auth.isLogin,addressController.addingAddress)
+userRoute.post('/addAddress', auth.isLogin, addressController.addingAddress)
 //Change password
-userRoute.post('/changePassword',auth.isLogin,userController.changePassword)
+userRoute.post('/changePassword', auth.isLogin, userController.changePassword)
 
 //Wishlist
-userRoute.get('/loadwishlist',auth.isLogin,userController.loadWishlist)
-userRoute.get('/addToWishlist/:productID',auth.isLogin,userController.addToWishlist)
-userRoute.get('/removeWishlist/:productID',auth.isLogin,userController.removeWishlist)
+userRoute.get('/loadwishlist', auth.isLogin, userController.loadWishlist)
+userRoute.get('/addToWishlist/:productID', auth.isLogin, userController.addToWishlist)
+userRoute.get('/removeWishlist/:productID', auth.isLogin, userController.removeWishlist)
+userRoute.get('/moveToCart/:productID',auth.isLogin,userController.moveToCart)
 
 
-userRoute.post('')
 
-module.exports=userRoute;
+module.exports = userRoute;
 
 

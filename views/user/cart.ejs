@@ -215,7 +215,7 @@
 											<tr class="summary-shipping-row">
 												<td>
 													<div class="custom-control custom-radio">
-														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
+														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input" checked>
 														<label class="custom-control-label" for="free-shipping">Free Shipping</label>
 													</div><!-- End .custom-control -->
 												</td>
@@ -244,7 +244,7 @@
 							
 											<tr class="summary-total">
 												<td>Total:</td>
-												<td id="summaryTotal">₹<%= initialSubtotal %></td>
+												<td id="summaryTotal"><%= initialSubtotal %>.00</td>
 											</tr><!-- End .summary-total -->
 										</tbody>
 									</table><!-- End .table table-summary -->
@@ -252,7 +252,7 @@
 									<a href="/checkoutPage" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
 								</div><!-- End .summary -->
 							
-								<a href="#" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+								<a href="/" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 							</aside><!-- End .col-lg-3 -->
 							
 						</div><!-- End .row -->
@@ -364,70 +364,76 @@
 
 		<script>
 			function updateTotals() {
-    // Calculate subtotal
-    let subtotal = 0;
-    const productPrices = document.querySelectorAll('.total-col');
-
-    productPrices.forEach(priceElem => {
-        subtotal += parseFloat(priceElem.innerHTML.replace('₹', '').trim()) || 0;
-    });
-
-    // Update subtotal and total
-    document.getElementById('subTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
-
-    const shippingElem = document.querySelector('input[name="shipping"]:checked');
-    const shipping = shippingElem ? parseFloat(shippingElem.parentElement.nextElementSibling.innerHTML.replace('₹', '').trim()) || 0 : 0;
-
-    document.getElementById('summaryTotal').innerHTML = `₹${(subtotal + shipping).toFixed(2)}`;
-}
-
-document.querySelectorAll('input[name="shipping"]').forEach(radio => {
-    radio.addEventListener('change', updateTotals);
-});
-
-// Initial call to set totals
-updateTotals();
-
-
-function remove(productId) {
-    const cartElement = document.getElementById('cartElement');
-    axios.get(`/removeCart/${productId}`)
-        .then(response => {
-            if (response.data.status) {
-                cartElement.remove();
-                updateTotals();
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-function quantity(index, productId) {
-    const price = parseFloat(document.getElementById(`price-${index}`).innerHTML.replace('₹', '')) || 0;
-    const currentQuantity = parseInt(document.getElementById(`inc-${index}`).value) || 0;
-    const total = currentQuantity * price;
-    document.getElementById(`totalPrice-${index}`).innerHTML = `₹${total.toFixed(2)}`;
-
-    const data = {
-        currentQuantity: currentQuantity,
-        productId: productId
-    };
-
-    axios.patch('/ProductQuantity', data)
-        .then(response => {
-            updateTotals();
-        })
-        .catch(error => {
-            console.log('Error:', error);
-        });
-}
-
-
-
-
-			
+				// Calculate subtotal
+				let subtotal = 0;
+				const productPrices = document.querySelectorAll('.total-col');
+		
+				productPrices.forEach(priceElem => {
+					subtotal += parseFloat(priceElem.innerHTML.replace('₹', '').trim()) || 0;
+				});
+		
+				// Update subtotal
+				document.getElementById('subTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
+		
+				// Calculate shipping
+				const shippingElem = document.querySelector('input[name="shipping"]:checked');
+				const shipping = shippingElem ? parseFloat(shippingElem.parentElement.nextElementSibling.innerHTML.replace('₹', '').trim()) || 0 : 0;
+		
+				// Update total
+				document.getElementById('summaryTotal').innerHTML = `₹${(subtotal + shipping).toFixed(2)}`;
+			}
+		
+			document.querySelectorAll('input[name="shipping"]').forEach(radio => {
+				radio.addEventListener('change', updateTotals);
+			});
+		
+			function remove(productId) {
+				const cartElement = document.getElementById('cartElement');
+				axios.get(`/removeCart/${productId}`)
+					.then(response => {
+						if (response.data.status) {
+							cartElement.remove();
+							updateTotals();
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			}
+		
+			function quantity(index, productId) {
+				const price = parseFloat(document.getElementById(`price-${index}`).innerHTML.replace('₹', '')) || 0;
+				const currentQuantity = parseInt(document.getElementById(`inc-${index}`).value) || 0;
+				const total = currentQuantity * price;
+				document.getElementById(`totalPrice-${index}`).innerHTML = `₹${total.toFixed(2)}`;
+		
+				const data = {
+					currentQuantity: currentQuantity,
+					productId: productId
+				};
+		
+				axios.patch('/ProductQuantity', data)
+					.then(response => {
+						updateTotals(); // Call updateTotals immediately after the quantity change
+					})
+					.catch(error => {
+						console.log('Error:', error);
+					});
+			}
+		
+			// Add event listeners to quantity input fields
+			document.querySelectorAll('.cart-product-quantity input').forEach(input => {
+				input.addEventListener('change', function() {
+					const index = this.id.split('-')[1];
+					const productId = this.getAttribute('data-product-id');
+					quantity(index, productId);
+				});
+			});
+		
+			// Initial call to set totals
+			updateTotals();
 		</script>
+		
 		
 
 

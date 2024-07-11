@@ -29,20 +29,23 @@ const orderSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId
         }],
         deliveryDate: {
-            type: Date 
+            type: Date ,
+            default: function() {
+                return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000); // Current date + 3 days
+            }
         }
     }],
     paymentMethod: {
         type: String,
         required: true,
-        enum: ['Credit Card', 'Razorpay', 'Paypal', 'Cash On Delivery']
+        enum: ['Credit Card', 'Razorpay', 'Paypal', 'Cash On Delivery','Wallet']
     },
     shippingAddress: {
         phone: { type: Number, required: true },
         phone1: { type: Number },
         fullName: { type: String, required: true },
-        address: { type: String, required: true }, 
         state: { type: String, required: true },
+        city:{ type:String, required: true},
         street: { type: String, required: true },
         pincode: { type: Number, required: true }
     },

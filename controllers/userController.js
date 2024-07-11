@@ -5,11 +5,13 @@ const product = require('../models/product')
 const addressModel = require('../models/address')
 const cartModel = require('../models/cart')
 const wishlistModel = require('../models/wishlist')
+const orderModel = require('../models/order')
 const bcrypt = require('bcrypt')
 const { tryCatch } = require('engine/utils')
 const nodemailer = require('nodemailer')
 const flash = require('express-flash')
 const { findById } = require('../models/category')
+const order = require('../models/order')
 require('dotenv').config()
 
 
@@ -78,7 +80,7 @@ const otpGenerate = (req, res) => {
 
 const logout = async(req,res)=>{
     try {
-        req.session.email = null; // Clear email from session
+        req.session.user_id = null; // Clear email from session
         res.render('user/homePage')
 
     } catch (error) {
@@ -438,8 +440,21 @@ const userProfile = async(req,res)=>{
         const {user_id} = req.session
         // console.log(user_id) 
         const user = await users.find({_id:user_id})
-        const addressDoc = await addressModel.find({userId:req.session.user_id})
-        res.render('user/userProfile',{user,addressDoc})
+        const addressDoc = await addressModel.find({userId:user_id})
+        const orderDetails = await orderModel.find({userId:user_id}).populate('products.productId').exec()
+        if(addressDoc){
+            if(orderDetails){
+                res.render('user/userProfile',{user,addressDoc,orderDetails})
+            }else{
+                res.render('user/userProfile',{user,addressDoc,orderDetails:[]})
+            }
+
+        }else{
+            res.render('user/userProfile',{user,addressDoc:[],orderDetails:[]})
+        }
+        
+        // console.log(orderDetails.products,' is the order model')
+        // console.log(order,' what is this order ??????')
     } catch (error) {
         console.log(error);
     }
@@ -490,7 +505,7 @@ const loadCheckout = async(req,res)=>{
 const loadWishlist = async(req,res)=>{
     try {
         const wishlist = await wishlistModel.findOne({ userId: req.session.user_id }).populate('products.productId').exec()
-       
+    //    console.log(wishlist.products,' is the wishlist ')
         res.render('user/wishlist',{wishlist})
     } catch (error) {
         console.log(error)
@@ -549,6 +564,34 @@ const removeWishlist = async(req,res)=>{
         console.log(error);
     }
 }
+
+const moveToCart = async(req,res)=>{
+    try {
+        const {productID} = req.params
+        const { user_id } = req.session
+
+        const userWishlist = await wishlistModel.findOne({userId:user_id})
+        if(userWishlist){
+            const wishlistProduct = await wishlistModel.findOne({userId:user_id,'products.productId': productID})
+            if(wishlistProduct){
+                const productInCart = await cartModel.findOne({userId:user_id,'product.productId':productID})
+                if(!productInCart){
+                   const addToCart = await cartModel.updateOne({userId:user_id},
+                    {$push:{product:{productId:productID}}})
+                    res.json({added:true})
+                }
+                const updateWishlist = await wishlistModel.updateOne(
+                    {userId:user_id},
+                    { $pull: { products: { productId: productID } } })
+                    res.json({removed:true})
+                
+            }
+            }
+        }
+         catch (error) {
+        console.log(error)
+    }
+}
 module.exports = {
     signIn,
     signUp,
@@ -573,7 +616,8 @@ module.exports = {
     loadCheckout,
     loadWishlist,
     addToWishlist,
-    removeWishlist
+    removeWishlist,
+    moveToCart
 
 
 

@@ -1,135 +1,8 @@
 <%- include('../layouts/header.ejs') %>
 <%- include('../layouts/userNav.ejs') %>
+<%- include('../layouts/userTopbar.ejs') %>
 
-<div class="header-middle sticky-header">
-    <div class="container">
-        <div class="header-left">
-            <button class="mobile-menu-toggler">
-                <span class="sr-only">Toggle mobile menu</span>
-                <i class="icon-bars"></i>
-            </button>
 
-            <a href="#" class="logo">
-                <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
-            </a>
-
-            <nav class="main-nav">
-                <ul class="menu sf-arrows">
-                    <li class="megamenu-container active">
-                        <a href="/" class="sf-with-ul">Home</a>
-                    </li>
-                    <li>
-                        <a href="/productPage" class="sf-with-ul">Product</a>
-                    </li>
-                    <li>
-                        <a href="#" class="sf-with-ul">Blog</a>
-                    </li>
-                    <li>
-                        <a href="#" class="sf-with-ul">Elements</a>
-                    </li>
-                </ul>
-            </nav><!-- End .main-nav -->
-        </div><!-- End .header-left -->
-
-        <div class="header-right">
-            <div class="header-search">
-                <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                <form action="#" method="get">
-                    <div class="header-search-wrapper">
-                        <label for="q" class="sr-only">Search</label>
-                        <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
-                    </div><!-- End .header-search-wrapper -->
-                </form>
-            </div><!-- End .header-search -->
-            <div class="dropdown compare-dropdown">
-                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                    <i class="icon-random"></i>
-                </a>
-
-                <div class="dropdown-menu dropdown-menu-right">
-                    <ul class="compare-products">
-                        <li class="compare-product">
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                            <h4 class="compare-product-title"><a href="#">Blue Night Dress</a></h4>
-                        </li>
-                        <li class="compare-product">
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                            <h4 class="compare-product-title"><a href="#">White Long Skirt</a></h4>
-                        </li>
-                    </ul>
-
-                    <div class="compare-actions">
-                        <a href="#" class="action-link">Clear All</a>
-                        <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                    </div>
-                </div><!-- End .dropdown-menu -->
-            </div><!-- End .compare-dropdown -->
-
-            <div class="dropdown cart-dropdown">
-                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-                    <i class="icon-shopping-cart"></i>
-                    <span class="cart-count">2</span>
-                </a>
-
-                <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-cart-products">
-                        <div class="product">
-                            <div class="product-cart-details">
-                                <h4 class="product-title">
-                                    <a href="#">Beige knitted elastic runner shoes</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span>
-                                    x ₹84.00
-                                </span>
-                            </div><!-- End .product-cart-details -->
-
-                            <figure class="product-image-container">
-                                <a href="#" class="product-image">
-                                    <img src="assets/images/products/cart/product-1.jpg" alt="product">
-                                </a>
-                            </figure>
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                        </div><!-- End .product -->
-
-                        <div class="product">
-                            <div class="product-cart-details">
-                                <h4 class="product-title">
-                                    <a href="#">Blue utility pinafore denim dress</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span>
-                                    x ₹76.00
-                                </span>
-                            </div><!-- End .product-cart-details -->
-
-                            <figure class="product-image-container">
-                                <a href="#" class="product-image">
-                                    <img src="assets/images/products/cart/product-2.jpg" alt="product">
-                                </a>
-                            </figure>
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                        </div><!-- End .product -->
-                    </div><!-- End .cart-product -->
-
-                    <div class="dropdown-cart-total">
-                        <span>Total</span>
-
-                        <span class="cart-total-price">₹160.00</span>
-                    </div><!-- End .dropdown-cart-total -->
-
-                    <div class="dropdown-cart-action">
-                        <a href="#" class="btn btn-primary">View Cart</a>
-                        <a href="#" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                    </div><!-- End .dropdown-cart-total -->
-                </div><!-- End .dropdown-menu -->
-            </div><!-- End .cart-dropdown -->
-        </div><!-- End .header-right -->
-    </div><!-- End .container -->
-</div><!-- End .header-middle -->
-</header><!-- End .header -->
 
 <main class="main">
     <div class="page-header text-center" style="height: 10px;  background-image: url('assets/images/page-header-bg.jpg')">
@@ -156,7 +29,8 @@
                         <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
                     </form>
                 </div><!-- End .checkout-discount -->
-                <form action="/placeOrder" method="post">
+
+                <form id="checkout-form" action="/placeOrder" method="post">
                     <div class="row">
                         <div class="col-lg-8">
                             <% if(addressDoc && addressDoc[0].address.length > 0){  %>
@@ -167,7 +41,8 @@
                                                 <div class="card card-dashboard address-card" id="address-<%= j %>">
                                                     <div class="card-body">
                                                         <label>
-                                                            <input type="radio" name="address-toggle" value="<%= addressDoc[0].address[j] %>" class="toggle-address-details" data-target="#address-details-<%= j %>" <% if (j === 0) { %> checked <% } %>/>
+                                                            <input type="radio" name="addressId" value="<%= addressDoc[0].address[j]._id %>" class="toggle-address-details" data-target="#address-details-<%= j %>" <% if (j === 0) { %> checked <% } %>/>
+                                                            
                                                         </label>
                                                         <h6>Address <%= j + 1 %></h6>
                                                         <p><strong>Name: <%= addressDoc[0].address[j].name %><br></strong> 
@@ -210,24 +85,26 @@
                                         </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
+                                <!-- Hidden input to transfer the total value -->
+                                <input type="hidden" name="total" value="<%= total %>">
                         
                                 <!-- Payment options radio buttons -->
                                 <div class="payment-options">
                                     <div class="form-group">
                                         <label class="payment-option">
-                                            <input type="radio" name="payment-option" value="cash-on-delivery" checked>
-                                            Cash on Delivery
+                                            <input type="radio" name="paymentOption" value="Cash On Delivery" checked>
+                                            Cash On Delivery
                                         </label>
                                     </div>
                                     <div class="form-group">
                                         <label class="payment-option">
-                                            <input type="radio" name="payment-option" value="online-payment">
-                                            Online Payments
+                                            <input type="radio" name="paymentOption" value="Razorpay">
+                                            Razorpay
                                         </label>
                                     </div>
                                     <div class="form-group">
                                         <label class="payment-option">
-                                            <input type="radio" name="payment-option" value="wallet">
+                                            <input type="radio" name="paymentOption" value="Wallet">
                                             Wallet
                                         </label>
                                     </div>
@@ -242,67 +119,11 @@
                 </form>
 
                 <div class="col-lg-9">
-                    <button id="shipToNewAddressBtn" class="btn btn-primary mb-4">Ship to New Address</button>
+                    <a href="#tab-address" id="shipToNewAddressBtn" class="btn btn-primary mb-4">Ship to New Address</a>
                 
                    
                 
-                    <!-- New address form (hidden by default) -->
-                    <div id="newAddressForm" style="display: none;">
-                        <h2 class="checkout-title">New Address</h2>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>First Name *</label>
-                                <input type="text" class="form-control" required>
-                            </div><!-- End .col-sm-6 -->
-                
-                            <div class="col-sm-6">
-                                <label>Last Name *</label>
-                                <input type="text" class="form-control" required>
-                            </div><!-- End .col-sm-6 -->
-                        </div><!-- End .row -->
-                
-                        <label>Company Name (Optional)</label>
-                        <input type="text" class="form-control">
-                
-                        <label>Country *</label>
-                        <input type="text" class="form-control" required>
-                
-                        <label>Street address *</label>
-                        <input type="text" class="form-control" placeholder="House number and Street name" required>
-                        <input type="text" class="form-control" placeholder="Appartments, suite, unit etc ..." required>
-                
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>Town / City *</label>
-                                <input type="text" class="form-control" required>
-                            </div><!-- End .col-sm-6 -->
-                
-                            <div class="col-sm-6">
-                                <label>State / County *</label>
-                                <input type="text" class="form-control" required>
-                            </div><!-- End .col-sm-6 -->
-                        </div><!-- End .row -->
-                
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>Postcode / ZIP *</label>
-                                <input type="text" class="form-control" required>
-                            </div><!-- End .col-sm-6 -->
-                
-                            <div class="col-sm-6">
-                                <label>Phone *</label>
-                                <input type="tel" class="form-control" required>
-                            </div><!-- End .col-sm-6 -->
-                        </div><!-- End .row -->
-                
-                        <label>Email address *</label>
-                        <input type="email" class="form-control" required>
-                
-                       
-                
-                        <label>Order notes (optional)</label>
-                        <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
-                    </div><!-- End #newAddressForm -->
+                    
                 
                 </div><!-- End .col-lg-9 -->
 
@@ -312,221 +133,39 @@
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
-
-
-
-<div class="footer-bottom">
-    <div class="container">
-        <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
-        <figure class="footer-payments">
-            <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
-        </figure><!-- End .footer-payments -->
-    </div><!-- End .container -->
-</div><!-- End .footer-bottom -->
-</footer><!-- End .footer -->
-</div><!-- End .page-wrapper -->
-<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-
-<div class="mobile-menu-container">
-<div class="mobile-menu-wrapper">
-<span class="mobile-menu-close"><i class="icon-close"></i></span>
-
-<form action="#" method="get" class="mobile-search">
-    <label for="mobile-search" class="sr-only">Search</label>
-    <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
-    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-</form>
-
-
-
-<div class="social-icons">
-    <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-    <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-    <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-    <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-</div><!-- End .social-icons -->
-</div><!-- End .mobile-menu-wrapper -->
-</div><!-- End .mobile-menu-container -->
-
-<!-- place order successfully modal -->
-<div class="modal fade" id="orderSuccessModal" tabindex="-1" aria-labelledby="orderSuccessModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="orderSuccessModalLabel">🎉 Order Placed Successfully 🎉</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Your order has been successfully placed!</p>
-          <div class="celebration">
-            <!-- Add your celebratory animations or graphics here -->
-            <div class="confetti"></div>
-            <div class="balloon"></div>
-            <!-- Feel free to add more celebratory elements -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  
-<style>
-.address-card {
-    max-width: 300px; /* Adjust as needed */
-}
-
-/* Modal styling */
-.modal-content {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-}
-
-.modal-header {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.modal-body {
-  text-align: center;
-  padding: 20px;
-}
-
-/* Celebration animations */
-.celebration {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.confetti {
-  width: 50px;
-  height: 50px;
-  background-image: url('path_to_confetti_image.png'); /* Replace with your confetti image */
-  background-size: contain;
-  animation: confetti-fall 3s ease-in-out;
-  animation-fill-mode: forwards;
-}
-
-.balloon {
-  width: 50px;
-  height: 80px;
-  background-image: url('path_to_balloon_image.png'); /* Replace with your balloon image */
-  background-size: contain;
-  animation: balloon-float 5s ease-in-out;
-  animation-fill-mode: forwards;
-}
-
-@keyframes confetti-fall {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
-}
-
-@keyframes balloon-float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-</style>
-
-<script>
-    document.getElementById('address-select').addEventListener('change', function() {
-    var selectedValue = this.value;
-    var addressCards = document.querySelectorAll('.address-card');
-    
-    addressCards.forEach(function(card) {
-        card.style.display = 'none';
-    });
-    
-    document.getElementById('address-' + selectedValue).style.display = 'block';
-});
-
-</script>
-
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var toggleButtons = document.querySelectorAll('.toggle-address-details');
-
-        toggleButtons.forEach(function(button) {
-            button.addEventListener('change', function(event) {
-                var targetId = this.getAttribute('data-target');
-                var targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
-                    var checked = this.checked;
-                    targetElement.style.display = checked ? 'block' : 'none';
-                    // You can adjust the label text here based on the checked state if needed
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var shipToNewAddressBtn = document.getElementById('shipToNewAddressBtn');
-        var newAddressForm = document.getElementById('newAddressForm');
-
-        if (shipToNewAddressBtn && newAddressForm) {
-            shipToNewAddressBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                newAddressForm.style.display = 'block';
-            });
-        }
-    });
-</script>
-
-
-<!-- place order successfully modal -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const placeOrderBtn = document.getElementById('placeOrderBtn');
-      const orderSuccessModal = new bootstrap.Modal(document.getElementById('orderSuccessModal'));
-  
-      placeOrderBtn.addEventListener('click', function(event) {
-        // Simulate order placement logic (replace with your actual logic)
-        setTimeout(function() {
-          orderSuccessModal.show(); // Show the modal after a delay (for demonstration)
-        }, 2000); // Replace with actual logic delay
-  
-        // Optional: Reset celebration animations on modal close
-        orderSuccessModal._element.addEventListener('hidden.bs.modal', function() {
-          resetCelebration();
-        });
-      });
-  
-      function resetCelebration() {
-        const confetti = document.querySelector('.confetti');
-        const balloon = document.querySelector('.balloon');
-  
-        // Reset animation by re-adding CSS class
-        confetti.style.animation = 'none';
-        balloon.style.animation = 'none';
-  
-        setTimeout(function() {
-          confetti.style.animation = 'confetti-fall 3s ease-in-out forwards';
-          balloon.style.animation = 'balloon-float 5s ease-in-out forwards';
-        }, 100);
-      }
-    });
-  </script>
-
- 
-  
-  
-
-
 <%- include('../layouts/footer.ejs') %>
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('checkout-form');
+       
+    
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const formData = new FormData(form);
+            const data = {};
+    
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+    
+            axios.post('/placeOrder', data)
+                .then(response => {
+                    if (response.status === 200) {
+                        window.location.href = '/orderSuccesfulPage';
+                    } else {
+                        alert('There was an error placing the order!');
+                    }
+                })
+                .catch(error => {
+                    console.error('There was an error placing the order!', error);
+                    alert('There was an error placing the order!');
+                });
+        });
+    });
+    </script>
+    

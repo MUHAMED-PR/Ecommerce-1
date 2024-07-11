@@ -47,84 +47,15 @@
                     <i class="icon-random"></i>
                 </a>
 
-                <div class="dropdown-menu dropdown-menu-right">
-                    <ul class="compare-products">
-                        <li class="compare-product">
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                            <h4 class="compare-product-title"><a href="#">Blue Night Dress</a></h4>
-                        </li>
-                        <li class="compare-product">
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                            <h4 class="compare-product-title"><a href="#">White Long Skirt</a></h4>
-                        </li>
-                    </ul>
-
-                    <div class="compare-actions">
-                        <a href="#" class="action-link">Clear All</a>
-                        <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                    </div>
-                </div><!-- End .dropdown-menu -->
+                
             </div><!-- End .compare-dropdown -->
 
             <div class="dropdown cart-dropdown">
                 <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                     <i class="icon-shopping-cart"></i>
-                    <span class="cart-count">2</span>
+            
                 </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-cart-products">
-                        <div class="product">
-                            <div class="product-cart-details">
-                                <h4 class="product-title">
-                                    <a href="#">Beige knitted elastic runner shoes</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span>
-                                    x ₹84.00
-                                </span>
-                            </div><!-- End .product-cart-details -->
-
-                            <figure class="product-image-container">
-                                <a href="#" class="product-image">
-                                    <img src="assets/images/products/cart/product-1.jpg" alt="product">
-                                </a>
-                            </figure>
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                        </div><!-- End .product -->
-
-                        <div class="product">
-                            <div class="product-cart-details">
-                                <h4 class="product-title">
-                                    <a href="#">Blue utility pinafore denim dress</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span>
-                                    x ₹76.00
-                                </span>
-                            </div><!-- End .product-cart-details -->
-
-                            <figure class="product-image-container">
-                                <a href="#" class="product-image">
-                                    <img src="assets/images/products/cart/product-2.jpg" alt="product">
-                                </a>
-                            </figure>
-                            <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                        </div><!-- End .product -->
-                    </div><!-- End .cart-product -->
-
-                    <div class="dropdown-cart-total">
-                        <span>Total</span>
-
-                        <span class="cart-total-price">₹160.00</span>
-                    </div><!-- End .dropdown-cart-total -->
-
-                    <div class="dropdown-cart-action">
-                        <a href="#" class="btn btn-primary">View Cart</a>
-                        <a href="#" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                    </div><!-- End .dropdown-cart-total -->
-                </div><!-- End .dropdown-menu -->
+                
             </div><!-- End .cart-dropdown -->
         </div><!-- End .header-right -->
     </div><!-- End .container -->
@@ -181,7 +112,7 @@
 								<td class="price-col">₹<%= data.productId.price  %></td>
 								<td class="stock-col"><span class="in-stock">In stock</span></td>
 								<td class="action-col">
-									<button class="btn btn-block btn-outline-primary-2" ><i class="icon-cart-plus"></i>Add to Cart</button>
+									<button class="btn btn-block btn-outline-primary-2" onclick="moveToCart('<%= data.productId._id %>')"><i class="icon-cart-plus"></i>Move to Cart</button>
 								</td>
 								<td class="remove-col"><button class="btn-remove" onclick="removeWishlist('<%= data.productId._id %>')"><i class="icon-close"></i></button></td>
                                 
@@ -303,6 +234,18 @@
                 }
             })
         }
+
+
+        function moveToCart(productId){
+            const wishlistItems = document.getElementById('wishlistItems')
+            axios.get(`/removeWishlist/${productId}`)
+            .then(response=>{
+                if(response.data.removed){
+                    wishlistItems.remove()
+                }
+            })
+        }
+
     </script>
 </body>
 

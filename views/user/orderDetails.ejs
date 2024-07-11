@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .order-section {
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .product-item {
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .product-item h5 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .product-item p {
+            margin: 5px 0;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4">Order Details</h2>
+    
+    <div class="order-section">
+        <h4 class="mb-3">Order Information</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Order ID:</strong> <%= orderDetails._id %></p>
+                <p><strong>Order Date:</strong> <%= orderDetails.orderDate.toDateString() %></p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Payment Method:</strong> <%= orderDetails.paymentMethod %></p>
+                <p><strong>Total Amount:</strong> ₹<%= orderDetails.totalAmount %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h4 class="mb-3">Shipping Address</h4>
+        <p><%= orderDetails.shippingAddress.fullName %></p>
+        <p><%= orderDetails.shippingAddress.street %></p>
+        <p><%= orderDetails.shippingAddress.city %>, <%= orderDetails.shippingAddress.state %> - <%= orderDetails.shippingAddress.pincode %></p>
+        <p><strong>Contact Number:</strong> <%= orderDetails.shippingAddress.phone %></p>
+    </div>
+    
+    <div class="order-section">
+        <h4 class="mb-3">Ordered Products</h4>
+        <% orderDetails.products.forEach(function(product) { %>
+            <div class="product-item">
+                <h5><%= product.productId.name %></h5>
+                <p><strong>Price:</strong> ₹<%= product.price %></p>
+                <p><strong>Quantity:</strong> <%= product.quantity %></p>
+                <p><strong>Subtotal:</strong> ₹<%= product.price * product.quantity %></p>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="btn-container">
+        <a href="/" class="btn btn-secondary btn-lg">Continue Shopping</a>
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

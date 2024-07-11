@@ -13,6 +13,19 @@ const User = require('../models/users')
  }
 
 
+ const logout = async (req,res,next)=>{
+    try {
+        if(req.session.user_id){
+            res.redirect('/')
+        }else{
+            res.redirect('/signup')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+ }
+
+
 const isLogout = async(req,res,next)=>{
     try {
         if(!req.session.user_id){
@@ -44,7 +57,8 @@ const isUserBlocked = async(req,res,next)=>{
 }
 module.exports={
     isLogin,
-    isLogout
+    isLogout,
     // isLogout,
-    // isUserBlocked
+    // isUserBlocked,
+    logout
 }

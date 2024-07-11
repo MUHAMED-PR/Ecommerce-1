@@ -106,7 +106,7 @@
             	<div class="dashboard">
 	                <div class="container">
 	                	<div class="row">
-	                		<aside class="col-md-4 col-lg-3">
+	                		<aside class="col-md-3 col-lg-2">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
 								    <li class="nav-item">
 								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">User Profile</a>
@@ -142,19 +142,18 @@
                                             <%= messages.success %>
                                         </div>
                                     <% } %>
+                                    <!-- Tab for user Details -->
 								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-                                        <div class="card mb-4">
-                                            
+                                        <div class="card mb-4 shadow-sm">
                                             <div class="card-body">
                                                 <% if(user.length > 0) { %>
                                                 <div class="profile-info mb-4">
                                                     <div class="d-flex align-items-center">
                                                         <div class="avatar mr-3">
-                                                            <div class="rounded-circle border d-flex justify-content-center align-items-center" style="width: 120px; height: 120px; background-color: #f0f0f0;">
-                                                                <i class="fas fa-user-circle fa-4x text-muted"></i>
+                                                            <div class="rounded-circle border d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; background-color: #f0f0f0;">
+                                                                <i class="fas fa-user-circle fa-2x text-muted"></i>
                                                             </div>
                                                         </div>
-                                                        
                                                         <div>
                                                             <h4 class="mb-1"><%= user[0].userName %></h4>
                                                             <p class="text-muted mb-0"><%= user[0].email %></p>
@@ -163,38 +162,95 @@
                                                 </div>
                                                 <hr>
                                                 <div class="profile-details">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered table-striped">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th class="text-right" style="width: 30%;"><strong>Name:</strong></th>
-                                                                    <td class="text-left pl-3" style="width: 70%;"><%= user[0].userName %></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="text-right" style="width: 30%;"><strong>Email:</strong></th>
-                                                                    <td class="text-left pl-3" style="width: 70%;"><%= user[0].email %></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="text-right" style="width: 30%;"><strong>Mobile:</strong></th>
-                                                                    <td class="text-left pl-3" style="width: 70%;"><%= user[0].mobile %></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-2"><strong>Name:</strong> <%= user[0].userName %></div>
+                                                            <div class="mb-2"><strong>Email:</strong> <%= user[0].email %></div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-2"><strong>Mobile:</strong> <%= user[0].mobile %></div>
+                                                        </div>
                                                     </div>
-                                                    
                                                 </div>
                                                 <% } else { %>
                                                 <p class="text-center text-muted">No user information available.</p>
                                                 <% } %>
                                             </div>
                                         </div>
-                                    </div><!-- .End .tab-pane -->
+                                    </div>
+                                    
+                                    
                                     
 
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="#" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+								   <!-- Tab for Orders -->
+                                   <div class="tab-pane fade show" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                    <% if (orderDetails && orderDetails.length > 0) { %>
+                                        
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="card-title">Your Orders</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Product</th>
+                                                                        <th>Image</th>
+                                                                        <th>Price</th>
+                                                                        <th>Quantity</th>
+                                                                        <th>Status</th>
+                                                                        <th>Delivery Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <% orderDetails.forEach(order => { %>
+                                                                        <% if (order.products.length > 0) { %>
+                                                                    <% order.products.forEach(product => { %>
+                                                                        <tr>
+                                                                            <td><%= product.productId.name %></td>
+                                                                            <td><img src="<%= product.productId.images[0] %>" alt="<%= product.productId.name %>" class="img-thumbnail" style="max-width: 100px; max-height: 70px;"></td>
+                                                                            <td> ₹<%= product.price %></td>
+                                                                            <td><%= product.quantity %></td>
+                                                                            <td>
+                                                                                <% if (product.orderStatus === 'Pending') { %>
+                                                                                    <span class="badge bg-warning text-dark"><%= product.orderStatus %></span>
+                                                                                <% } else if (product.orderStatus === 'Processing') { %>
+                                                                                    <span class="badge bg-info text-white"><%= product.orderStatus %></span>
+                                                                                <% } else if (product.orderStatus === 'Shipped') { %>
+                                                                                    <span class="badge bg-primary"><%= product.orderStatus %></span>
+                                                                                <% } else if (product.orderStatus === 'Delivered') { %>
+                                                                                    <span class="badge bg-success"><%= product.orderStatus %></span>
+                                                                                <% } else if (product.orderStatus === 'Cancelled' || product.orderStatus === 'Returned') { %>
+                                                                                    <span class="badge bg-danger"><%= product.orderStatus %></span>
+                                                                                <% } %>
+                                                                            </td>
+                                                                            <td><%= new Date(product.deliveryDate).toLocaleDateString() %></td>
+                                                                        </tr>
+                                                                    <% }) %>
+                                                                <% } %>
+                                                             <% }) %>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                    <% } else { %>
+                                        <div class="alert alert-info" role="alert">
+                                            No orders found.
+                                        </div>
+                                    <% } %>
+                                </div><!-- .End .tab-pane -->
+
+
+
+
+                                    
+
+
+
+
 
 								    <!-- <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
@@ -222,7 +278,8 @@
                                                                     Street: <%= data.street %><br>
                                                                     Landmark: <%= data.landmark %><br>
                                                                     Alternate Phone: <%= data.phone1 %><br>
-                                                                    <a href="#">Edit <i class="icon-edit"></i></a></p>
+                                                                    <a href="#" class="edit-address" data-toggle="modal" data-target="#editAddressModal">Edit <i class="icon-edit"></i></a>
+                                                                </p>
                                                             </div><!-- End .card-body -->
                                                         </div><!-- End .card-dashboard -->
                                                     <% }) %>
@@ -439,7 +496,77 @@
     </div>
 </div><!-- .End .modal -->
 
-</body>
+
+
+<!-- Edit Address Modal -->
+<div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editAddressForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editName" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editPhone" placeholder="Phone" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editPincode" placeholder="Pincode" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editState" placeholder="State" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editCity" placeholder="City" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editStreet" placeholder="Street" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editLandmark" placeholder="Landmark">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="editAlternatePhone" placeholder="Alternate Phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveAddressBtn">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.edit-address').forEach(editBtn => {
+        editBtn.addEventListener('click', event => {
+            const button = event.currentTarget;
+            const modal = document.getElementById('editAddressModal');
+
+            // Populate the modal fields with the existing data
+            document.getElementById('editName').value = button.getAttribute('data-name');
+            document.getElementById('editPhone').value = button.getAttribute('data-phone');
+            document.getElementById('editEmail').value = button.getAttribute('data-email');
+            document.getElementById('editPincode').value = button.getAttribute('data-pincode');
+            document.getElementById('editState').value = button.getAttribute('data-state');
+            document.getElementById('editCity').value = button.getAttribute('data-city');
+            document.getElementById('editStreet').value = button.getAttribute('data-street');
+            document.getElementById('editLandmark').value = button.getAttribute('data-landmark');
+            document.getElementById('editAlternatePhone').value = button.getAttribute('data-alternate-phone');
+        });
+    });
+</script>
+
 
 
 <!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
