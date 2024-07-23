@@ -171,7 +171,7 @@ const addCategory = async(req,res)=>{
 const updateCategory = async(req,res)=>{
     try {
         const {categoryId,editName,editDescription}=req.body
-        console.log(editDescription,' is editedDescription');
+        // console.log(editDescription,' is editedDescription');
         // console.log(categoryId,'id',editName,'editName',editDescription,'editedDescription');
         const currentCategory = await categoryModel.findOne({_id:categoryId})
         // console.log(currentCategory.description,' is the description ');

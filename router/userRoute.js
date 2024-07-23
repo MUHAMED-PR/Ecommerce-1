@@ -96,6 +96,7 @@ userRoute.get('/ordersListed',auth.isLogin,userController.userProfile)
 userRoute.get('/userProfile', auth.isLogin, userController.userProfile)
 //Address
 userRoute.post('/addAddress', auth.isLogin, addressController.addingAddress)
+userRoute.post('/editAddress',auth.isLogin,addressController.editAddress)
 //Change password
 userRoute.post('/changePassword', auth.isLogin, userController.changePassword)
 

@@ -112,102 +112,92 @@
         </header><!-- End .header -->
 
         <main class="main">
-        	<div class="page-header text-center" style="height: 10px;  background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container-fluid">
-        			<h3 class="page-title">PRODUCTS</h3>
-        		</div><!-- End .container-fluid -->
-        	</div><!-- End .page-header -->
+            <div class="page-header text-center" style="height: 10px; background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container-fluid">
+                    <h3 class="page-title">PRODUCTS</h3>
+                </div><!-- End .container-fluid -->
+            </div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container-fluid">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item"><a href="#">Products</a></li>
-                       
                     </ol>
                 </div><!-- End .container-fluid -->
             </nav><!-- End .breadcrumb-nav -->
-
+        
             <div class="page-content">
                 <div class="container-fluid">
-        			<div class="toolbox">
-        				<div class="toolbox-left">
+                    <div class="toolbox">
+                        <div class="toolbox-left">
                             <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
-        				</div><!-- End .toolbox-left -->
-
+                        </div><!-- End .toolbox-left -->
+        
                         <div class="toolbox-center">
                             <div class="toolbox-info">
-                                Showing <span>12 of 56</span> Products
+                                Showing Products
                             </div><!-- End .toolbox-info -->
                         </div><!-- End .toolbox-center -->
-
-        				<div class="toolbox-right">
-        					<div class="toolbox-sort">
-        						<label for="sortby">Sort by:</label>
-        						<div class="select-custom">
-									<select name="sortby" id="sortby" class="form-control">
-										<option value="popularity" selected="selected">Most Popular</option>
-										<option value="rating">Most Rated</option>
-										<option value="date">Date</option>
-									</select>
-								</div>
-        					</div><!-- End .toolbox-sort -->
-        				</div><!-- End .toolbox-right -->
-        			</div><!-- End .toolbox -->
-
+        
+                        <div class="toolbox-right">
+                            <div class="toolbox-sort">
+                                <label for="sortby">Sort by:</label>
+                                <div class="select-custom">
+                                    <select name="sortby" id="sortby" class="form-control">
+                                        <option value="alphabetical" selected="selected">Alphabetical</option>
+                                        <option value="lowToHigh">Price: Low to High</option>
+                                        <option value="highToLow">Price: High to Low</option>
+                                        <option value="latest">Latest</option>
+                                    </select>
+                                </div>
+                            </div><!-- End .toolbox-sort -->
+                        </div><!-- End .toolbox-right -->   
+                    </div><!-- End .toolbox -->
+        
                     <div class="products">
                         <div class="row">
-                            <% if(products.length>0){ %>
-                                <% products.forEach(products=>{  %>
+                            <% if(products.length > 0) { %>
+                                <% products.forEach(product => { %>
                                     <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                         <div class="product">
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
-                                                <a href="/productDetails/<%= products._id %>">
-                                                    <img src="<%= products.images[0] %>" alt="Product image" class="product-image">
+                                                <a href="/productDetails/<%= product._id %>">
+                                                    <img src="<%= product.images[0] %>" alt="Product image" class="product-image">
                                                 </a>
-        
                                                 <div class="product-action-vertical">
                                                     <a href="/addToWishlist" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                 </div><!-- End .product-action -->
-        
-                                                <!-- <div class="product-action action-icon-top">
-                                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
-                                                    <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
-                                                </div> -->
-                                                <!-- End .product-action -->
                                             </figure><!-- End .product-media -->
-        
                                             <div class="product-body">
-                                                <div class="product-cat">
-                                                    <!-- <a href="#">Women</a> -->
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href=""><%= products.name %></a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href=""><%= product.name %></a></h3><!-- End .product-title -->
                                                 <div class="product-price">
-                                                    ₹<%= products.price %>
+                                                    ₹<%= product.price %>
                                                 </div><!-- End .product-price -->
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 0 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-        
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
-                                                </div><!-- End .product-nav -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
-                                    <% }) %>
-                                <% } %>
-
-                            
-                        <div class="load-more-container text-center">
-                            <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
-                        </div><!-- End .load-more-container -->
+                                <% }) %>
+                            <% } %>
+                        </div><!-- End .row -->
                     </div><!-- End .products -->
+        
+                    <!-- Pagination Controls -->
+                    <div class="d-flex justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i %>&sortby=<%= sortBy %>"><%= i %></a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </nav>
+                    </div><!-- End .d-flex -->
+                </div><!-- End .container-fluid -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+        
 
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
                     <aside class="sidebar-shop sidebar-filter">
@@ -574,7 +564,15 @@
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
-   
+
+
+    <script>
+        document.getElementById('sortby').addEventListener('change', function() {
+            var sortBy = this.value;
+            window.location.href = `/productPage?sortby=${sortBy}`;
+        });
+        </script>
+        
 
 
     <!-- Plugins JS File -->

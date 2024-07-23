@@ -490,15 +490,24 @@ const changePassword = async(req,res)=>{
     }
 }
 
-const loadCheckout = async(req,res)=>{
+const loadCheckout = async (req, res) => {
     try {
-        const cart = await cartModel.findOne({userId:req.session.user_id}).populate('product.productId').exec();
-        const addressDoc = await addressModel.find({userId:req.session.user_id}) 
-        res.render('user/checkout',{addressDoc,cart})
+        const cart = await cartModel.find({ userId: req.session.user_id }).populate('product.productId').exec();
+        const addressDoc = await addressModel.find({ userId: req.session.user_id });
+
+        // Check if the cart is empty
+        if (cart.length > 0) {
+            res.render('user/checkout', { addressDoc, cart });
+        } else {
+            res.send('No items in your cart.');
+        }
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.status(500).send('An error occurred while loading the checkout page.');
     }
-}
+};
+
+
 
 
 

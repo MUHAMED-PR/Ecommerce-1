@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
     quantity:{
         type:Number,
         required:true
-    },
+    },  
     images:{
         type:Array  
     },
@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema({
         // type:String,
         required:true,
         
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now
     },
     is_status:{
         type:Boolean,

@@ -268,7 +268,7 @@
                                                     <% addressDoc[0].address.forEach((data, i) => { %>
                                                         <div class="card card-dashboard">
                                                             <div class="card-body">
-                                                                <h6><%= ++i %></h6>
+                                                                <h6><%= i + 1 %></h6>
                                                                 <p>User Name: <%= data.name %><br>
                                                                     Phone: <%= data.phone %><br>
                                                                     Email: <%= data.email %><br>
@@ -278,26 +278,28 @@
                                                                     Street: <%= data.street %><br>
                                                                     Landmark: <%= data.landmark %><br>
                                                                     Alternate Phone: <%= data.phone1 %><br>
-                                                                    <a href="#" class="edit-address" data-toggle="modal" data-target="#editAddressModal">Edit <i class="icon-edit"></i></a>
-                                                                </p>
+                                                                    <a href="#" class="edit-address" data-toggle="modal" data-target="#editAddressModal" 
+                                                                       data-id="<%= data._id %>"
+                                                                       data-name="<%= data.name %>" 
+                                                                       data-phone="<%= data.phone %>" 
+                                                                       data-email="<%= data.email %>" 
+                                                                       data-pincode="<%= data.pincode %>" 
+                                                                       data-state="<%= data.state %>" 
+                                                                       data-city="<%= data.city %>" 
+                                                                       data-street="<%= data.street %>" 
+                                                                       data-landmark="<%= data.landmark %>" 
+                                                                       data-alternate-phone="<%= data.phone1 %>">Edit <i class="icon-edit"></i></a></p>
                                                             </div><!-- End .card-body -->
                                                         </div><!-- End .card-dashboard -->
                                                     <% }) %>
+                                                    
                                                 </div><!-- End .col-lg-6 -->
                                             </div><!-- End .row -->
                                         <% } else { %>
                                             <p>No addresses found. Please add a new address.</p>
                                         <% } %>
                                     </div><!-- .End .tab-pane -->
-                                                                        
-                                    <div class="tab-pane fade" id="tab-Password" role="tabpanel" aria-labelledby="tab-Password-link">
-                                        <p>Set new password!</p>
-                                        <!-- Button to trigger modal -->
-                                        <a href="#" class="btn btn-outline-primary-2" data-toggle="modal" data-target="#changePasswordModal">
-                                            <span>Change Password</span>
-                                            <i class="icon-long-arrow-right"></i>
-                                        </a>
-                                    </div><!-- .End .tab-pane -->
+                                    
 
 								   
 								</div>
@@ -500,7 +502,7 @@
 
 <!-- Edit Address Modal -->
 <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
@@ -510,38 +512,39 @@
             </div>
             <div class="modal-body">
                 <form id="editAddressForm">
+                    <input type="hidden" id="editAddressId" name="addressId">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editName" placeholder="Name" required>
+                        <input type="text" class="form-control" id="editName" name="name" placeholder="Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editPhone" placeholder="Phone" required>
+                        <input type="text" class="form-control" id="editPhone" name="phone" placeholder="Phone" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-control" id="editEmail" placeholder="Email" required>
+                        <input type="email" class="form-control" id="editEmail" name="email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editPincode" placeholder="Pincode" required>
+                        <input type="text" class="form-control" id="editPincode" name="pincode" placeholder="Pincode" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editState" placeholder="State" required>
+                        <input type="text" class="form-control" id="editState" name="state" placeholder="State" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editCity" placeholder="City" required>
+                        <input type="text" class="form-control" id="editCity" name="city" placeholder="City" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editStreet" placeholder="Street" required>
+                        <input type="text" class="form-control" id="editStreet" name="street" placeholder="Street" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editLandmark" placeholder="Landmark">
+                        <input type="text" class="form-control" id="editLandmark" name="landmark" placeholder="Landmark">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="editAlternatePhone" placeholder="Alternate Phone">
+                        <input type="text" class="form-control" id="editAlternatePhone" name="alternatePhone" placeholder="Alternate Phone">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="saveAddressBtn">Save</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveAddressBtn">Save changes</button>
             </div>
         </div>
     </div>
@@ -551,9 +554,9 @@
     document.querySelectorAll('.edit-address').forEach(editBtn => {
         editBtn.addEventListener('click', event => {
             const button = event.currentTarget;
-            const modal = document.getElementById('editAddressModal');
-
+            
             // Populate the modal fields with the existing data
+            document.getElementById('editAddressId').value = button.getAttribute('data-id');
             document.getElementById('editName').value = button.getAttribute('data-name');
             document.getElementById('editPhone').value = button.getAttribute('data-phone');
             document.getElementById('editEmail').value = button.getAttribute('data-email');
@@ -565,8 +568,80 @@
             document.getElementById('editAlternatePhone').value = button.getAttribute('data-alternate-phone');
         });
     });
+
+    document.getElementById('saveAddressBtn').addEventListener('click', async () => {
+        const form = document.getElementById('editAddressForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        console.log('Form Data:', data); // Log the form data to verify it
+
+        try {
+            const response = await fetch('/editAddress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            console.log('Response:', result); // Log the response to verify it
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: result.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                }).then(() => {
+                    // Reload the page or specific tab
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message,
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while updating the address.',
+            });
+        }
+    });
 </script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+
+<style>
+    .modal-sm {
+        max-width: 500px;
+    }
+
+    .modal-body .form-group {
+        margin-bottom: 15px;
+    }
+
+    .modal-body .form-control {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .modal-footer .btn {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+</style>
+
+
+
+</body>
 
 
 <!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
