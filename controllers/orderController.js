@@ -1,6 +1,11 @@
 const orderModel = require('../models/order');
 const cartModel = require('../models/cart');
 const addressModel = require('../models/address');
+const { ObjectId } = require('mongodb')
+const mongoose=require('mongoose')
+
+
+
 
 const placeOrder = async (req, res) => {
     try {
@@ -50,6 +55,7 @@ const placeOrder = async (req, res) => {
 
                 // Clear the user's cart
                 await cartModel.updateOne({ userId: user_id }, { $set: { product: [] } });
+                console.log("isthe order Placing :",orderPlacing)
 
                 res.status(200).json({ message: 'Order placed successfully' });
             } else {
@@ -81,8 +87,46 @@ const orderDetails = async(req,res)=>{
         console.log(error);
     }
 }
+
+const adminOrderDetails = async(req,res)=>{
+    try {
+        
+        const orders = await orderModel.find().populate('products.productId').populate('userId').exec() 
+        // console.log(orders,' is the orders ')
+        res.render('admin/order',{orders})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const changeOrderStatus = async (req, res) => {
+    try {
+        const { orderId, productId, status } = req.query;
+        console.log(orderId, productId, status);
+        // console.log(typeof orderId, ' is the type of orderId');
+
+        const updateStatus = await orderModel.findOneAndUpdate(
+            { _id: orderId, 'products.productId': productId },
+            { $set: { 'products.$.orderStatus': status } },
+            { new: true }
+        );
+        console.log(updateStatus, ' is the updatedStatus');
+
+        if (updateStatus) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Order or Product not found' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+};
+
 module.exports = {
     placeOrder,
     orderSuccessfulPage,
-    orderDetails
+    orderDetails,
+    adminOrderDetails,
+    changeOrderStatus
 };

@@ -50,6 +50,7 @@ const adminVerify = async(req,res)=>{
 
 const adminLogin = async(req,res)=>{
     try{
+        
         res.render('admin/login')
     }catch(error){
         console.log(error)
@@ -59,6 +60,7 @@ const adminLogin = async(req,res)=>{
 
 const dashboard = async(req,res,next)=>{
     try {
+        // console.log(req.session,' is the session contents   ')
         res.render('admin/dashboard')
     } catch (error) {
         console.log(error);
@@ -378,6 +380,7 @@ const productListing = async(req,res)=>{
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 
 

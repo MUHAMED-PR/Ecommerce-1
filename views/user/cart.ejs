@@ -364,28 +364,66 @@
 
 		<script>
 			function updateTotals() {
-				// Calculate subtotal
-				let subtotal = 0;
-				const productPrices = document.querySelectorAll('.total-col');
-		
-				productPrices.forEach(priceElem => {
-					subtotal += parseFloat(priceElem.innerHTML.replace('₹', '').trim()) || 0;
-				});
-		
-				// Update subtotal
-				document.getElementById('subTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
-		
-				// Calculate shipping
-				const shippingElem = document.querySelector('input[name="shipping"]:checked');
-				const shipping = shippingElem ? parseFloat(shippingElem.parentElement.nextElementSibling.innerHTML.replace('₹', '').trim()) || 0 : 0;
-		
-				// Update total
-				document.getElementById('summaryTotal').innerHTML = `₹${(subtotal + shipping).toFixed(2)}`;
-			}
-		
-			document.querySelectorAll('input[name="shipping"]').forEach(radio => {
-				radio.addEventListener('change', updateTotals);
-			});
+    // Calculate subtotal
+    let subtotal = 0;
+    const productPrices = document.querySelectorAll('.total-col');
+
+    productPrices.forEach(priceElem => {
+        subtotal += parseFloat(priceElem.innerHTML.replace('₹', '').trim()) || 0;
+    });
+
+    // Update subtotal
+    document.getElementById('subTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
+
+    // Get the selected shipping option
+    const shippingElem = document.querySelector('input[name="shipping"]:checked');
+    
+    // Debugging logs
+    console.log("Shipping Element:", shippingElem);
+
+    // Check if shippingElem is null
+    if (!shippingElem) {
+        console.log("No shipping option selected.");
+        // You may set default shipping cost here if needed
+        document.getElementById('summaryTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
+        return;
+    }
+
+    // Debugging logs
+    console.log("Shipping Element Parent:", shippingElem.parentElement);
+    console.log("Shipping Element Sibling:", shippingElem.parentElement.nextElementSibling);
+
+    // Get the shipping cost from the sibling element
+    const shippingCostText = shippingElem.parentElement.nextElementSibling ? shippingElem.parentElement.nextElementSibling.innerHTML : '₹0.00';
+    const shipping = parseFloat(shippingCostText.replace('₹', '').trim()) || 0;
+
+    // Debugging log
+    console.log("Shipping Cost Text:", shippingCostText);
+    console.log("Parsed Shipping Cost:", shipping);
+
+    // Update total
+    document.getElementById('summaryTotal').innerHTML = `₹${(subtotal + shipping).toFixed(2)}`;
+}
+
+// Ensure the function is called when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    updateTotals();
+});
+
+// Add event listeners to shipping radio buttons
+document.querySelectorAll('input[name="shipping"]').forEach(radio => {
+    radio.addEventListener('change', updateTotals);
+});
+
+// Add event listeners to quantity input fields
+document.querySelectorAll('.cart-product-quantity input').forEach(input => {
+    input.addEventListener('change', function() {
+        const index = this.id.split('-')[1];
+        const productId = this.getAttribute('data-product-id');
+        quantity(index, productId);  // Update quantities
+    });
+});
+
 		
 			function remove(productId) {
 				const cartElement = document.getElementById('cartElement');
@@ -431,7 +469,7 @@
 			});
 		
 			// Initial call to set totals
-			updateTotals();
+			// updateTotals();
 		</script>
 		
 		

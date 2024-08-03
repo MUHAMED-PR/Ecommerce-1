@@ -3,6 +3,7 @@ const adminRoute = express.Router();
 const path = require('path')
 const session = require('express-session')
 const adminController = require('../controllers/adminController')
+const orderController = require('../controllers/orderController')
 const app = express()
 const adminAuth = require('../middleware/adminAuth')
 const multer = require('multer')
@@ -32,15 +33,18 @@ adminRoute.get('/products',adminAuth.isLogin,adminController.products)
 adminRoute.get('/category',adminAuth.isLogin,adminController.category)
 adminRoute.post('/login',adminController.adminVerify)
 adminRoute.get('/blockUser',adminController.UserBlock)
+//category
 adminRoute.get('/loadaddCategory',adminController.loadaddCategory)
 adminRoute.post('/addCategory',adminController.addCategory)
 adminRoute.post('/updateCategory',adminController.updateCategory)
 adminRoute.post('/listCategory',adminController.categoryListing)
+//product
 adminRoute.get('/loadAddProduct',adminController.loadAddProduct)
 adminRoute.post('/addProduct', upload.array('images', 4),adminController.addProduct)
 adminRoute.get('/editProduct',adminController.loadEditProduct)
 adminRoute.post('/editProduct/:id',adminController.updateProduct)
 adminRoute.post('/listProduct',adminController.productListing)
+
 
 
 

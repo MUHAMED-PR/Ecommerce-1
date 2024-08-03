@@ -30,7 +30,7 @@
                     </form>
                 </div><!-- End .checkout-discount -->
 
-                <form id="checkout-form" action="/placeOrder" method="post">
+                <form id="checkout-form" action="/order/placeOrder" method="post">
                     <div class="row">
                         <div class="col-lg-8">
                             <% if(addressDoc && addressDoc[0].address.length > 0){  %>
@@ -67,6 +67,7 @@
                             <div class="summary">
                                 <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
                                 <% let total = cart.product.reduce((acc, data) => acc + (data.quantity * data.productId.price), 0) %>
+                                <% console.log(total,' ') %>
 
                                 <table class="table table-summary">
                                     <tbody>
@@ -153,10 +154,10 @@
                 data[key] = value;
             });
     
-            axios.post('/placeOrder', data)
+            axios.post('/order/placeOrder', data)
                 .then(response => {
                     if (response.status === 200) {
-                        window.location.href = '/orderSuccesfulPage';
+                        window.location.href = '/order/orderSuccesfulPage';
                     } else {
                         alert('There was an error placing the order!');
                     }

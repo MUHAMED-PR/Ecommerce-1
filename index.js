@@ -35,9 +35,11 @@ app.use(flash());
 
 const userRoute = require("./router/userRoute");
 const adminRoute = require('./router/adminRoute');
+const orderRoute = require('./router/order')
 
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
+app.use('/order',orderRoute);
 
 app.listen(3000, () => {
     console.log(`server is listening at http://localhost:3000`);

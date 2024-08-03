@@ -85,11 +85,7 @@ userRoute.patch('/ProductQuantity', auth.isLogin, cartController.productQuantity
 
 //checkout
 userRoute.get('/checkoutPage', auth.isLogin, userController.loadCheckout)
-//Order Placed
-userRoute.post('/placeOrder', auth.isLogin, orderController.placeOrder)
-userRoute.get('/orderSuccesfulPage', auth.isLogin, orderController.orderSuccessfulPage)
-userRoute.get('/orderDetailsPage',auth.isLogin,orderController.orderDetails)
-userRoute.get('/ordersListed',auth.isLogin,userController.userProfile)
+
 
 
 //User Profile

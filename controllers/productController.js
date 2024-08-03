@@ -5,7 +5,7 @@ const loadProductPage = async (req, res) => {
     try {
         const sortBy = req.query.sortby || 'alphabetical';
         const page = parseInt(req.query.page) || 1;
-        const itemsPerPage = 8;
+        const itemsPerPage = 4;
         const skip = (page - 1) * itemsPerPage;
 
         let sortCriteria;
