@@ -11,6 +11,7 @@ const productController = require('../controllers/productController')
 const cartController = require('../controllers/cartController')
 const addressController = require('../controllers/addressController')
 const orderController = require('../controllers/orderController')
+const couponController = require('../controllers/couponController')
 
 
 
@@ -102,7 +103,8 @@ userRoute.get('/addToWishlist/:productID', auth.isLogin, userController.addToWis
 userRoute.get('/removeWishlist/:productID', auth.isLogin, userController.removeWishlist)
 userRoute.get('/moveToCart/:productID',auth.isLogin,userController.moveToCart)
 
-
+//coupon
+userRoute.get('/availableCoupons',auth.isLogin,couponController.availabeCoupons)
 
 module.exports = userRoute;
 

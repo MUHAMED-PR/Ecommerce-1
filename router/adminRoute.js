@@ -4,6 +4,7 @@ const path = require('path')
 const session = require('express-session')
 const adminController = require('../controllers/adminController')
 const orderController = require('../controllers/orderController')
+const couponController = require('../controllers/couponController')
 const app = express()
 const adminAuth = require('../middleware/adminAuth')
 const multer = require('multer')
@@ -45,8 +46,13 @@ adminRoute.get('/editProduct',adminController.loadEditProduct)
 adminRoute.post('/editProduct/:id',adminController.updateProduct)
 adminRoute.post('/listProduct',adminController.productListing)
 
-
-
+// coupon
+adminRoute.get('/loadCouponPage',adminAuth.isLogin,couponController.loadAdminCoupon);
+adminRoute.get('/addCouponPage',adminAuth.isLogin,couponController.loadAddCoupon);
+adminRoute.post('/addingNewCoupon',adminAuth.isLogin,couponController.addCoupon);
+adminRoute.delete('/delete/:id',adminAuth.isLogin,couponController.deleteCoupon)
+adminRoute.get('/getCoupon/:id', adminAuth.isLogin,couponController.getCouponForEdit);
+adminRoute.post('/editCoupon/:id', adminAuth.isLogin,couponController.updateCoupon);
 
 
 

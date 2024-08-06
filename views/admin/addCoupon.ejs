@@ -1,0 +1,118 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<!-- Custom CSS for Toggle Switch -->
+<style>
+    .form-switch .form-check-input {
+        width: 2.5em;
+        height: 1.25em;
+        margin-left: -2.5em;
+    }
+    .form-switch .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    .form-switch .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    .form-switch .form-check-input:checked:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+    }
+    .form-switch .form-check-input:checked::before {
+        transform: translateX(1.25em);
+    }
+</style>
+
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <!-- Layout container -->
+        <div class="layout-page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+                <div class="card mt-2 ms-4 me-4">
+                    <h5 class="card-header">Add Coupon</h5>
+                    <div class="card-body">
+                        <!-- Add Coupon Form -->
+                        <form id="addCouponForm" action="/admin/addingNewCoupon" method="post">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="couponName" class="form-label">Coupon Name</label>
+                                    <input type="text" class="form-control" id="couponName" name="couponName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="couponCode" class="form-label">Coupon Code</label>
+                                    <input type="text" class="form-control" id="couponCode" name="couponCode" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="count" class="form-label">Count</label>
+                                    <input type="number" class="form-control" id="count" name="count" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="expiry" class="form-label">Expiry Date</label>
+                                    <input type="date" class="form-control" id="expiry" name="expiry" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="discountAmount" class="form-label">Discount Amount</label>
+                                    <input type="number" class="form-control" id="discountAmount" name="discountAmount">
+                                </div> 
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Coupon</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+    </div>
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+</div>
+<!-- / Layout wrapper -->
+
+<!-- SweetAlert2 library -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    document.getElementById('addCouponForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        fetch('/admin/addingNewCoupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("data in the .then:",data)
+            if (data.success) {
+                Swal.fire('Success!', 'Coupon added successfully.', 'success');
+                document.getElementById('addCouponForm').reset();
+            } else {
+                Swal.fire('Error!', 'Failed to add coupon. Please try again.', 'error');
+            }
+        })
+        .catch(() => {
+            Swal.fire('Error!', 'Failed to add coupon. Please try again.', 'error');
+        });
+    });
+</script> -->
+
+<%- include('../layouts/adminFooter.ejs') %>

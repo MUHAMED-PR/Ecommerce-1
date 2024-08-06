@@ -40,6 +40,12 @@ const orderSchema = new mongoose.Schema({
         required: true,
         enum: ['Credit Card', 'Razorpay', 'Paypal', 'Cash On Delivery','Wallet']
     },
+    paymentStatus:{
+        type: String,
+        required : true,
+        enum : ['Paid', 'Not Paid']
+
+    },
     shippingAddress: {
         phone: { type: Number, required: true },
         phone1: { type: Number },

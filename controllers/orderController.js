@@ -3,19 +3,27 @@ const cartModel = require('../models/cart');
 const addressModel = require('../models/address');
 const { ObjectId } = require('mongodb')
 const mongoose=require('mongoose')
+const Razorpay = require('razorpay');
 
 
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
 
 const placeOrder = async (req, res) => {
     try {
         const { user_id } = req.session;
         const { addressId, paymentOption, total } = req.body;
-        // console.log('hello inam reached here!!!')
+
+        if (paymentOption === 'Cash On Delivery' && total > 10000) {
+            return res.status(400).json({ message: 'Cash on Delivery is not available for orders above ₹10,000' });
+        }
 
         const userCart = await cartModel.findOne({ userId: user_id }).populate('product.productId').exec();
-        // console.log(userCart,' is hte userCart .....')
-        if (userCart.product.length>0) {
+
+        if (userCart.product.length > 0) {
             const userAddress = await addressModel.findOne({
                 userId: user_id,
                 'address._id': addressId
@@ -24,7 +32,7 @@ const placeOrder = async (req, res) => {
             });
 
             if (userAddress) {
-                const address = userAddress.address[0]; // Get the matched address from the array
+                const address = userAddress.address[0];
                 const addressIs = {
                     phone: address.phone,
                     phone1: address.phone1,
@@ -46,18 +54,37 @@ const placeOrder = async (req, res) => {
                     userId: user_id,
                     products: products,
                     paymentMethod: paymentOption,
+                    paymentStatus: paymentOption === 'Cash On Delivery' ? 'Not Paid' : 'Paid',
                     shippingAddress: addressIs,
                     totalAmount: total
                 });
 
                 const saveddata = await orderPlacing.save();
-                // console.log(saveddata,'is the saved data...')
 
                 // Clear the user's cart
                 await cartModel.updateOne({ userId: user_id }, { $set: { product: [] } });
-                console.log("isthe order Placing :",orderPlacing)
 
-                res.status(200).json({ message: 'Order placed successfully' });
+                if (paymentOption === 'Razorpay') {
+                    const options = {
+                        amount: total * 100, // amount in smallest currency unit
+                        currency: "INR",
+                        receipt: `order_rcptid_${saveddata._id}`
+                    };
+
+                    try {
+                        const order = await razorpayInstance.orders.create(options);
+                        console.log('this is razorpay integation...................')
+                        res.status(200).json({ message: 'Order placed successfully', orderId: order.id, keyId: process.env.RAZORPAY_KEY_ID });
+                    } catch (error) {
+                        console.error(error);
+                        res.status(500).json({ message: 'Error creating Razorpay order' });
+                    }
+                } else {
+                    // res.status(200).json({ message: 'Order placed successfully' });
+                    console.log('this is cash on delivery integratoin ');
+                    
+                    res.redirect('/order/orderSuccesfulPage')
+                }
             } else {
                 res.status(404).json({ message: 'Address not found' });
             }
@@ -69,6 +96,7 @@ const placeOrder = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 const orderSuccessfulPage = async(req,res)=>{
     try {
