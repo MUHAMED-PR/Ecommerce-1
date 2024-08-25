@@ -6,6 +6,7 @@ const addressModel = require('../models/address')
 const cartModel = require('../models/cart')
 const wishlistModel = require('../models/wishlist')
 const orderModel = require('../models/order')
+const couponModel = require('../models/coupon')
 const bcrypt = require('bcrypt')
 const { tryCatch } = require('engine/utils')
 const nodemailer = require('nodemailer')
@@ -435,22 +436,35 @@ const changeForgetPassword = async (req, res) => {
 
 const userProfile = async(req,res)=>{
     try {
-        // let address = await addressModel.find()
-        // console.log(address,'it is dddress')
+        
         const {user_id} = req.session
         // console.log(user_id) 
         const user = await users.find({_id:user_id})
         const addressDoc = await addressModel.find({userId:user_id})
         const orderDetails = await orderModel.find({userId:user_id}).populate('products.productId').exec()
+        // console.log("userdetaials:",user," address details:",addressDoc," orderDetais:",orderDetails)
+        
+        // console.log("what is inside the params",req.params)
+        const orderId = req.query.id
+        // console.log('queeeeeeeeeeeery  id:::::::::',orderId);
+        
+        if(orderId){
+
+            req.flash('ordersuccess','open')
+            return res.redirect('/userProfile');
+        }
+        const orderMessage = req.flash('ordersuccess')
+        // console.log('orderMessage:::::::::::::::::',orderMessage);
+        
+
         if(addressDoc){
             if(orderDetails){
-                res.render('user/userProfile',{user,addressDoc,orderDetails})
+                res.render('user/userProfile',{user,addressDoc,orderDetails,orderMessage})
             }else{
-                res.render('user/userProfile',{user,addressDoc,orderDetails:[]})
+                res.render('user/userProfile',{user,addressDoc,orderDetails:[],orderMessage})
             }
-
         }else{
-            res.render('user/userProfile',{user,addressDoc:[],orderDetails:[]})
+            res.render('user/userProfile',{user,addressDoc:[],orderDetails:[],orderMessage})
         }
         
         // console.log(orderDetails.products,' is the order model')
@@ -493,11 +507,19 @@ const changePassword = async(req,res)=>{
 const loadCheckout = async (req, res) => {
     try {
         const cart = await cartModel.findOne({ userId: req.session.user_id }).populate('product.productId').exec();
-        const addressDoc = await addressModel.find({ userId: req.session.user_id });
+        const addressDoc = await addressModel.findOne({ userId: req.session.user_id });
+        // console.log("isht e cart available:",cart)
+        // console.log("address is :",addressDoc.address)
+
+        const coupon = await couponModel.find({active:true})
 
         // Check if the cart is empty
         if (cart && cart.product && cart.product.length > 0) {
-            res.render('user/checkout', { addressDoc, cart });
+            if(addressDoc && addressDoc.address.length > 0){
+                res.render('user/checkout', { addressDoc, cart,coupon });
+            }else{
+                res.send('No address found!')
+            }
         } else {
             res.send('No items in your cart.');
         }

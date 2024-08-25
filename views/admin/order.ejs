@@ -242,7 +242,7 @@
         modal.show();
 
         // Fetch order details
-        fetch(`/order/details/${orderId}/${productId}`)
+        fetch(`/order/viewOrderDetails/${orderId}/${productId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

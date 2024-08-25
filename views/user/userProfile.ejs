@@ -4,6 +4,7 @@
 
 
             <div class="header-middle sticky-header">
+                <p hidden id="openOrderStatus"><%=orderMessage%></p>
                 <div class="container">
                     <div class="header-left">
                         <button class="mobile-menu-toggler">
@@ -167,7 +168,7 @@
                                     
 
 								   <!-- Tab for Orders -->
-                                   <div class="tab-pane fade show" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                   <div class="tab-pane fade show " id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
                                     <% if (orderDetails && orderDetails.length > 0) { %>
                                         
                                                 <div class="card">
@@ -179,19 +180,24 @@
                                                             <table class="table table-striped">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>No.</th>
                                                                         <th>Product</th>
                                                                         <th>Image</th>
                                                                         <th>Price</th>
                                                                         <th>Quantity</th>
                                                                         <th>Status</th>
                                                                         <th>Delivery Date</th>
+                                                                        <th></th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <% orderDetails.forEach(order => { %>
+                                                                      
                                                                         <% if (order.products.length > 0) { %>
-                                                                    <% order.products.forEach(product => { %>
+                                                                    <% order.products.forEach((product,index) => { %>
+                                                                       
                                                                         <tr>
+                                                                            <td><%= index+1 %></td>
                                                                             <td><%= product.productId.name %></td>
                                                                             <td><img src="<%= product.productId.images[0] %>" alt="<%= product.productId.name %>" class="img-thumbnail" style="max-width: 100px; max-height: 70px;"></td>
                                                                             <td> ₹<%= product.price %></td>
@@ -210,6 +216,7 @@
                                                                                 <% } %>
                                                                             </td>
                                                                             <td><%= new Date(product.deliveryDate).toLocaleDateString() %></td>
+                                                                            <td><a href = <%= `/order/viewDetails?orderId=${order._id}&productId=${product._id}` %> >View Details</a></td>
                                                                         </tr>
                                                                     <% }) %>
                                                                 <% } %>
@@ -534,7 +541,21 @@
     </div>
 </div>
 
+
+
+    
+
 <script>
+let openstatus=document.getElementById('openOrderStatus');
+    if(openstatus.textContent){
+        setTimeout(() => {
+         const orderbutton=document.getElementById('tab-orders-link');
+            orderbutton.click()
+
+        }, 500);
+    }
+
+
     document.querySelectorAll('.edit-address').forEach(editBtn => {
         editBtn.addEventListener('click', event => {
             const button = event.currentTarget;

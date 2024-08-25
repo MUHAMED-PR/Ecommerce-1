@@ -12,6 +12,7 @@ const cartController = require('../controllers/cartController')
 const addressController = require('../controllers/addressController')
 const orderController = require('../controllers/orderController')
 const couponController = require('../controllers/couponController')
+const coupon = require('../models/coupon')
 
 
 
@@ -105,6 +106,7 @@ userRoute.get('/moveToCart/:productID',auth.isLogin,userController.moveToCart)
 
 //coupon
 userRoute.get('/availableCoupons',auth.isLogin,couponController.availabeCoupons)
+userRoute.get('/applyCoupon/:couponCode',auth.isLogin,couponController.applyCoupon)
 
 module.exports = userRoute;
 

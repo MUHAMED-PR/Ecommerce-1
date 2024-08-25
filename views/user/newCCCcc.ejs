@@ -1,0 +1,105 @@
+<div class="container">
+    <h2 class="text-center mb-4">Order Details</h2>
+    
+    <div class="order-section">
+        <h4 class="mb-3">Order Information</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Order ID:</strong> <%= orderDetails._id %></p>
+                <p><strong>Order Date:</strong> <%= orderDetails.orderDate.toDateString() %></p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Payment Method:</strong> <%= orderDetails.paymentMethod %></p>
+                <p><strong>Total Amount:</strong> ₹<%= orderDetails.totalAmount %></p>
+                <p><strong>Status:</strong> <%= orderDetails.orderStatus %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h4 class="mb-3">Shipping Address</h4>
+        <p><%= orderDetails.shippingAddress.fullName %></p>
+        <p><%= orderDetails.shippingAddress.street %></p>
+        <p><%= orderDetails.shippingAddress.city %>, <%= orderDetails.shippingAddress.state %> - <%= orderDetails.shippingAddress.pincode %></p>
+        <p><strong>Contact Number:</strong> <%= orderDetails.shippingAddress.phone %></p>
+    </div>
+    
+    <div class="order-section">
+        <h4 class="mb-3">Ordered Product</h4>
+        <div class="product-item">
+            <h5><%= infoOfProduct.productId.name %></h5>
+            <p><strong>Price:</strong> ₹<%= infoOfProduct.price %></p>
+            <p><strong>Quantity:</strong> <%= infoOfProduct.quantity %></p>
+            <p><strong>Subtotal:</strong> ₹<%= infoOfProduct.price * infoOfProduct.quantity %></p>
+            <img src="" alt="">
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn btn-primary btn-lg" onclick="history.back()">Go Back</button>
+        <a href="/" class="btn btn-secondary btn-lg">Continue Shopping</a>
+
+        <!-- Show Invoice Button and Return Order Option only if Delivered -->
+        <% if (orderDetails.orderStatus === 'Delivered') { %>
+            <!-- Invoice Button -->
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#invoiceModal">View Invoice</button>
+            <!-- Return Order Button -->
+            <button type="button" class="btn btn-warning btn-lg" onclick="returnOrder()">Return Order</button>
+        <% } %>
+    </div>
+</div>
+
+<!-- Invoice Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="invoiceModalLabel">Invoice</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Invoice Details -->
+        <h4>Order ID: <%= orderDetails._id %></h4>
+        <p><strong>Date:</strong> <%= orderDetails.orderDate.toDateString() %></p>
+        <p><strong>Payment Method:</strong> <%= orderDetails.paymentMethod %></p>
+        <p><strong>Total Amount:</strong> ₹<%= orderDetails.totalAmount %></p>
+
+        <h4>Shipping Address</h4>
+        <p><%= orderDetails.shippingAddress.fullName %></p>
+        <p><%= orderDetails.shippingAddress.street %></p>
+        <p><%= orderDetails.shippingAddress.city %>, <%= orderDetails.shippingAddress.state %> - <%= orderDetails.shippingAddress.pincode %></p>
+        <p><strong>Contact Number:</strong> <%= orderDetails.shippingAddress.phone %></p>
+
+        <h4>Products</h4>
+        <ul>
+            <li><strong>Product:</strong> <%= infoOfProduct.productId.name %></li>
+            <li><strong>Price:</strong> ₹<%= infoOfProduct.price %></li>
+            <li><strong>Quantity:</strong> <%= infoOfProduct.quantity %></li>
+            <li><strong>Subtotal:</strong> ₹<%= infoOfProduct.price * infoOfProduct.quantity %></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Return Order Script -->
+<script>
+    function returnOrder() {
+        // Add your logic to handle order return here
+        alert('Return order process initiated.');
+        // You can add an AJAX call to update the order status to "Returned" on the backend
+    }
+</script>
+
+</body>
+</html>

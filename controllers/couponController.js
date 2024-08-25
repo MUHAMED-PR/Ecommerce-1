@@ -51,15 +51,26 @@ const loadAddCoupon = async (req, res) => {
 // Function to add a new coupon
 const addCoupon = async (req, res) => {
     try {
-        const { couponName, couponCode, description, count, expiry, discountAmount } = req.body;
+        const { couponName, couponCode, description, count, expiry, discountAmount,minCartValue } = req.body;
+
+        // Server-side validation
+        if (!couponName.trim() || !couponCode.trim() || !count.trim() || !expiry.trim() || !discountAmount.trim()) {
+            req.flash('error', 'All fields are required and should not contain only spaces.');
+            return res.redirect('/admin/loadCouponPage');
+        }
+
+        if(Number(count) < 0 || Number(discountAmount) < 0 ){
+            req.flash('error','Count and Discount Amount should not be negative.')
+            return res.redirect('/admin/loadCouponPage');
+        }
 
         // Check if the coupon already exists
-        const regex = new RegExp(couponCode, 'i') 
-        const existingCoupon = await couponModel.findOne({ couponCode:regex });
+        const regex = new RegExp(`^${couponCode}$`, 'i');
+        const existingCoupon = await couponModel.findOne({ couponCode: regex });
 
         if (!existingCoupon) {
             const coupon = new couponModel({
-                couponName, couponCode, description, count, expiry, discountAmount
+                couponName, couponCode, description, count, expiry, discountAmount,minCartValue
             });
 
             const savedCoupon = await coupon.save();
@@ -82,6 +93,7 @@ const addCoupon = async (req, res) => {
     }
 };
 
+
 // Function to delete a coupon
 const deleteCoupon = async (req, res) => {
     try {
@@ -103,7 +115,9 @@ const deleteCoupon = async (req, res) => {
 const getCouponForEdit = async (req, res) => {
     try {
         const { id } = req.params;
+        // console.log('here si the couponId for modal :',typeof id)
         const coupon = await couponModel.findById(id);
+        // console.log("editMOdal coupon :",coupon)
 
         if (coupon) {
             res.json({ success: true, coupon });
@@ -119,7 +133,9 @@ const getCouponForEdit = async (req, res) => {
 // Function to update an existing coupon
 const updateCoupon = async (req, res) => {
     try {
+        console.log("heelloooo koooiiii")
         const { id } = req.params;
+        console.log(typeof id)
         const { couponName, couponCode, description, count, expiry, discountAmount, active } = req.body;
 
         // Check if the coupon exists
@@ -135,6 +151,7 @@ const updateCoupon = async (req, res) => {
             coupon.active = active === 'true'; // Convert 'true'/'false' to boolean
 
             const updatedCoupon = await coupon.save();
+            console.log(updateCoupon,"is the updataed coupon")
 
             if (updatedCoupon) {
                 res.json({ success: true, message: 'Coupon updated successfully.' });
@@ -150,6 +167,7 @@ const updateCoupon = async (req, res) => {
     }
 };
 
+//userside:
 const availabeCoupons = async (req, res) => {
     try {
         const coupons = await couponModel.find({ active: true });
@@ -160,6 +178,16 @@ const availabeCoupons = async (req, res) => {
     }
 }
 
+const applyCoupon = async (req,res)=>{
+    try {
+        const {couponCode} = req.params
+        const coupons = await couponModel.findOne({couponCode})
+        console.log("coupon is :",coupons)
+        res.json({coupons})
+    } catch (error) {
+        console.log(error)
+    }
+}
 module.exports = {
     loadAdminCoupon,
     loadAddCoupon,
@@ -167,5 +195,6 @@ module.exports = {
     deleteCoupon,
     getCouponForEdit,
     updateCoupon,
-    availabeCoupons
+    availabeCoupons,
+    applyCoupon
 };

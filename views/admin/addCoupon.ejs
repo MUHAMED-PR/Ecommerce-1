@@ -32,6 +32,17 @@
                 <!-- Content -->
                 <div class="card mt-2 ms-4 me-4">
                     <h5 class="card-header">Add Coupon</h5>
+                    <% if (messages.error) { %>
+                        <div class="alert text-danger">
+                            <%= messages.error %>
+                        </div>
+                    <% } %>
+                    
+                    <% if (messages.success) { %>
+                        <div class="alert text-success">
+                            <%= messages.success %>
+                        </div>
+                    <% } %>
                     <div class="card-body">
                         <!-- Add Coupon Form -->
                         <form id="addCouponForm" action="/admin/addingNewCoupon" method="post">
@@ -50,19 +61,23 @@
                                 <textarea class="form-control" id="description" name="description" rows="2"></textarea>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <label for="count" class="form-label">Count</label>
                                     <input type="number" class="form-control" id="count" name="count" required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label for="expiry" class="form-label">Expiry Date</label>
                                     <input type="date" class="form-control" id="expiry" name="expiry" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <label for="discountAmount" class="form-label">Discount Amount</label>
-                                    <input type="number" class="form-control" id="discountAmount" name="discountAmount">
+                                    <input type="number" class="form-control" id="discountAmount" name="discountAmount" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="minCartValue" class="form-label">Min Cart Amount</label>
+                                    <input type="number" class="form-control" id="minCartValue" name="minCartValue" required>
                                 </div> 
                             </div>
                             <button type="submit" class="btn btn-primary">Add Coupon</button>
@@ -114,5 +129,6 @@
         });
     });
 </script> -->
+
 
 <%- include('../layouts/adminFooter.ejs') %>

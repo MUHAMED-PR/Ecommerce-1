@@ -6,7 +6,8 @@ const couponSchema = new mongoose.Schema({
     description: { type: String },
     count: { type: Number, required: true },
     expiry: { type: Date, required: true },
-    discountAmount: { type: Number },
+    discountAmount: { type: Number, required:true},
+    minCartValue:{type:Number,required:true},
     active: { type: Boolean, required: true, default: true }
 });
 

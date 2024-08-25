@@ -1,3 +1,4 @@
+const users = require('../models/users')
 const orderModel = require('../models/order');
 const cartModel = require('../models/cart');
 const addressModel = require('../models/address');
@@ -17,10 +18,6 @@ const placeOrder = async (req, res) => {
         const { user_id } = req.session;
         const { addressId, paymentOption, total } = req.body;
 
-        if (paymentOption === 'Cash On Delivery' && total > 10000) {
-            return res.status(400).json({ message: 'Cash on Delivery is not available for orders above ₹10,000' });
-        }
-
         const userCart = await cartModel.findOne({ userId: user_id }).populate('product.productId').exec();
 
         if (userCart.product.length > 0) {
@@ -28,7 +25,7 @@ const placeOrder = async (req, res) => {
                 userId: user_id,
                 'address._id': addressId
             }, {
-                'address.$': 1 // Only return the matched address element
+                'address.$': 1
             });
 
             if (userAddress) {
@@ -59,7 +56,7 @@ const placeOrder = async (req, res) => {
                     totalAmount: total
                 });
 
-                const saveddata = await orderPlacing.save();
+                const savedData = await orderPlacing.save();
 
                 // Clear the user's cart
                 await cartModel.updateOne({ userId: user_id }, { $set: { product: [] } });
@@ -68,22 +65,18 @@ const placeOrder = async (req, res) => {
                     const options = {
                         amount: total * 100, // amount in smallest currency unit
                         currency: "INR",
-                        receipt: `order_rcptid_${saveddata._id}`
+                        receipt: `order_rcptid_${savedData._id}`
                     };
 
                     try {
                         const order = await razorpayInstance.orders.create(options);
-                        console.log('this is razorpay integation...................')
                         res.status(200).json({ message: 'Order placed successfully', orderId: order.id, keyId: process.env.RAZORPAY_KEY_ID });
                     } catch (error) {
                         console.error(error);
                         res.status(500).json({ message: 'Error creating Razorpay order' });
                     }
-                } else {
-                    // res.status(200).json({ message: 'Order placed successfully' });
-                    console.log('this is cash on delivery integratoin ');
-                    
-                    res.redirect('/order/orderSuccesfulPage')
+                } else if (paymentOption === 'Cash On Delivery') {
+                    res.status(200).json({ message: 'Order placed successfully', orderId: savedData._id });
                 }
             } else {
                 res.status(404).json({ message: 'Address not found' });
@@ -98,6 +91,7 @@ const placeOrder = async (req, res) => {
 };
 
 
+
 const orderSuccessfulPage = async(req,res)=>{
     try {
         res.render('user/orderSuccessful')
@@ -108,11 +102,30 @@ const orderSuccessfulPage = async(req,res)=>{
 
 const orderDetails = async(req,res)=>{
     try {
-        const {user_id} = req.session
-        const orderDetails = await orderModel.findOne({userId:user_id}).populate('products.productId').exec() 
-        res.render('user/orderDetails',{orderDetails})
+        // console.log("id the queeeyyyrrrr things:",req.query)
+        const {orderId,productId} = req.query
+        const orderDetails = await orderModel.findOne({_id:orderId,products: {
+            $elemMatch: { _id: productId }
+          }})
+
+    let arrayOfproducts = orderDetails.products
+    let infoOfProduct;
+      for(let i=0;i<arrayOfproducts.length;i++){
+        if(arrayOfproducts[i].id == productId){
+           infoOfProduct=arrayOfproducts[i]
+           break;
+        }
+      }
+// console.log("---+++---+",infoOfProduct)
+        //   const aaa = await orderModel.findOne({"products._id":productId })
+        // const dataa = await orderModel.findOne({_id:orderId})
+        
+        //   const aaa = await orderModel.findOne({products: {$elemMatch: { _id: productId }}})
+        //   console.log("herere is hte ordere",orderDetails)
+        // console.log("ishte object int he array of products:",aaa)
+        res.render('user/orderDetails',{orderDetails,infoOfProduct})
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
@@ -151,10 +164,53 @@ const changeOrderStatus = async (req, res) => {
     }
 };
 
+const viewOrderDetails = async (req, res) => {
+    try {
+        const { orderId, productId } = req.params;
+
+        // Find the order by orderId
+        const order = await orderModel.findById(orderId).populate('userId').populate('products.productId').exec();
+
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        // Find the specific product in the order
+        const product = order.products.find(p => p.productId._id.toString() === productId);
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found in this order' });
+        }
+
+        // Prepare the response data
+        const data = {
+            success: true,
+            order: order,
+            product: product.productId, // Use product.productId to get the actual product details
+            customer: {
+                userName: order.userId.name,
+                email: order.userId.email
+            }
+        };
+
+        // Send the JSON response with the order and product details
+        res.json(data);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
 module.exports = {
+    //User Controller:
     placeOrder,
     orderSuccessfulPage,
     orderDetails,
+
+
+    //Admin Controller:
     adminOrderDetails,
-    changeOrderStatus
+    changeOrderStatus,
+    viewOrderDetails
 };

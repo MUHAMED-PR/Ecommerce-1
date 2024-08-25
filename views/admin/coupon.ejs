@@ -57,18 +57,20 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Coupon Name</th>
+                                        <th>Name</th>
                                         <th>Coupon Code</th>
                                         <th>Description</th>
                                         <th>Count</th>
                                         <th>Expiry</th>
-                                        <th>Discount Amount</th>
+                                        <th>Discount Amt</th>
+                                        <th>min Amt</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
                                     <% coupons.forEach((coupon, index) => { %>
+                                       
                                         <tr>
                                             <td><%= index + 1 %></td>
                                             <td><%= coupon.couponName %></td>
@@ -77,6 +79,7 @@
                                             <td><%= coupon.count %></td>
                                             <td><%= new Date(coupon.expiry).toDateString() %></td>
                                             <td>₹<%= coupon.discountAmount || 'N/A' %></td>
+                                            <td>₹<%= coupon.minCartValue %></td>
                                             <td>
                                                 <span class="badge <%= coupon.active ? 'bg-success' : 'bg-danger' %>">
                                                     <%= coupon.active ? 'Active' : 'Expired' %>
@@ -163,12 +166,10 @@
                         <input type="number" class="form-control" id="discountAmount" name="discountAmount" required>
                     </div>
                     <div class="form-group">
-                        <label for="active">Status</label>
-                        <select class="form-control" id="active" name="active" required>
-                            <option value="true">Active</option>
-                            <option value="false">Expired</option>
-                        </select>
+                        <label for="minCartValue">Min Cart Amount</label>
+                        <input type="number" class="form-control" id="minCartValue" name="minCartValue" required>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary mt-3">Update Coupon</button>
                 </form>
             </div>
@@ -193,8 +194,8 @@
                     document.getElementById('count').value = coupon.count;
                     document.getElementById('expiry').value = new Date(coupon.expiry).toISOString().split('T')[0];
                     document.getElementById('discountAmount').value = coupon.discountAmount;
-                    document.getElementById('active').value = coupon.active ? 'true' : 'false';
-                    
+                    document.getElementById('minCartValue').value = coupon.minCartValue
+
                     const editCouponModal = new bootstrap.Modal(document.getElementById('editCouponModal'));
                     editCouponModal.show();
                 } else {
@@ -210,16 +211,20 @@
         e.preventDefault();
         
         const form = e.target;
+        console.log("here is hte form showing",form)
+        // cosole.log('jejejjejje')
         const couponId = form.couponId.value;
+        console.log("coupon id is this:",typeof couponId)
         const couponData = {
             couponName: form.couponName.value,
             couponCode: form.couponCode.value,
             description: form.description.value,
             count: form.count.value,
             expiry: form.expiry.value,
-            discountAmount: form.discountAmount.value,
-            active: form.active.value
+            discountAmount: form.discountAmount.value
         };
+        console.log("is the datas from ",couponData)
+        console.log(couponId,"is available")
 
         fetch(`/admin/editCoupon/${couponId}`, {
             method: 'POST',
