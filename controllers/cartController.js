@@ -1,5 +1,5 @@
 const cartModel = require('../models/cart')
-const product = require('../models/product')
+const productModel = require('../models/product')
 
 
 const loadcart = async (req, res) => {
@@ -7,7 +7,7 @@ const loadcart = async (req, res) => {
         const cart = await cartModel.findOne({ userId: req.session.user_id }).populate('product.productId').exec();
         
         if (!cart) {
-            return res.render('user/cart', { cart: [], product: [] });
+            return res.render('user/cart', { cart: [] });
         }
 
         res.render('user/cart', { cart: cart.product });
@@ -45,16 +45,16 @@ const addToCart = async (req, res) => {
             console.log(added)
 
         } else {
-            console.log("it is else")
+            // console.log("it is else")
             const existProduct = await cartModel.find({ $and: [{ 'product.productId': productId }, { userId: user_id }] })
             if (existProduct.length == 0) {
-                console.log('it flsfsdfsd')
+                // console.log('it flsfsdfsd')
                 const addnewpr = await cartModel.updateOne(
                     { userId: user_id },
                     { $addToSet: { 'product': { productId: productId } } }
                 );
 
-                console.log(addnewpr)
+                // console.log(addnewpr)
             } else {
 
                 res.json({ status: 'existing' })

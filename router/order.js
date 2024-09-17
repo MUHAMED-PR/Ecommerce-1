@@ -16,6 +16,7 @@ orderRoute.post('/placeOrder', auth.isLogin, orderController.placeOrder)
 orderRoute.get('/orderSuccessfulPage', auth.isLogin, orderController.orderSuccessfulPage)
 orderRoute.get('/orderDetailsPage/:val',auth.isLogin,userController.userProfile)
 orderRoute.get('/viewDetails',auth.isLogin,orderController.orderDetails)
+orderRoute.patch('/returnOrder/:orderId/:itemId',auth.isLogin,orderController.orderReturned)
 
 //AdminSide:
 orderRoute.get('/orderDetails',adminAuth.isLogin,orderController.adminOrderDetails)

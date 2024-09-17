@@ -12,6 +12,7 @@ const cartController = require('../controllers/cartController')
 const addressController = require('../controllers/addressController')
 const orderController = require('../controllers/orderController')
 const couponController = require('../controllers/couponController')
+const walletController = require('../controllers/walletController')
 const coupon = require('../models/coupon')
 
 
@@ -97,6 +98,8 @@ userRoute.post('/addAddress', auth.isLogin, addressController.addingAddress)
 userRoute.post('/editAddress',auth.isLogin,addressController.editAddress)
 //Change password
 userRoute.post('/changePassword', auth.isLogin, userController.changePassword)
+//Wallet
+userRoute.post('/addCashToWallet/:userId',auth.isLogin,walletController.addCashToWallet)
 
 //Wishlist
 userRoute.get('/loadwishlist', auth.isLogin, userController.loadWishlist)

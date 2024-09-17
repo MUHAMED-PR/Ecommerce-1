@@ -7,6 +7,7 @@ const cartModel = require('../models/cart')
 const wishlistModel = require('../models/wishlist')
 const orderModel = require('../models/order')
 const couponModel = require('../models/coupon')
+const walletModel = require('../models/wallet')
 const bcrypt = require('bcrypt')
 const { tryCatch } = require('engine/utils')
 const nodemailer = require('nodemailer')
@@ -441,7 +442,8 @@ const userProfile = async(req,res)=>{
         // console.log(user_id) 
         const user = await users.find({_id:user_id})
         const addressDoc = await addressModel.find({userId:user_id})
-        const orderDetails = await orderModel.find({userId:user_id}).populate('products.productId').exec()
+        const orderDetails = await orderModel.find({userId:user_id}).populate('products.productId').sort({ orderDate: -1 }).exec()
+        const walletDetails = await walletModel.find({userId:user_id})
         // console.log("userdetaials:",user," address details:",addressDoc," orderDetais:",orderDetails)
         
         // console.log("what is inside the params",req.params)
@@ -459,7 +461,12 @@ const userProfile = async(req,res)=>{
 
         if(addressDoc){
             if(orderDetails){
-                res.render('user/userProfile',{user,addressDoc,orderDetails,orderMessage})
+                if(walletDetails){
+                    res.render('user/userProfile',{user,addressDoc,orderDetails,orderMessage,walletDetails})
+                }else{
+                    res.render('user/userProfile',{user,addressDoc,orderDetails,orderMessage,walletDetails:[]})
+                }
+                
             }else{
                 res.render('user/userProfile',{user,addressDoc,orderDetails:[],orderMessage})
             }

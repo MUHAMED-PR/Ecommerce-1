@@ -99,9 +99,9 @@
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 								    </li>
-								    <!-- <li class="nav-item">
-								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-								    </li> -->
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-wallet-link" data-toggle="tab" href="#tab-wallet" role="tab" aria-controls="tab-wallet" aria-selected="false">Wallet</a>
+								    </li>
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								    </li>
@@ -236,18 +236,84 @@
 
 
 
+                               <!-- tab-wallet -->
+                               <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+                                <div class="wallet-section">
+                                    <h3 class="wallet-balance-title">Your Wallet Balance</h3>
+                                    <div class="wallet-balance">
+                                        <% if(walletDetails && walletDetails.length > 0){ %>
+                                            <span class="balance-amount">₹<%= walletDetails[0].balance %></span>
+                                            <% }else{ %>
+                                                <span class="balance-amount">₹00.0</span>
+                                                <% } %>
+                                        
+                                    </div>
+                            
+                                    <p class="wallet-note">Use your wallet balance for seamless checkouts.</p>
+                            
+                                    <div class="add-cash-section">
+                                        <h4 class="add-cash-title">Add Cash</h4>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control add-cash-input" id="add-cash-amount" placeholder="Enter amount (min ₹100)" min="100" step="100">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-primary-2" onclick="addCashToWallet('<%= user[0]._id%>')">Add Cash</button>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">Amount must be in multiples of ₹100.</small>
+                                    </div>
+                            
+                                    <a href="/" class="btn btn-primary-2 wallet-shop-btn"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- .End .tab-pane -->
 
-                                    
+                            <style>
+                                .wallet-section {
+                                text-align: center;
+                                padding: 20px;
+                            }
+                            
+                            .wallet-balance-title {
+                                font-size: 24px;
+                                font-weight: bold;
+                                margin-bottom: 10px;
+                            }
+                            
+                            .wallet-balance {
+                                font-size: 32px;
+                                font-weight: bold;
+                                color: #28a745;
+                                margin-bottom: 20px;
+                            }
+                            
+                            .wallet-note {
+                                font-size: 16px;
+                                color: #6c757d;
+                                margin-bottom: 20px;
+                            }
+                            
+                            .add-cash-section {
+                                margin-bottom: 20px;
+                            }
+                            
+                            .add-cash-title {
+                                font-size: 20px;
+                                font-weight: bold;
+                                margin-bottom: 10px;
+                            }
+                            
+                            .add-cash-input {
+                                width: 200px;
+                                margin-right: 10px;
+                            }
+                            
+                            .wallet-shop-btn {
+                                margin-top: 20px;
+                            }
+                            
+                            </style>
+                            
 
-
-
-
-
-								    <!-- <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<p>No downloads available yet.</p>
-								    	<a href="#" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div> -->
-                                    <!-- .End .tab-pane -->
 
                                     <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                                         <a href="#" class="btn btn-outline-primary-2" data-toggle="modal" data-target="#addAddressModal"><span>Add Address</span><i class="icon-long-arrow-right"></i></a>
@@ -291,6 +357,14 @@
                                         <% } %>
                                     </div><!-- .End .tab-pane -->
                                     
+                                    <div class="tab-pane fade" id="tab-Password" role="tabpanel" aria-labelledby="tab-Password-link">
+                                        <p>Set new password!</p>
+                                        <!-- Button to trigger modal -->
+                                        <a href="#" class="btn btn-outline-primary-2" data-toggle="modal" data-target="#changePasswordModal">
+                                            <span>Change Password</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </a>
+                                    </div><!-- .End .tab-pane -->
 
 								   
 								</div>
@@ -619,6 +693,9 @@ let openstatus=document.getElementById('openOrderStatus');
             });
         }
     });
+
+
+    
 </script>
 
 
@@ -643,7 +720,54 @@ let openstatus=document.getElementById('openOrderStatus');
         font-size: 14px;
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+    function addCashToWallet(userId) {
+    const amountInput = document.getElementById('add-cash-amount');
+    const amount = amountInput.value;
+
+    // Validate the amount
+    if (amount < 100 || amount % 100 !== 0) {
+        alert('Please enter an amount that is a multiple of ₹100 and at least ₹100.');
+        return;
+    }
+
+    // Send a request to the server to add cash to the wallet
+    fetch(`/addCashToWallet/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ amount: amount })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the wallet balance on the page
+            document.querySelector('.balance-amount').textContent = `₹${data.newBalance}`;
+            Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Cash added successfully!',
+            confirmButtonText: 'OK'
+        });
+  
+
+
+            // Clear the input field
+            amountInput.value = '';
+        } else {
+            alert('Failed to add cash to wallet.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding cash to the wallet.');
+    });
+}
+
+</script>
 
 
 </body>

@@ -182,7 +182,7 @@ const applyCoupon = async (req,res)=>{
     try {
         const {couponCode} = req.params
         const coupons = await couponModel.findOne({couponCode})
-        console.log("coupon is :",coupons)
+        // console.log("coupon is :",coupons)
         res.json({coupons})
     } catch (error) {
         console.log(error)

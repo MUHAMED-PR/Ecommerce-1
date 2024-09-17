@@ -82,7 +82,12 @@
                         <aside class="col-lg-4">
                             <div class="summary">
                                 <h3 class="summary-title">Your Order</h3>
-                                <% let total = cart.product.reduce((acc, data) => acc + (data.quantity * data.productId.price), 0) %>
+                               
+                                <% let total = cart.product.reduce((acc, data) => {
+                                    return acc + (data.quantity * (data.productId.offerPrice || data.productId.price));
+                                }, 0); %>
+
+
                                 <table class="table table-summary">
                                     <tbody>
                                         <tr class="summary-subtotal">
@@ -131,7 +136,7 @@
                 </form>
 
                 <div class="col-lg-9">
-                    <a href="#tab-address" id="shipToNewAddressBtn" class="btn btn-primary mb-4">Ship to New Address</a>
+                    <a href="#" id="shipToNewAddressBtn" class="btn btn-primary mb-4">Ship to New Address</a>
                 </div>
             </div>
         </div>
@@ -394,7 +399,12 @@
         }
     });
     
-    
+
+    //ship to new address
+    // document.getElementById('shipToNewAddressBtn').addEventListener('click',function(event){
+    //     event.preventDefault();
+    //     fetch(`/shipToNewAddress/`)
+    // })
     
      // Form submission handling
 const form = document.getElementById('checkout-form');
@@ -406,7 +416,6 @@ form.addEventListener('submit', async function (event) {
     const formData = new FormData(form);
     const paymentOption = formData.get('paymentOption');
     const total = parseFloat(hiddenTotal.value);
-    console.log(total,'is ht e totalllll')
 
     // COD validation
     if (paymentOption === 'Cash On Delivery') {
@@ -414,11 +423,10 @@ form.addEventListener('submit', async function (event) {
             codMessage.style.display = 'block';
             return; // Stop form submission
         } else {
-            // Handle COD order placement using Axios
             try {
                 const response = await axios.post('/order/placeOrder', Object.fromEntries(formData));
                 if (response.data.orderId) {
-                    window.location.href = '/order/orderSuccessfulPage'; // Redirect to order success page
+                    window.location.href = '/order/orderSuccessfulPage';
                 } else {
                     alert(response.data.message);
                 }
@@ -469,11 +477,28 @@ form.addEventListener('submit', async function (event) {
             console.error('Error placing order:', error);
             alert('Something went wrong, please try again.');
         }
-    } else {
-        // For other payment methods like Wallet
+    } 
+    // Handle Wallet payment
+    else if (paymentOption === 'Wallet') {
+        try {
+            const response = await axios.post('/order/placeOrder', Object.fromEntries(formData));
+            if (response.data.success) {
+                alert('Order placed successfully using wallet!');
+                window.location.href = '/order/orderSuccessfulPage';
+            } else {
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error placing order:', error);
+            alert('Something went wrong, please try again.');
+        }
+    } 
+    else {
+        // For other payment methods
         form.submit(); // Submit form naturally
     }
 });
+
 
     
         // Make useCoupon available globally

@@ -144,7 +144,11 @@
 																	</div><!-- End .product -->
 																</td>
 																<td id="price-<%=index%>" class="price-col">
+																	<% if(product.productId.offerPrice && product.productId.offerPrice !== 0){  %>
+																		₹<%= product.productId.offerPrice %>
+																		<% }else{ %>
 																	₹ <%= product.productId.price %>
+																	<% } %>
 																</td>
 																<td class="quantity-col">
 																	<div class="cart-product-quantity d-flex">
@@ -158,7 +162,11 @@
 																	</div><!-- End .cart-product-quantity -->
 																</td>
 																<td id="totalPrice-<%=index%>" class="total-col">
+																	<% if(product.productId.offerPrice && product.productId.offerPrice !== 0){ %>
+																		<%= product.productId.offerPrice * product.quantity %>
+																	<% }else{  %>
 																	 <%= product.productId.price * product.quantity %>
+																	 <% } %>
 																	
 																</td>
 																<td class="remove-col"><button

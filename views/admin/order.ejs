@@ -251,10 +251,10 @@
                         <p><strong>Order ID:</strong> ${data.order._id}</p>
                         <p><strong>Product ID:</strong> ${data.product._id}</p>
                         <p><strong>Product Name:</strong> ${data.product.name}</p>
-                        <p><strong>Customer:</strong> ${data.customer.userName}</p>
+                        <p><strong>Customer:</strong> ${data.order.userId.userName}</p>
                         <p><strong>Price:</strong> ₹${data.product.price}</p>
                         <p><strong>Quantity:</strong> ${data.product.quantity}</p>
-                        <p><strong>Status:</strong> ${data.product.orderStatus}</p>
+                        <p><strong>Cart Amount:</strong> ${data.order.totalAmount}</p>
                         <!-- Add more fields as necessary -->
                     `;
                 } else {

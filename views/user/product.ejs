@@ -162,7 +162,6 @@
                                     <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                         <div class="product">
                                             <figure class="product-media">
-                                                <span class="product-label label-new">New</span>
                                                 <a href="/productDetails/<%= product._id %>">
                                                     <img src="<%= product.images[0] %>" alt="Product image" class="product-image">
                                                 </a>
@@ -170,10 +169,19 @@
                                                     <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                 </div><!-- End .product-action -->
                                             </figure><!-- End .product-media -->
+                    
                                             <div class="product-body">
-                                                <h3 class="product-title"><a href=""><%= product.name %></a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href="/productDetails/<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
+                    
                                                 <div class="product-price">
-                                                    ₹<%= product.price %>
+                                                    <% if (product.offerPrice && product.offerPrice !== 0) { %>
+                                                        <!-- If offer is active, show discounted price -->
+                                                        <span class="new-price">₹<%= product.offerPrice.toFixed(2) %></span>
+                                                        <span class="old-price"><s>₹<%= product.price %></s></span>
+                                                    <% } else { %>
+                                                        <!-- No offer, show original price -->
+                                                        ₹<%= product.price %>
+                                                    <% } %>
                                                 </div><!-- End .product-price -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
@@ -182,6 +190,7 @@
                             <% } %>
                         </div><!-- End .row -->
                     </div><!-- End .products -->
+                    
         
                     <!-- Pagination Controls -->
                     <div class="d-flex justify-content-center">
