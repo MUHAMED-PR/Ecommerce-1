@@ -87,7 +87,7 @@ userRoute.get('/removeCart/:productID', auth.isLogin, cartController.removeCart)
 userRoute.patch('/ProductQuantity', auth.isLogin, cartController.productQuantity)
 
 //checkout
-userRoute.get('/checkoutPage', auth.isLogin, userController.loadCheckout)
+userRoute.post('/checkoutPage', auth.isLogin, userController.loadCheckout)
 
 
 

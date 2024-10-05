@@ -1,6 +1,7 @@
 const users = require('../models/users')
 const categoryModel = require('../models/category')
 const productModel = require('../models/product')
+const orderModel = require('../models/order')
 const bcrypt = require('bcrypt')
 const flash = require('express-flash')
 
@@ -381,7 +382,18 @@ const productListing = async(req,res)=>{
     }
 }
 
-
+const SalesReport = async(req,res)=>{
+    try {
+        const orders = await orderModel.find();
+        const totalSale = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+        
+        console.log(totalSale);
+        
+        res.render('admin/salesReport',{orders,totalSale})
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 module.exports ={
@@ -401,5 +413,6 @@ module.exports ={
     addProduct,
     loadEditProduct,
     updateProduct,
-    productListing
+    productListing,
+    SalesReport
 }

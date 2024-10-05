@@ -37,6 +37,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
@@ -727,10 +728,35 @@
             })
             .then(response=> response.json())
             .then(data => {
-                console.log('dflksdfljsdlfkj')
-                 if(data.status == 'existing'){
-                    swal("Error", data.status, "error");
+               
+                if(data.status == 'added'){
+                    Swal.fire({
+                        title: 'Success!',
+                        html: '<strong>Successfully added to Cart</strong>',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+                if(data.status == 'existing'){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        html: '<strong>Already Existing</strong>',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });  
                  }
+                 if(data.status == 'No quantity available!'){
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: '<strong>No quantity available!</strong>',
+                    timer: 2000,
+                    showConfirmButton: false
+                });  
+            }
+
 
             })
             .catch(error =>{
@@ -743,7 +769,13 @@
             axios.get(`/addToWishlist/${productId}`)
             .then(response=>{
                 if(response.data.added){
-                   
+                    Swal.fire({
+                        title: 'Success!',
+                        html: '<strong>Successfully added to Wishlist</strong>',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
                 }
             })
         }

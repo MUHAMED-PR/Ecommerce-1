@@ -197,60 +197,63 @@
 							<% }); %>
 							
 							<aside class="col-lg-3">
-								<div class="summary summary-cart">
-									<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
-							
-									<table class="table table-summary">
-										<tbody>
-											<tr class="summary-subtotal">
-												<td>Subtotal:</td>
-												<td id="subTotal">₹<%= initialSubtotal %></td>
-											</tr><!-- End .summary-subtotal -->
-											<tr class="summary-shipping">
-												<td>Shipping:</td>
-												<td>&nbsp;</td>
-											</tr>
-							
-											<tr class="summary-shipping-row">
-												<td>
-													<div class="custom-control custom-radio">
-														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input" checked>
-														<label class="custom-control-label" for="free-shipping">Free Shipping</label>
-													</div><!-- End .custom-control -->
-												</td>
-												<td>₹0.00</td>
-											</tr><!-- End .summary-shipping-row -->
-							
-											<tr class="summary-shipping-row">
-												<td>
-													<div class="custom-control custom-radio">
-														<input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="standart-shipping">Standard:</label>
-													</div><!-- End .custom-control -->
-												</td>
-												<td>₹40.00</td>
-											</tr><!-- End .summary-shipping-row -->
-							
-											<tr class="summary-shipping-row">
-												<td>
-													<div class="custom-control custom-radio">
-														<input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="express-shipping">Express:</label>
-													</div><!-- End .custom-control -->
-												</td>
-												<td>₹70.00</td>
-											</tr><!-- End .summary-shipping-row -->
-							
-											<tr class="summary-total">
-												<td>Total:</td>
-												<td id="summaryTotal"><%= initialSubtotal %>.00</td>
-											</tr><!-- End .summary-total -->
-										</tbody>
-									</table><!-- End .table table-summary -->
-							
-									<a href="/checkoutPage" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
-								</div><!-- End .summary -->
-							
+								<form id="shippingCharge-form" action="/checkoutPage" method="post">
+									<div class="summary summary-cart">
+										<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+								
+										<table class="table table-summary">
+											<tbody>
+												<tr class="summary-subtotal">
+													<td>Subtotal:</td>
+													<td id="subTotal">₹<%= initialSubtotal %></td>
+												</tr><!-- End .summary-subtotal -->
+												<tr class="summary-shipping">
+													<td>Shipping:</td>
+													<td>&nbsp;</td>
+												</tr>
+								
+												<tr class="summary-shipping-row">
+													<td>
+														<div class="custom-control custom-radio">
+															<input type="radio" id="free-shipping" name="shipping" value="free" class="custom-control-input" checked>
+															<label class="custom-control-label" for="free-shipping">Free Shipping</label>
+														</div><!-- End .custom-control -->
+													</td>
+													<td>₹0.00</td>
+												</tr><!-- End .summary-shipping-row -->
+								
+												<tr class="summary-shipping-row">
+													<td>
+														<div class="custom-control custom-radio">
+															<input type="radio" id="standard-shipping" name="shipping" value="standard" class="custom-control-input">
+															<label class="custom-control-label" for="standard-shipping">Standard:</label>
+														</div><!-- End .custom-control -->
+													</td>
+													<td>₹40.00</td>
+												</tr><!-- End .summary-shipping-row -->
+								
+												<tr class="summary-shipping-row">
+													<td>
+														<div class="custom-control custom-radio">
+															<input type="radio" id="express-shipping" name="shipping" value="express" class="custom-control-input">
+															<label class="custom-control-label" for="express-shipping">Express:</label>
+														</div><!-- End .custom-control -->
+													</td>
+													<td>₹70.00</td>
+												</tr><!-- End .summary-shipping-row -->
+								
+												<tr class="summary-total">
+													<td>Total:</td>
+													<td id="summaryTotal"><%= initialSubtotal %>.00</td>
+												</tr><!-- End .summary-total -->
+											</tbody>
+										</table><!-- End .table table-summary -->
+								
+										<!-- Replace the link with a button for form submission -->
+										<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" >PROCEED TO CHECKOUT</button>
+									</div><!-- End .summary -->
+								</form>
+								
 								<a href="/" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 							</aside><!-- End .col-lg-3 -->
 							
@@ -361,6 +364,39 @@
 		<!-- Main JS File -->
 		<script src="assets/js/main.js"></script>
 
+
+		<script>
+			const chargeForm = document.getElementById('shippingCharge-form')
+			// console.log("shipping charge:",chargeForm)
+			chargeForm.addEventListener('sub')
+		</script>
+
+		<script>
+			// Function to update the checkout link
+			function updateCheckoutLink() {
+				// Get all the radio buttons
+				const shippingOptions = document.getElementsByName('shipping');
+				
+				// Find the selected option
+				let selectedShipping = '';
+				shippingOptions.forEach(option => {
+					if (option.checked) {
+						selectedShipping = option.value;
+					}
+				});
+		
+				// Update the href of the anchor tag
+				const checkoutLink = document.getElementById('checkout-link');
+				checkoutLink.href = `/checkoutPage?shipping=${selectedShipping}`;
+			}
+		
+			// Attach the event listener to all radio buttons
+			const shippingRadios = document.querySelectorAll('input[name="shipping"]');
+			shippingRadios.forEach(radio => {
+				radio.addEventListener('change', updateCheckoutLink);
+			});
+		</script>
+
 		<script>
 			function updateTotals() {
     // Calculate subtotal
@@ -374,31 +410,28 @@
     // Update subtotal
     document.getElementById('subTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
 
-    // Get the selected shipping option
-    const shippingElem = document.querySelector('input[name="shipping"]:checked');
-    
-    // Debugging logs
-    console.log("Shipping Element:", shippingElem);
+    // Assume `subtotal` is already defined
+// Example: let subtotal = 100;
 
-    // Check if shippingElem is null
-    if (!shippingElem) {
-        console.log("No shipping option selected.");
-        // You may set default shipping cost here if needed
-        document.getElementById('summaryTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
-        return;
-    }
+// Get the selected shipping option
+const shippingElem = document.querySelector('input[name="shipping"]:checked');
 
-    // Debugging logs
-    console.log("Shipping Element Parent:", shippingElem.parentElement);
-    console.log("Shipping Element Sibling:", shippingElem.parentElement.nextElementSibling);
 
-    // Get the shipping cost from the sibling element
-    const shippingCostText = shippingElem.parentElement.nextElementSibling ? shippingElem.parentElement.nextElementSibling.innerHTML : '₹0.00';
-    const shipping = parseFloat(shippingCostText.replace('₹', '').trim()) || 0;
+// Check if shippingElem is null
+if (!shippingElem) {
+    console.log("No shipping option selected.");
+    // Set default shipping cost here if needed
+    document.getElementById('summaryTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
+    return;
+}
 
-    // Debugging log
-    console.log("Shipping Cost Text:", shippingCostText);
-    console.log("Parsed Shipping Cost:", shipping);
+// Get the shipping cost from the sibling <td> element
+const shippingCostText = shippingElem.parentElement.parentElement.nextElementSibling.innerHTML || '₹0.00';
+const shipping = parseFloat(shippingCostText.replace('₹', '').trim()) || 0;
+
+// Add shipping cost to subtotal
+const total = subtotal + shipping;
+
 
     // Update total
     document.getElementById('summaryTotal').innerHTML = `₹${(subtotal + shipping).toFixed(2)}`;

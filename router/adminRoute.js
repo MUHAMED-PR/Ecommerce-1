@@ -60,6 +60,9 @@ adminRoute.get('/loadofferPage',adminAuth.isLogin,offerController.loadOfferPage)
 adminRoute.post('/addOffer',adminAuth.isLogin,offerController.addingOffer)
 adminRoute.put('/toggleOffer/:id',adminAuth.isLogin,offerController.offerUpdate)
 
+//Sales Report:
+adminRoute.get('/Salesreport',adminAuth.isLogin,adminController.SalesReport)
+
 
 
 

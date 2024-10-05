@@ -43,8 +43,8 @@ const orderSchema = new mongoose.Schema({
     paymentStatus:{
         type: String,
         required : true,
-        enum : ['Paid', 'Not Paid']
-
+        enum : ['Paid', 'Not Paid'] ,
+        default : 'Not Paid'
     },
     shippingAddress: {
         phone: { type: Number, required: true },

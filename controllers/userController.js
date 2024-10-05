@@ -513,6 +513,21 @@ const changePassword = async(req,res)=>{
 
 const loadCheckout = async (req, res) => {
     try {
+        const shippingType = req.body.shipping;
+        console.log("inside the req body is:",req.body)
+        console.log("shipping charge is :",shippingType)
+        let shippingCost = 0
+        if (shippingType == 'free') {
+            shippingCost = 0;
+           console.log("free");
+       } else if (shippingType == 'standard') {
+        shippingCost = 40;
+           console.log("standard");
+       } else if (shippingType == 'express') {
+        shippingCost = 70;
+           console.log("express");
+       }      
+
         const cart = await cartModel.findOne({ userId: req.session.user_id }).populate('product.productId').exec();
         const addressDoc = await addressModel.findOne({ userId: req.session.user_id });
         // console.log("isht e cart available:",cart)
@@ -523,7 +538,7 @@ const loadCheckout = async (req, res) => {
         // Check if the cart is empty
         if (cart && cart.product && cart.product.length > 0) {
             if(addressDoc && addressDoc.address.length > 0){
-                res.render('user/checkout', { addressDoc, cart,coupon });
+                res.render('user/checkout', { addressDoc, cart,coupon,shippingCost });
             }else{
                 res.send('No address found!')
             }
@@ -575,8 +590,8 @@ const addToWishlist = async(req,res)=>{
             products: [{ productId:productID }]
         });
         await newWishlist.save();
+        res.json({added:true})
     }
-        res.end()
     } catch (error) {
         console.log(error);
     }

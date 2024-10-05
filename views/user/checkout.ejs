@@ -95,12 +95,20 @@
                                             <td>₹<span id="subtotal"><%= total %></span></td>
                                         </tr>
                                         <tr>
-                                            <td>Shipping:</td>
-                                            <td>Free shipping</td>
+                                            <% if(shippingCost == 0){ %>
+                                            <td>Free Shipping:</td>
+                                            <td> 00.00</td>
+                                            <% }else if(shippingCost == 40){ %>
+                                                <td>Standard Shipping:</td>
+                                            <td> 40.00</td>
+                                                <% }else if(shippingCost == 70){ %>
+                                                    <td>Express Shipping:</td>
+                                                <td> 70.00</td>
+                                                    <% } %>
                                         </tr>
                                         <tr class="summary-total">
                                             <td>Total:</td>
-                                            <td>₹<span id="total"><%= total %></span></td>
+                                            <td>₹<span id="total"><%= total + shippingCost%></span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -453,7 +461,6 @@ form.addEventListener('submit', async function (event) {
                     "description": "Test Transaction",
                     "order_id": data.orderId,
                     "handler": function (response) {
-                        alert('Payment successful');
                         window.location.href = '/order/orderSuccessfulPage';
                     },
                     "prefill": {

@@ -30,8 +30,8 @@ const addToCart = async (req, res) => {
         const existing = await cartModel.find({ userId: user_id })
         if (existing.length == 0) {
 
-            console.log(user_id)
-
+            const product = await productModel.findById({_id:productId})
+            if(product.quantity>0){
             const addingCart = new cartModel({
                 userId: user_id,
                 product: [
@@ -41,20 +41,27 @@ const addToCart = async (req, res) => {
                 ]
             })
 
-            let added = await addingCart.save()
-            console.log(added)
-
+            await addingCart.save()
+            res.json({status : 'added'})
+        }else{
+            res.json({status : 'No quantity available!'})
+        }
+        
         } else {
             // console.log("it is else")
             const existProduct = await cartModel.find({ $and: [{ 'product.productId': productId }, { userId: user_id }] })
             if (existProduct.length == 0) {
                 // console.log('it flsfsdfsd')
+                const product = await productModel.findById({_id:productId})
+                if(product.quantity>0){
                 const addnewpr = await cartModel.updateOne(
                     { userId: user_id },
                     { $addToSet: { 'product': { productId: productId } } }
                 );
-
-                // console.log(addnewpr)
+                res.json({status : 'added'})
+            }else{
+                res.json({status : 'No quantity available!'})
+            }
             } else {
 
                 res.json({ status: 'existing' })
