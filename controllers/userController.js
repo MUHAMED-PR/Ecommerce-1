@@ -514,18 +514,14 @@ const changePassword = async(req,res)=>{
 const loadCheckout = async (req, res) => {
     try {
         const shippingType = req.body.shipping;
-        console.log("inside the req body is:",req.body)
-        console.log("shipping charge is :",shippingType)
         let shippingCost = 0
+        
         if (shippingType == 'free') {
             shippingCost = 0;
-           console.log("free");
        } else if (shippingType == 'standard') {
         shippingCost = 40;
-           console.log("standard");
        } else if (shippingType == 'express') {
         shippingCost = 70;
-           console.log("express");
        }      
 
         const cart = await cartModel.findOne({ userId: req.session.user_id }).populate('product.productId').exec();

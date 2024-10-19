@@ -56,8 +56,8 @@ app.set('views', './views/user')
 // userRoute.get('/failure', userController.failureGoogleLogin)
 
 userRoute.get('/', userController.homePage)
-userRoute.get('/signIn', userController.signIn);
-userRoute.get('/signUp', userController.signUp);
+userRoute.get('/signIn', auth.isLogout, userController.signIn);
+userRoute.get('/signUp', auth.isLogout,userController.signUp);
 userRoute.get('/logout', auth.isLogin, userController.logout)
 userRoute.get('/OTP', userController.getOtp)
 userRoute.post('/signUp', userController.insertUser)

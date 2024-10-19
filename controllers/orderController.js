@@ -115,6 +115,7 @@ const placeOrder = async (req, res) => {
             res.status(200).json({
               message: "Order placed successfully",
               orderId: order.id,
+              _id:savedData._id,
               keyId: process.env.RAZORPAY_KEY_ID,
             });
           } catch (error) {
@@ -145,6 +146,37 @@ const placeOrder = async (req, res) => {
   }
 };
 
+const creatRazorpayInstence=async(req,res)=>{
+  try {
+    const {id}=req.body;
+    if(!id) throw new Error("id not get ");
+    const order=await orderModel.findById(id);
+    if(!order) throw new Error("order not found id is not valid");
+
+    const options = {
+      amount: order.totalAmount * 100, // amount in smallest currency unit
+      currency: "INR",
+      receipt: `order_rcptid_${order._id}`,
+    };
+
+    try {
+      const order = await razorpayInstance.orders.create(options);
+      res.status(200).json({
+        message: "Order placed successfully",
+        orderId: order.id,
+        _id:order._id,
+        keyId: process.env.RAZORPAY_KEY_ID,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error creating Razorpay order" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    
+    res.status(400).json({error})
+  }
+}
 
 const orderSuccessfulPage = async (req, res) => {
   try {
@@ -288,7 +320,9 @@ const orderReturned = async (req, res) => {
     }
 
     // Find the specific product that was returned
-    const returnedProduct = order.products.find((item) => item._id.toString() === itemId);
+    const returnedProduct = order.products.find(
+      (item) => item._id.toString() === itemId
+    );
 
     if (!returnedProduct) {
       return res.status(404).json({ message: "Returned product not found" });
@@ -319,38 +353,60 @@ const orderReturned = async (req, res) => {
       wallet = new walletModel({
         userId: order.userId,
         balance: transactionAmount,
-        transactions: [{
-          method: "Credit",
-          reason: "Refund",
-          transactionAmount: transactionAmount,
-          date: Date.now(),
-        }]
+        transactions: [
+          {
+            method: "Credit",
+            reason: "Refund",
+            transactionAmount: transactionAmount,
+            date: Date.now(),
+          },
+        ],
       });
     }
 
     // Save the wallet update
     await wallet.save();
-    console.log('Wallet updated:', wallet);
+    console.log("Wallet updated:", wallet);
 
     return res
       .status(200)
-      .json({ message: "Order status updated to Returned, stock updated, and wallet credited", order, wallet });
-
+      .json({
+        message:
+          "Order status updated to Returned, stock updated, and wallet credited",
+        order,
+        wallet,
+      });
   } catch (error) {
     console.error("Error in orderReturned:", error);
     return res.status(500).json({ message: "Server error", error });
   }
 };
 
-
+const updateOrderPaymentStatus = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+    if (!id && !status) throw new Error("lesss data");
+    const order = await orderModel.findById(id);
+    if (!order) throw new Error("wrong id , no order fonund");
+    order.paymentStatus=status;
+    const updatedOrder=await order.save();
+    if(!updatedOrder) throw new Error("somthing isssue happend");
+    res.status(200).json({order:updatedOrder})
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).send(error.message);
+    
+  }
+};
 
 module.exports = {
+  updateOrderPaymentStatus,
   //User Controller:
   placeOrder,
   orderSuccessfulPage,
   orderDetails,
   orderReturned,
-
+  creatRazorpayInstence,
   //Admin Controller:
   adminOrderDetails,
   changeOrderStatus,

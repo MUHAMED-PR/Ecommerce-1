@@ -68,6 +68,7 @@
                                                         State: <%= addressDoc.address[j].state %><br>
                                                         City: <%= addressDoc.address[j].city %>,
                                                         Street: <%= addressDoc.address[j].street %></p>
+                                                        <input type="hidden" name="paymentStatus" id="paymentStatus">
                                                     </div>
                                                 </div>
                                             </div>
@@ -95,6 +96,10 @@
                                             <td>₹<span id="subtotal"><%= total %></span></td>
                                         </tr>
                                         <tr>
+                                            <td>Discount :</td>
+                                            <td id="Discout-amount">00.00</td>
+                                        </tr>
+                                        <tr id="shipValue">
                                             <% if(shippingCost == 0){ %>
                                             <td>Free Shipping:</td>
                                             <td> 00.00</td>
@@ -108,12 +113,17 @@
                                         </tr>
                                         <tr class="summary-total">
                                             <td>Total:</td>
-                                            <td>₹<span id="total"><%= total + shippingCost%></span></td>
+                                            <% let grandTotal =  total + shippingCost%>
+                                            <td>₹<span id="total"><%= grandTotal%></span></td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <input type="hidden" name="total" id="hiddenTotal" value="<%= total %>">
-
+                                <input type="hidden" name="total" id="hiddenTotal" value="<%= grandTotal %>">
+                                <script>
+                                    const total = document.getElementById('total')
+                                    const hiddenTotal = document.getElementById('hiddenTotal')
+                                    console.log("total is :",total ,"& hidden total is :",hiddenTotal)
+                                </script>
                                 <div class="payment-options">
                                     <div class="form-group">
                                         <label class="payment-option">
@@ -276,7 +286,6 @@
         const checkoutDiscountInput = document.getElementById('checkout-discount-input');
         if (checkoutDiscountInput) {
             checkoutDiscountInput.value = couponCode;
-            // console.log("Is the value available in the input tag?", checkoutDiscountInput.value);
     
             const closeModal = document.getElementById('close-available-coupons')
             if(closeModal){
@@ -294,118 +303,146 @@
         fetchAvailableCoupons();
     });
     
-    const applyCouponBtn = document.getElementById('applyCouponBtn');
-    const checkoutDiscountInput = document.getElementById('checkout-discount-input');
-    const subtotalElement = document.getElementById('subtotal');
-    const totalElement = document.getElementById('total');
-    const hiddenTotal = document.getElementById('hiddenTotal');
-    const removeCouponBtn = document.getElementById('removeCouponBtn');
-    const appliedCouponDetails = document.getElementById('applied-coupon-details');
-    const couponForm = document.getElementById('coupon-form');
-    
-    let appliedCoupon = null; // Store applied coupon information
-    
-    applyCouponBtn.addEventListener('click', async function() {
-        const couponCode = checkoutDiscountInput.value.trim();
-        if (couponCode) {
-            try {
-                applyCouponBtn.disabled = true;
-    
-                const response = await fetch(`/applyCoupon/${couponCode}`, {
-                    method: 'get',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-    
-                const data = await response.json();
-    
-                if (data.coupons && data.coupons.discountAmount) {
-                    const discountAmount = data.coupons.discountAmount;
-                    const subtotal = parseFloat(subtotalElement.textContent.replace('₹', ''));
-                    const newTotal = Math.max(0, subtotal - discountAmount);
-    
-                    totalElement.textContent = `₹${newTotal.toFixed(2)}`;
-                    hiddenTotal.value = newTotal.toFixed(2);
-    
-                    // Store the applied coupon information
-                    appliedCoupon = {
-                        code: couponCode,
-                        discountAmount: discountAmount
-                    };
-    
-                    // Show success message and coupon details
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Coupon applied successfully!',
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-    
-                    // Update UI to show applied coupon details
-                    document.getElementById('applied-coupon-info').innerHTML = `
-                        <i class="bi bi-check-circle me-2"></i>
-                        Coupon "${couponCode}" applied with discount ₹${discountAmount}.
-                    `;
-                    appliedCouponDetails.style.display = 'block';
-                    couponForm.style.display = 'none';
-                    checkoutDiscountInput.value = '';
-    
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: data.message || 'Invalid coupon code.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+const applyCouponBtn = document.getElementById('applyCouponBtn');
+const checkoutDiscountInput = document.getElementById('checkout-discount-input');
+const subtotalElement = document.getElementById('subtotal');
+const totalElement = document.getElementById('total');
+const hiddenTotal = document.getElementById('hiddenTotal');
+const removeCouponBtn = document.getElementById('removeCouponBtn');
+const appliedCouponDetails = document.getElementById('applied-coupon-details');
+const couponForm = document.getElementById('coupon-form');
+
+let appliedCoupon = null; // Store applied coupon information
+
+applyCouponBtn.addEventListener('click', async function() {
+    const couponCode = checkoutDiscountInput.value.trim();
+    if (couponCode) {
+        try {
+            applyCouponBtn.disabled = true;
+
+            const response = await fetch(`/applyCoupon/${couponCode}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            } catch (error) {
-                console.error('Error applying coupon:', error);
+            });
+
+            const data = await response.json();
+
+            if (data.coupons && data.coupons.discountAmount) {
+                const discountAmount = data.coupons.discountAmount;
+
+                // Update the discount amount in the table using innerText
+                document.getElementById("Discout-amount").innerText = `₹${discountAmount}`;
+
+                // Get the subtotal and calculate the new total
+                const total = parseFloat(totalElement.textContent.replace('₹', ''));
+                const newTotal = Math.max(0, total - discountAmount);
+
+                // Update the total amount and the hidden input value for the total
+                totalElement.textContent = `₹${newTotal.toFixed(2)}`;
+                hiddenTotal.value = newTotal.toFixed(2);
+
+                // Store the applied coupon information
+                appliedCoupon = {
+                    code: couponCode,
+                    discountAmount: discountAmount
+                };
+
+                // Show success message and coupon details
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Coupon applied successfully!',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                // Update UI to show applied coupon details
+                document.getElementById('applied-coupon-info').innerHTML = `
+                    <i class="bi bi-check-circle me-2"></i>
+                    Coupon "${couponCode}" applied with discount ₹${discountAmount}.
+                `;
+                appliedCouponDetails.style.display = 'block';
+                couponForm.style.display = 'none';
+                checkoutDiscountInput.value = '';
+
+            } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error applying the coupon. Please try again.',
+                    text: data.message || 'Invalid coupon code.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } finally {
-                applyCouponBtn.disabled = false;
             }
-        } else {
+        } catch (error) {
+            console.error('Error applying coupon:', error);
             Swal.fire({
-                title: 'Warning!',
-                text: 'Please enter a coupon code.',
-                icon: 'warning',
+                title: 'Error!',
+                text: 'There was an error applying the coupon. Please try again.',
+                icon: 'error',
                 confirmButtonText: 'OK'
             });
+        } finally {
+            applyCouponBtn.disabled = false;
         }
-    });
+    } else {
+        Swal.fire({
+            title: 'Warning!',
+            text: 'Please enter a coupon code.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+    }
+});
+
     
     // Handle coupon removal on the frontend
-    removeCouponBtn.addEventListener('click', function() {
-        if (appliedCoupon) {
-            // Reset the total to the original value
-            const subtotal = parseFloat(subtotalElement.textContent.replace('₹', ''));
-            totalElement.textContent = `₹${subtotal.toFixed(2)}`;
-            hiddenTotal.value = subtotal.toFixed(2);
-    
-            // Show success message
-            Swal.fire({
-                title: 'Success!',
-                text: 'Coupon removed successfully!',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            });
-    
-            // Update UI to show coupon form and hide coupon details
-            appliedCouponDetails.style.display = 'none';
-            couponForm.style.display = 'flex';
-    
-            // Reset the applied coupon information
-            appliedCoupon = null;
+// Handle coupon removal on the frontend
+removeCouponBtn.addEventListener('click', function() {
+    if (appliedCoupon) {
+
+        const shippingRow = document.getElementById('shipValue');
+
+        // Get the second <td> (shipping cost) and convert it to a number
+        const shippingCost = parseFloat(shippingRow.querySelectorAll('td')[1].innerText);
+
+        console.log("shipping cost :::", shippingCost);
+
+        // Reset the total to the original value (before the coupon was applied)
+        const subtotal = parseFloat(subtotalElement.textContent.replace('₹', '').trim());
+
+        // Check if both values are valid numbers before doing the calculation
+        if (!isNaN(subtotal) && !isNaN(shippingCost)) {
+            // Perform the addition as a number, then format it with toFixed()
+            const total = (subtotal + shippingCost).toFixed(2);
+            totalElement.textContent = `₹${total}`;
+            hiddenTotal.value = total;
+        } else {
+            console.error("Subtotal or shipping cost is not a valid number.");
         }
-    });
+
+        // Reset the discount amount to 00.00
+        document.getElementById('Discout-amount').innerText = '₹00.00';
+
+        // Show success message
+        Swal.fire({
+            title: 'Success!',
+            text: 'Coupon removed successfully!',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        // Update UI to show coupon form and hide applied coupon details
+        appliedCouponDetails.style.display = 'none';
+        couponForm.style.display = 'flex';
+
+        // Reset the applied coupon information
+        appliedCoupon = null;
+    }
+});
+    
     
 
     //ship to new address
@@ -424,6 +461,7 @@ form.addEventListener('submit', async function (event) {
     const formData = new FormData(form);
     const paymentOption = formData.get('paymentOption');
     const total = parseFloat(hiddenTotal.value);
+    const paymentStatus = document.getElementById('paymentStatus')
 
     // COD validation
     if (paymentOption === 'Cash On Delivery') {
@@ -432,6 +470,7 @@ form.addEventListener('submit', async function (event) {
             return; // Stop form submission
         } else {
             try {
+                paymentStatus.value = 'Paid'
                 const response = await axios.post('/order/placeOrder', Object.fromEntries(formData));
                 if (response.data.orderId) {
                     window.location.href = '/order/orderSuccessfulPage';
@@ -460,7 +499,9 @@ form.addEventListener('submit', async function (event) {
                     "name": "E-Commerce Site",
                     "description": "Test Transaction",
                     "order_id": data.orderId,
-                    "handler": function (response) {
+                    "handler": async function (response) {
+                        await axios.put('/order/updatePaymentStatus',{id:data._id,status:"Paid"})
+                        paymentStatus.value = 'Paid'
                         window.location.href = '/order/orderSuccessfulPage';
                     },
                     "prefill": {
@@ -476,6 +517,12 @@ form.addEventListener('submit', async function (event) {
                     }
                 };
                 const rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', async() => {
+                    await axios.put('/order/updatePaymentStatus',{id:data._id,status:"Not Paid"})
+                    window.location.href="/"
+                    alert("payment failed");
+                        
+                 })
                 rzp1.open();
             } else {
                 alert(data.message);
@@ -488,6 +535,7 @@ form.addEventListener('submit', async function (event) {
     // Handle Wallet payment
     else if (paymentOption === 'Wallet') {
         try {
+
             const response = await axios.post('/order/placeOrder', Object.fromEntries(formData));
             if (response.data.success) {
                 alert('Order placed successfully using wallet!');

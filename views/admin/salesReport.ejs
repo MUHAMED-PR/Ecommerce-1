@@ -6,177 +6,208 @@
         <!-- Layout container -->
         <div class="layout-page">
             <!-- Navbar -->
-            <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+            <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-white shadow-sm" id="layout-navbar">
                 <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                     <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                         <i class="bx bx-menu bx-sm"></i>
                     </a>
                 </div>
 
-                <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                <div class="navbar-nav-right d-flex align-items-center w-100" id="navbar-collapse">
                     <!-- Search -->
                     <div class="navbar-nav align-items-center">
                         <div class="nav-item d-flex align-items-center">
-                            <i class="bx bx-search fs-4 lh-0"></i>
-                            <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
+                            <i class="bx bx-search fs-4 lh-0 text-muted"></i>
+                            <input type="text" class="form-control border-0 shadow-sm" placeholder="Search..." aria-label="Search..." />
                         </div>
                     </div>
                     <!-- /Search -->
 
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
-                        <!-- User options here if needed -->
+                        <!-- User options here -->
                     </ul>
                 </div>
             </nav>
             <!-- / Navbar -->
 
             <!-- Content wrapper -->
-            <div class="content-wrapper p-3">
+            <div class="content-wrapper p-4">
                 <!-- Header Section -->
-                <div class="d-flex justify-content-between align-items-center ">
-                    <h3 class="mt-1">Sales Report</h3>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold text-dark">📊 Sales Dashboard</h3>
                     <div>
-                        <input type="text" class="form-control" id="date-range" placeholder="Select Date Range">
+                        <input type="text" class="form-control shadow-sm rounded-pill border-0" id="date-range" placeholder="Select Date Range">
                     </div>
                 </div>
 
                 <!-- Summary Cards -->
-                <div class="row ">
+                <div class="row g-3 mb-4">
+                    <!-- Total Sales Card -->
                     <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5>Total Sales</h5>
-                                <h3>₹<%= totalSale %></h3>
-                                <!-- <span class="text-success">+8% from last month</span> -->
+                        <div class="card h-100 border-0 shadow-lg" style="background-color: #bdbbe4;">
+                            <div class="card-body text-center text-white">
+                                <h5 class="mb-2">Total Sales</h5>
+                                <h2>₹<%= totalSale %></h2>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Total Orders Card -->
                     <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5>Total Orders</h5>
-                                <h3><%= orders.length %></h3>
-                                <!-- <span class="text-success">+5% from last month</span> -->
+                        <div class="card h-100 border-0 shadow-lg" style="background-color: #98b3de;">
+                            <div class="card-body text-center text-white">
+                                <h5 class="mb-2">Total Orders</h5>
+                                <h2><%= orders.length %></h2>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 ">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5>Average Order Value</h5>
-                                <h3>₹<%= (totalSale/orders.length).toFixed(2) %></h3>
-                                <!-- <span class="text-danger">-2% from last month</span> -->
+
+                    <!-- Avg Order Value Card -->
+                    <div class="col-md-3">
+                        <div class="card h-100 border-0 shadow-lg" style="background-color: #51f2ca;">
+                            <div class="card-body text-center text-white">
+                                <h5 class="mb-2">Avg Order Value</h5>
+                                <h2>₹<%= (totalSale/orders.length).toFixed(2) %></h2>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-md-3 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5>New Customers</h5>
-                                <h3>320</h3>
-                                <span class="text-success">+15% from last month</span>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
 
-                <!-- Charts Section -->
-                <!-- <div class="row mb-4">
-                    <div class="col-lg-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Sales Trends</h5>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="salesTrendChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Category Performance</h5>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="categoryPerformanceChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
                 <!-- Detailed Sales Table -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Sales Details</h5>
+                <div class="card border-0 shadow-lg mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0">📝 Sales Details</h5>
                     </div>
-                    <div class="card-body">
-                            <% if(orders.length === 0){ %>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>User Name</th>
-                                    <th>Order Id</th>
-                                    <th>Order Details</th>
-                                    <th>Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2023-09-01</td>
-                                    <td>Product A</td>
-                                    <td>100</td>
-                                    <td>$1,200</td>
-                                    <td>North America</td>
-                                </tr>
-                                <!-- Add more rows as needed -->
-                            </tbody>
-                        </table>
+                    <div class="card-body p-0">
+                        <% if (orders.length > 0) { %>
+                            <!-- Table displaying orders -->
+                            <table class="table table-hover table-borderless mb-0">
+                                <thead class="table-light">
+                                    <tr class="text-center">
+                                        <th>Sl No.</th>
+                                        <th>Date</th>
+                                        <th>User Name</th>
+                                        <th>Order ID</th>
+                                        <th>Order Details</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% let totalRevenue = 0; %>
+                                    <% orders.forEach((order, i) => { %>
+                                        <tr class="text-center">
+                                            <td><%= i + 1 %></td>
+                                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                                            <td><%= order.userId.userName %></td>
+                                            <td><%= order._id %></td>
+                                            <td>
+                                                <!-- Product Name with data attributes -->
+                                                <span class="product-name" 
+                                                      data-order-id="<%= order._id %>" 
+                                                      data-user-name="<%= order.userId.userName %>" 
+                                                      data-product-name="<%= order.products[0].productId.name %>" 
+                                                      data-quantity="<%= order.products[0].quantity %>" 
+                                                      data-revenue="<%= order.totalAmount %>">
+                                                    <%= order.products[0].productId.name %>
+                                                </span>
+                                                <!-- Icon to indicate more details available -->
+                                                <a href="#" class="details-icon" 
+                                                   title="Click here to see more details" 
+                                                   data-bs-toggle="modal" 
+                                                   data-bs-target="#orderDetailsModal">
+                                                   <i class='bx bx-info-circle'></i>
+                                                </a>
+                                            </td>
+                                            <td>₹<%= order.totalAmount %></td>
+                                        </tr>
+                                        <% totalRevenue += order.totalAmount; %>
+                                    <% }) %>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="text-center">
+                                        <td colspan="5"><strong>Total Revenue</strong></td>
+                                        <td><strong>₹<%= totalRevenue %></strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        <% } else { %>
+                            <p class="text-center my-3">No sales available for the selected date range.</p>
                         <% } %>
                     </div>
                 </div>
-
             </div>
-            <!-- / Content wrapper -->
         </div>
-        <!-- / Layout page -->
     </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
 </div>
-<!-- / Layout wrapper -->
+
+<!-- Modal to display order details -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Order ID:</strong> <span id="modalOrderId"></span></p>
+                <p><strong>User Name:</strong> <span id="modalUserName"></span></p>
+                <p><strong>Product Name:</strong> <span id="modalProductName"></span></p>
+                <p><strong>Quantity:</strong> <span id="modalQuantity"></span></p>
+                <p><strong>Total Revenue:</strong> <span id="modalRevenue"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS for modal functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- JavaScript for handling click event and displaying modal -->
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    // Use event delegation to capture clicks on dynamically loaded elements
+    document.body.addEventListener('click', function(e) {
+        // Check if the clicked element has the 'product-name' class
+        if (e.target.classList.contains('product-name')) {
+            console.log("Element clicked:", e.target);
+
+            // Retrieve the data attributes from the clicked element
+            const orderId = e.target.getAttribute('data-order-id');
+            const userName = e.target.getAttribute('data-user-name');
+            const productName = e.target.getAttribute('data-product-name');
+            const quantity = e.target.getAttribute('data-quantity');
+            const revenue = e.target.getAttribute('data-revenue');
+
+            console.log("Order ID:", orderId);
+            console.log("User Name:", userName);
+            console.log("Product Name:", productName);
+            console.log("Quantity:", quantity);
+            console.log("Revenue:", revenue);
+
+            // Ensure the values exist before displaying them
+            if (orderId && userName && productName && quantity && revenue) {
+                // Populate the modal fields with the correct data
+                document.getElementById('modalOrderId').innerText = orderId;
+                document.getElementById('modalUserName').innerText = userName;
+                document.getElementById('modalProductName').innerText = productName;
+                document.getElementById('modalQuantity').innerText = quantity;
+                document.getElementById('modalRevenue').innerText = '₹' + revenue;
+
+                // Show the modal using Bootstrap's JavaScript API
+                const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+                modal.show();
+            } else {
+                console.error("Missing data attributes. Modal cannot be populated.");
+            }
+        }
+    });
+});
+
+</script>
+
 
 <%- include('../layouts/adminFooter.ejs') %>
-
-<!-- Include Chart.js or any other charting library in your layout for chart rendering -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Sample chart initialization
-    var ctx = document.getElementById('salesTrendChart').getContext('2d');
-    var salesTrendChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'Sales',
-                data: [1000, 1200, 900, 1400, 1300, 1700],
-                borderColor: '#42a5f5',
-                fill: false
-            }]
-        }
-    });
-
-    var ctx2 = document.getElementById('categoryPerformanceChart').getContext('2d');
-    var categoryPerformanceChart = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: ['Category A', 'Category B', 'Category C'],
-            datasets: [{
-                label: 'Sales',
-                data: [5000, 3000, 2000],
-                backgroundColor: ['#42a5f5', '#66bb6a', '#ff7043']
-            }]
-        }
-    });
-</script> -->

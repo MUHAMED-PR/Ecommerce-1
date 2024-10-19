@@ -60,7 +60,11 @@
                 <div class="col-md-6">
                     <p><strong>Payment Method:</strong> <%= orderDetails.paymentMethod %></p>
                     <p><strong>Total Amount:</strong> ₹<%= orderDetails.totalAmount %></p>
-                    <p><strong>Status:</strong> <%= infoOfProduct.orderStatus %></p>
+                    <p><strong>Payment Status:</strong><%= orderDetails.paymentStatus %></p>
+                    <% if(orderDetails.paymentStatus == 'Not Paid'){ %>
+                        <a onclick="rzr('<%=orderDetails._id %>','<%= orderDetails.totalAmount %>')">Re-payment</a>
+                        <% } %>
+                    
                 </div>
             </div>
         </div>
@@ -80,8 +84,8 @@
                 <p><strong>Price:</strong> ₹<%= infoOfProduct.price %></p>
                 <p><strong>Quantity:</strong> <%= infoOfProduct.quantity %></p>
                 <p><strong>Subtotal:</strong> ₹<%= infoOfProduct.price * infoOfProduct.quantity %></p>
-                <!-- <img src="" alt="" class="img-thumbnail" style="max-width: 100px; max-height: 70px;"> -->
-                 <%= console.log(infoOfProduct.productId.name) %>
+                <p><strong>Delivery Status:</strong> <%= infoOfProduct.orderStatus %></p>
+               
             </div>
         </div>
     
@@ -146,8 +150,48 @@
     </div>
     
 
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+       async function rzr(id,total){
+            const {data}=await axios.put('/order/creatRazorpayInstence',{id})
+            if (data.orderId) {
+                const options = {
+                    "key": data.keyId,
+                    "amount": total * 100, // Amount in paisa
+                    "currency": "INR",
+                    "name": "E-Commerce Site",
+                    "description": "Test Transaction",
+                    "order_id": data.orderId,
+                    "handler": async function (response) {
+                        await axios.put('/order/updatePaymentStatus',{id:id,status:"Paid"})
+                        paymentStatus.value = 'Paid'
+                        window.location.reload()
+                    },
+                    "prefill": {
+                        "name": "Test User",
+                        "email": "test@example.com",
+                        "contact": "9999999999"
+                    },
+                    "notes": {
+                        "address": "Test Address"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+                const rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', async() => {
+                    await axios.put('/order/updatePaymentStatus',{id:data._id,status:"Not Paid"})
+                    alert("payment failed");
+                        
+                 })
+                rzp1.open();
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
     <script>
         document.getElementById('downloadInvoice').addEventListener('click', function () {
             const invoiceElement = document.getElementById('invoice-content');

@@ -27,8 +27,8 @@ app.set('views', '../views/admin');
 
 
 
-adminRoute.get('/',adminController.adminLoad)
-adminRoute.get('/login',adminController.adminLogin)
+adminRoute.get('/',adminAuth.isLogout,adminController.adminLoad)
+adminRoute.get('/login',adminAuth.isLogout,adminController.adminLogin)
 adminRoute.get('/dashboard',adminAuth.isLogin,adminController.dashboard)
 adminRoute.get('/customer',adminAuth.isLogin,adminController.costumers)
 adminRoute.get('/products',adminAuth.isLogin,adminController.products)

@@ -76,7 +76,13 @@ const searchProduct = async (req, res) => {
         const itemsPerPage = 4;
         const skip = (page - 1) * itemsPerPage;
 
-        const regex = new RegExp(search, "i");
+        let searchCriteria = {};
+
+        // If the search input is not empty, create a regex to filter products by name
+        if (search && search.trim() !== "") {
+            const regex = new RegExp(search, "i");
+            searchCriteria = { name: regex };
+        }
 
         let sortCriteria;
         switch (sortBy) {
@@ -98,17 +104,17 @@ const searchProduct = async (req, res) => {
         }
 
         // Fetch the total number of matching products for pagination
-        const totalProducts = await product.countDocuments({ name: regex });
+        const totalProducts = await product.countDocuments(searchCriteria);
         const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
         // Fetch products based on search criteria, sorting, and pagination
-        const products = await product.find({ name: regex })
+        const products = await product.find(searchCriteria)
             .sort(sortCriteria)
             .populate('category')
             .skip(skip)
             .limit(itemsPerPage);
 
-            // Fetch active offers
+        // Fetch active offers
         const activeOffers = await offerModel.find({ status: true });
 
         // Match offers with products
@@ -119,12 +125,15 @@ const searchProduct = async (req, res) => {
             }
         });
 
-        res.render('user/product', { products, currentPage: page, totalPages, sortBy }); // Pass all variables to the template
+        res.render('user/product', { products, currentPage: page, totalPages, sortBy, search });
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
     }
 };
+
+
+
 
 module.exports = {
     loadProductPage,

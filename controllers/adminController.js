@@ -258,22 +258,19 @@ const loadAddProduct = async(req,res)=>{
 
 const addProduct = async(req,res)=>{
     try {
-        console.log('Request body:', req.body);
-        console.log('Request files:', req.files);
+        
         const {productName,category,
             productPrice,productQuantity,                                
             description} = req.body
-         console.log(productName,'productName');
-            // console.log(category,' category');
+        //  console.log(productName,'productName');
+            console.log(category,' category');
             // console.log(image1,' is the image1')
             const categoryId = await categoryModel.findOne({categoryName:category})
-            // console.log(categoryId,'catergoryId over .......!!!!')
+            console.log(categoryId,'catergoryId over .......!!!!')
 
             const regex = new RegExp(productName,"i")
-            // console.log(regex,'regex');
             const existingProduct = await productModel.find({name:regex})
-            // console.log(existingProduct,' is the existingProduct!!!!!!!!')
-            const categoryModels = await categoryModel.find()
+            
             if(existingProduct.length>0){
                 req.flash('error','Product name is already existed !')
                 return res.redirect('/admin/loadAddProduct')
@@ -294,7 +291,14 @@ const addProduct = async(req,res)=>{
 
             })
           let productss  =  await newProduct.save()
-        //    console.log(products+"toduckldfdlfkl")
+          if(productss){
+            const numOfProduct = await categoryModel.findByIdAndUpdate(
+                categoryId._id, // Directly passing the category ID
+                { $inc: { numOfProduct: 1 } }, // Use the $inc operator to increment numOfProduct by 1
+                { new: true } // Optional: Return the updated document
+            );
+                      }
+        
             return res.redirect('/admin/products')
     } catch (error) {
         console.log(error)
@@ -303,10 +307,7 @@ const addProduct = async(req,res)=>{
 
 const loadEditProduct = async(req,res)=>{
     try {
-        // console.log(`ggggggggggggggggggggggg`);
         const {productId} = req.query
-    
-        // console.log(`productId is ${productId}`);
         const category = await categoryModel.find({})
         const product = await productModel.findById(productId)
         console.log(product );
@@ -384,10 +385,13 @@ const productListing = async(req,res)=>{
 
 const SalesReport = async(req,res)=>{
     try {
-        const orders = await orderModel.find();
-        const totalSale = orders.reduce((sum, order) => sum + order.totalAmount, 0);
-        
-        console.log(totalSale);
+        const orders = await orderModel
+        .find().populate({
+          path: 'products.productId',  
+          select: 'name'  // Only selects the 'name' field from the Product model
+        }) .populate('userId').sort({ orderDate: -1 }); 
+ 
+         const totalSale = orders.reduce((sum, order) => sum + order.totalAmount, 0);
         
         res.render('admin/salesReport',{orders,totalSale})
     } catch (error) {

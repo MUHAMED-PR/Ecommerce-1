@@ -13,6 +13,11 @@ const categorySchema = new mongoose.Schema({
         type:Boolean,
         required:true,
         default:false
+    },
+    numOfProduct:{
+        type:Number,
+        required:true,
+        default:0
     }
 })
 

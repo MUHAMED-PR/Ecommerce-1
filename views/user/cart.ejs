@@ -459,10 +459,12 @@ document.querySelectorAll('.cart-product-quantity input').forEach(input => {
 		
 			function remove(productId) {
 				const cartElement = document.getElementById('cartElement');
+				console.log('is the cart elements:',cartElement)
 				axios.get(`/removeCart/${productId}`)
 					.then(response => {
 						if (response.data.status) {
 							cartElement.remove();
+							// window.location.reload()
 							updateTotals();
 						}
 					})
