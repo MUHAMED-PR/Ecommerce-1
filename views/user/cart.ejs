@@ -126,7 +126,7 @@
 													<% cart.forEach((product,index)=>{ %>
 														
 
-															<tr id="cartElement">
+															<tr id="<%= index+"cartElement" %>">
 																<td class="product-col">
 																	<div class="product">
 																		<figure class="product-media">
@@ -170,7 +170,7 @@
 																	
 																</td>
 																<td class="remove-col"><button
-																		onclick="remove('<%= product._id%>')"
+																		onclick="remove('<%= product._id%>','<%= index%>')"
 																		class="btn-remove"><i
 																			class="icon-close"></i></button></td>
 															</tr>
@@ -457,14 +457,12 @@ document.querySelectorAll('.cart-product-quantity input').forEach(input => {
 });
 
 		
-			function remove(productId) {
-				const cartElement = document.getElementById('cartElement');
-				console.log('is the cart elements:',cartElement)
+			function remove(productId,index) {
+				const cartElement = document.getElementById(`${index}cartElement`);
 				axios.get(`/removeCart/${productId}`)
 					.then(response => {
 						if (response.data.status) {
 							cartElement.remove();
-							// window.location.reload()
 							updateTotals();
 						}
 					})

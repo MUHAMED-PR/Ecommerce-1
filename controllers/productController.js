@@ -1,5 +1,6 @@
 const product = require('../models/product');
 const offerModel = require('../models/offers')
+const categoryModel = require('../models/category')
 
 const loadProductPage = async (req, res) => {
     try {
@@ -8,6 +9,7 @@ const loadProductPage = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const itemsPerPage = 4;
         const skip = (page - 1) * itemsPerPage;
+        const categories = await categoryModel.find() 
 
         let sortCriteria;
         switch (sortBy) {
@@ -41,7 +43,7 @@ const loadProductPage = async (req, res) => {
 
         
         // Render the user product page
-        res.render('user/product', { products, currentPage: page, totalPages, sortBy });
+        res.render('user/product', { products, currentPage: page, totalPages, sortBy, categories});
     } catch (error) {
         console.error('Error loading product page:', error);
         res.status(500).send('Internal Server Error');
