@@ -419,7 +419,7 @@ const shippingElem = document.querySelector('input[name="shipping"]:checked');
 
 // Check if shippingElem is null
 if (!shippingElem) {
-    console.log("No shipping option selected.");
+   
     // Set default shipping cost here if needed
     document.getElementById('summaryTotal').innerHTML = `₹${subtotal.toFixed(2)}`;
     return;

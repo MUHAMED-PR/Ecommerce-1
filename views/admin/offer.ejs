@@ -163,57 +163,7 @@
       <!-- / Layout wrapper -->
   
      
-     <!-- ================================================   -->
-     <!-- <script>
-      function editCategory(id, name, description) {
-        // Set the form action URL
-        const form = document.getElementById('editCategoryForm');
-        
-    
-        // Set the input values
-        document.getElementById('categoryId').value = id;
-        console.log(id,'id in ejs page');
-        document.getElementById('categoryName').value = name;
-        document.getElementById('description').value = description;
-      }
-    
-      function categoryListing(categoryId) {
-        console.log(categoryId,'category id in fetch');
-    fetch('/admin/listCategory', {
-        method: 'POST', // Use POST method
-        headers: {
-            'Content-Type': 'application/json' // Set the appropriate headers
-        },
-        body: JSON.stringify({ categoryId: categoryId.trim() }) // Include the body with JSON data
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if (data.category) {
-            const statusButton = document.getElementById(`listingBtn${categoryId}`);
-            console.log(statusButton,'status button');
-            // window.location.href='/admin/category'
-            
-            console.log('statusButton reached......')
-            if (data.category.is_status===true) {
-              // console.log('-*************');
-                statusButton.innerHTML = '<span><i class="bx bx-block me-1"></i>Unlisted</span>';
-                // window.location.href='/admin/category'
-            } else {
-                statusButton.innerHTML = '<span><i class="bx bx-check-circle me-1"></i> Listed</span>';
-                // console.log('&&&&&&&&&&&&');
-                // window.location.href='/admin/category'
 
-            }
-        }
-        
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-    </script> -->
     
 
  <!-- Bootstrap Modal -->
@@ -287,16 +237,7 @@
             <input type="number" class="form-control" id="offerPercentage" name="offerPercentage" placeholder="Discount Percentage" min="0" max="100" required>
           </div>
 
-          <!-- <div class="mb-3">
-            <input type="date" class="form-control" id="expiry" name="expiry" required>
-          </div> -->
-
-          <!-- <div class="mb-3">
-            <select class="form-select" id="status" name="status" required>
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
-          </div> -->
+         
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

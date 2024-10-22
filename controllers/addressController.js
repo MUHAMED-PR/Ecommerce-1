@@ -3,10 +3,7 @@ const addressModel = require('../models/address')
 const addingAddress = async(req,res)=>{
     try {
         const {name,email,phone,phone1,pincode,state,city,street,landmark} = req.body
-        // console.log(name,email,phone,phone1,pincode,state,city,street,landmark)
-    //    console.log(req.session ,' is the session things')
         const existingAddress = await addressModel.findOne({userId:req.session.user_id})
-        // console.log(existingAddress,' is the existing addresssssss')
 
         if(existingAddress && existingAddress.address.length >=3){
             req.flash('error', 'You can add only three addresses.');
@@ -77,7 +74,6 @@ const editAddress = async (req, res) => {
             { $set: { 'address.$': editedAddress } },
             { new: true }
         );
-        // console.log(updatedAddress, 'is the updated Address');
 
         if (updatedAddress) {
             res.status(200).json({ success: true, message: 'Address updated successfully' });

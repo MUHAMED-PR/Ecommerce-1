@@ -115,9 +115,7 @@ const deleteCoupon = async (req, res) => {
 const getCouponForEdit = async (req, res) => {
     try {
         const { id } = req.params;
-        // console.log('here si the couponId for modal :',typeof id)
         const coupon = await couponModel.findById(id);
-        // console.log("editMOdal coupon :",coupon)
 
         if (coupon) {
             res.json({ success: true, coupon });
@@ -133,9 +131,7 @@ const getCouponForEdit = async (req, res) => {
 // Function to update an existing coupon
 const updateCoupon = async (req, res) => {
     try {
-        console.log("heelloooo koooiiii")
         const { id } = req.params;
-        console.log(typeof id)
         const { couponName, couponCode, description, count, expiry, discountAmount, active } = req.body;
 
         // Check if the coupon exists
@@ -151,7 +147,6 @@ const updateCoupon = async (req, res) => {
             coupon.active = active === 'true'; // Convert 'true'/'false' to boolean
 
             const updatedCoupon = await coupon.save();
-            console.log(updateCoupon,"is the updataed coupon")
 
             if (updatedCoupon) {
                 res.json({ success: true, message: 'Coupon updated successfully.' });
@@ -182,7 +177,6 @@ const applyCoupon = async (req,res)=>{
     try {
         const {couponCode} = req.params
         const coupons = await couponModel.findOne({couponCode})
-        // console.log("coupon is :",coupons)
         res.json({coupons})
     } catch (error) {
         console.log(error)

@@ -5,9 +5,9 @@ const loadOfferPage = async (req, res) => {
     try {
       const offers = await offerModel.find().populate('productName').exec()
       const products = await productModel.find(); 
-      //  console.log('offers: ', offers);
-      //  console.log('products: ',products);
+      
       res.render('admin/offer', { offers, products });
+
     } catch (error) {
       console.log(error);
       res.status(500).send("An error occurred while loading the offer page.");
@@ -17,7 +17,6 @@ const loadOfferPage = async (req, res) => {
 
   const addingOffer = async(req,res)=>{
     try {
-        // console.log(req.body)
         const {offerName,productName,offerPercentage} = req.body
 
         const saveOffer = new offerModel({
@@ -28,15 +27,12 @@ const loadOfferPage = async (req, res) => {
         const savedOffer = await saveOffer.save()
 
         const offerProduct = await productModel.findOne({_id:productName})
-        console.log("hhhhhh",offerProduct)
         if(offerProduct){
           const offerPrice = offerProduct.price * (1 - offerPercentage / 100);
          const prdt = await productModel.updateOne({_id:productName},{$set:{offerPrice:offerPrice}})
-         console.log(prdt," si heeeelere ")
         }else{
           console.log('offered product is not found!')
         }
-        console.log("is the offer is saved to schema:",savedOffer)
         res.redirect('/admin/loadofferPage')
 
     } catch (error) {

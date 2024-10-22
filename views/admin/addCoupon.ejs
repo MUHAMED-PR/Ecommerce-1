@@ -94,41 +94,7 @@
 </div>
 <!-- / Layout wrapper -->
 
-<!-- SweetAlert2 library -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-    document.getElementById('addCouponForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const formData = new FormData(this);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
 
-        fetch('/admin/addingNewCoupon', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("data in the .then:",data)
-            if (data.success) {
-                Swal.fire('Success!', 'Coupon added successfully.', 'success');
-                document.getElementById('addCouponForm').reset();
-            } else {
-                Swal.fire('Error!', 'Failed to add coupon. Please try again.', 'error');
-            }
-        })
-        .catch(() => {
-            Swal.fire('Error!', 'Failed to add coupon. Please try again.', 'error');
-        });
-    });
-</script> -->
 
 
 <%- include('../layouts/adminFooter.ejs') %>

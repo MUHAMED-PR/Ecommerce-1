@@ -189,7 +189,6 @@ const orderSuccessfulPage = async (req, res) => {
 
 const orderDetails = async (req, res) => {
   try {
-    // console.log("id the queeeyyyrrrr things:",req.query)
     const { orderId, productId } = req.query;
     const orderDetails = await orderModel.findOne({
       _id: orderId,
@@ -206,13 +205,6 @@ const orderDetails = async (req, res) => {
         break;
       }
     }
-    // console.log("---+++---+",infoOfProduct)
-    //   const aaa = await orderModel.findOne({"products._id":productId })
-    // const dataa = await orderModel.findOne({_id:orderId})
-
-    //   const aaa = await orderModel.findOne({products: {$elemMatch: { _id: productId }}})
-    //   console.log("herere is hte ordere",orderDetails)
-    // console.log("ishte object int he array of products:",aaa)
     res.render("user/orderDetails", { orderDetails, infoOfProduct });
   } catch (error) {
     console.log(error);
@@ -227,8 +219,9 @@ const adminOrderDetails = async (req, res) => {
       .populate("userId")
       .sort({ orderDate: -1 })
       .exec();
-    // console.log(orders,' is the orders ')
+
     res.render("admin/order", { orders });
+
   } catch (error) {
     console.log(error);
   }
@@ -236,16 +229,13 @@ const adminOrderDetails = async (req, res) => {
 
 const changeOrderStatus = async (req, res) => {
   try {
-    const { orderId, productId, status } = req.query;
-    // console.log(orderId, productId, status);
-    // console.log(typeof orderId, ' is the type of orderId');
+    const { orderId, productId, status } = req.query;;
 
     const updateStatus = await orderModel.findOneAndUpdate(
       { _id: orderId, "products.productId": productId },
       { $set: { "products.$.orderStatus": status } },
       { new: true }
     );
-    // console.log(updateStatus, ' is the updatedStatus');
     if(status == 'Delivered'){
         const payStatus = await orderModel.findOneAndUpdate(
           {_id:orderId},
@@ -374,7 +364,6 @@ const orderReturned = async (req, res) => {
 
     // Save the wallet update
     await wallet.save();
-    console.log("Wallet updated:", wallet);
 
     return res
       .status(200)
@@ -456,7 +445,6 @@ const orderCancelled = async(req,res) => {
 
     // Save the wallet update
     await wallet.save();
-    console.log("Wallet updated:", wallet);
     }
 
     return res
@@ -506,7 +494,6 @@ const yearlySalesReport = async (req,res) => {
               }
           }
       ])
-      // console.log("aggreagate value:::yearlyReport",yearlyReport)
       return res.json({ yearlyReport })
   } catch (error) {
     console.log(error)

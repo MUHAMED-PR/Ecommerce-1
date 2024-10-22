@@ -35,11 +35,9 @@ const homePage = async (req, res) => {
         .sort((a, b) => b.quantity - a.quantity)
         .slice(0, 4);
 
-        console.log(top4ProductsByQuantity); 
         const user = req.session.user_id
         if (user) {
             const userData = await users.findById(user)
-            // console.log(userData);
             res.render('user/homePage', {userData,top4ProductsByQuantity })
 
         } else {
@@ -70,14 +68,11 @@ const signUp = async (req, res) => {
 }
 const otpGenerate = (req, res) => {
     try {
-        console.log('otp is generating');
         const digits = '0123456789';
         let OTP = '';
         for (let i = 0; i < 4; i++) {
             OTP += digits[Math.floor(Math.random() * 10)];
         }
-
-
         return OTP;
 
     } catch (error) {
@@ -98,8 +93,6 @@ const logout = async(req,res)=>{
 
 const saveOtp = async (email, otp) => {
     try {
-        // console.log(email,' email otp sended..');
-        // console.log(otp,' saved otp ');
 
         let saveOtp = new OTP({
             email: email,
@@ -148,7 +141,6 @@ const insertUser = async (req, res) => {
 
         if (userData) {
             const genotp = otpGenerate();
-            console.log(genotp, ' is genotp')
             req.session.email = req.body.email;
 
             let savingotp = saveOtp(req.body.email, genotp);
@@ -166,8 +158,6 @@ const insertUser = async (req, res) => {
 
 // //for send mail
 const sendVerifyMail = async (name, email, user_id, otp) => {
-    // const otp1=otp
-
     try {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -192,38 +182,20 @@ const sendVerifyMail = async (name, email, user_id, otp) => {
                 console.log('Email has been send :-', info.response);
             }
         })
-
-        // const saltRounds = 10;
-
-        // const hashedOTP = await bcrypt.hash(otp,saltRounds);
-        // const newOTPVerification = await new OTP({
-        //     userId:_id,
-        //     otp:hashedOTP,
-        //     createdAt:Date.now(),
-        //     expiresAt:Date.now()+3600,
-        // });
-        //save otp record
-        // await newOTPVerification.save();
+    
     } catch (error) {
         console.log(error.message);
     }
 }
 const verifyOTP = async (req, res) => {
     try {
-        console.log(req.body.otp+'it is otpppppppp')
-        console.log(req.session.email + " is email")
+
         let storedotp = await OTP.findOne({email:req.session.email})
-        // console.log('Stored', storedotp);
-        // console.log('Stored OTP:', storedotp.otp);
-        // console.log('Entered OTP:', req.body.otp);
+
         if(storedotp.otp==req.body.otp){ 
         
             const updateInfo = await users.updateOne({ email: req.session.email }, { $set: { is_verified: 1 } })
-            // console.log(updateInfo +' verified');
-            // const user= await users.findOne({email:req.session.email})
-            // console.log(user,'user in verifyotp');
-            // req.session.user_id=user._id
-            // console.log(req.session.user_id,'req.session.user_id');
+            
             res.render("user/homePage",{message :''})
             
         }else {
@@ -239,19 +211,13 @@ const verifyOTP = async (req, res) => {
 //Resend otp
 const resendOTP = async (req,res)=>{
     try {
-        // console.log('resendotp reached');
+        
         const reOtp = otpGenerate()
-        console.log(reOtp+' is the reOTP');
-        console.log(req.session.email,'  email on session..');
         
         const id= await users.findOne({email:req.session.email})
-        // console.log(id,'id in resendd otp');
         
-
         let saveReOtp = saveOtp(req.session.email,reOtp)
-        // console.log(saveReOtp,'save re otp');
         let response = sendVerifyMail(id.name,req.session.email,id._id,reOtp)
-        // console.log(response,'response in resend ot p');
         res.redirect('/OTP')
 
     } catch(error){
@@ -272,24 +238,19 @@ const verifyLogin = async (req, res) => {
                 if (userData.is_blocked == false) {
                     if (!userData.is_verified) {
                         const genotp = otpGenerate()
-                        console.log(genotp + ' is the otp');
                         req.session.email = req.body.email
 
                         let savingotp = saveOtp(req.body.email, genotp)
                         let response = sendVerifyMail(req.body.name, req.body.email, userData._id, genotp)
                         res.render('user/OTP', { message: 'please verify your email' })
                     } else {
-                        // console.table(userData);
                         req.session.user_id = userData._id
-                        // res.render('user/homePage', {message:''})
                         res.redirect('/')
                     }
 
                 } else {
-                    console.log('admin is blocked you !..')
                     res.render('user/signIn', { message: 'Admin is blocked You !..' })
                 }
-
             } else {
                 res.render('user/signIn', { message: 'Password is incorrect' })
             }
@@ -339,11 +300,9 @@ const resetPassword = async (req, res) => {
     try {
         const theEmail = req.body.email
         const emailCheck = await users.findOne({ email: theEmail })
-        // console.log(emailCheck,' is the checked email for reset password')
         if (emailCheck) {
             req.session.email = emailCheck.email
             const genotp = otpGenerate()
-            console.log(genotp + ' is the otp');
 
             let savingotp = saveOtp(emailCheck.email, genotp)
             let response = sendVerifyMail(emailCheck.userName, emailCheck.email, emailCheck._id, genotp)
@@ -378,13 +337,10 @@ const setNewPassword = async (req, res) => {
 const ResetPasswordOTPverify = async (req, res) => {
     try {
         const storedOTP = await OTP.findOne({ email: req.session.email })
-        // console.log(storedOTP, ' is storedOTP')
 
         if (storedOTP.otp === req.body.otp) {
             res.redirect('/setNewPassword')
         } else {
-            // Render the OTP page with the error message
-            // req.flash('error','OTP is not matched')
             res.render("user/otpResetPassword", { message: 'OTP is not matched' });
         }
 
@@ -397,8 +353,6 @@ const ResetPasswordOTPverify = async (req, res) => {
 const ResetPasswordREsendOTP = async (req, res) => {
     try {
         const reOtp = otpGenerate()
-        console.log(reOtp + ' is the reOTP');
-        console.log(req.session.email, '  email on session..');
 
         const id = await users.findOne({ email: req.session.email })
 
@@ -423,18 +377,7 @@ const changeForgetPassword = async (req, res) => {
         const hashedPass  =  await bcrypt.hash(newPassword, 10)
 
         const updatedPass = await users.updateOne({email:req.session.email},{$set:{password:hashedPass}})
-            // document.addEventListener('DOMContentLoaded', (event) => {
-            //     const message = "<%= message %>";
-            //     if (message) {
-            //         swal({
-            //             title: "Success!",
-            //             text: message,
-            //             icon: "success",
-            //             button: "OK",
-            //             timer: 3000,
-            //         });
-            //     }
-            // });
+           
             req.flash('success', 'Password changed successfully')
             res.redirect('/signIn')
         } else {
@@ -450,25 +393,17 @@ const userProfile = async(req,res)=>{
     try {
         
         const {user_id} = req.session
-        // console.log(user_id) 
         const user = await users.find({_id:user_id})
         const addressDoc = await addressModel.find({userId:user_id})
         const orderDetails = await orderModel.find({userId:user_id}).populate('products.productId').sort({ orderDate: -1 }).exec()
         const walletDetails = await walletModel.find({userId:user_id})
-        // console.log("userdetaials:",user," address details:",addressDoc," orderDetais:",orderDetails)
-        
-        // console.log("what is inside the params",req.params)
-        const orderId = req.query.id
-        // console.log('queeeeeeeeeeeery  id:::::::::',orderId);
-        
+        const orderId = req.query.id;
         if(orderId){
 
             req.flash('ordersuccess','open')
             return res.redirect('/userProfile');
         }
         const orderMessage = req.flash('ordersuccess')
-        // console.log('orderMessage:::::::::::::::::',orderMessage);
-        
 
         if(addressDoc){
             if(orderDetails){
@@ -484,9 +419,6 @@ const userProfile = async(req,res)=>{
         }else{
             res.render('user/userProfile',{user,addressDoc:[],orderDetails:[],orderMessage})
         }
-        
-        // console.log(orderDetails.products,' is the order model')
-        // console.log(order,' what is this order ??????')
     } catch (error) {
         console.log(error);
     }
@@ -495,16 +427,13 @@ const userProfile = async(req,res)=>{
 const changePassword = async(req,res)=>{
     try {
         const {currentPassword,newPassword,confirmPassword} = req.body
-        // console.log(currentPassword,newPassword,confirmPassword,' is the passsssss');
         const userData = await users.findOne({_id:req.session.user_id})
         if(userData){
             const passwordMatch = await bcrypt.compare(currentPassword,userData.password)
-            // console.log(passwordMatch,' is the password Match')
             if(passwordMatch){
                 if(newPassword==confirmPassword){
                     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
                     const updatePass = await users.findOneAndUpdate({_id:req.session.user_id},{$set:{password:hashedNewPassword}})
-                    // console.log(newPassword,' is the newPassword');
                 }else{
                     req.flash('error','Confirm password doesnot match! ')
                     res.redirect('/userProfile')
@@ -537,9 +466,6 @@ const loadCheckout = async (req, res) => {
 
         const cart = await cartModel.findOne({ userId: req.session.user_id }).populate('product.productId').exec();
         const addressDoc = await addressModel.findOne({ userId: req.session.user_id });
-        // console.log("isht e cart available:",cart)
-        // console.log("address is :",addressDoc.address)
-
         const coupon = await couponModel.find({active:true})
 
         // Check if the cart is empty
@@ -565,7 +491,6 @@ const loadCheckout = async (req, res) => {
 const loadWishlist = async(req,res)=>{
     try {
         const wishlist = await wishlistModel.findOne({ userId: req.session.user_id }).populate('products.productId').exec()
-    //    console.log(wishlist.products,' is the wishlist ')
         res.render('user/wishlist',{wishlist})
     } catch (error) {
         console.log(error)
@@ -578,12 +503,10 @@ const addToWishlist = async(req,res)=>{
         const { productID } = req.params
         const { user_id } = req.session
 
-
         const userWishlist = await wishlistModel.findOne({userId:user_id})
         
         if(userWishlist){
         const wishlistProduct = await wishlistModel.findOne({userId:user_id,'products.productId': productID})
-        // console.log(wishlistProduct);
 
         if(!wishlistProduct){
            const updateWishlist = await wishlistModel.findOneAndUpdate(

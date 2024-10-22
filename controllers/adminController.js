@@ -9,7 +9,6 @@ const order = require('../models/order')
 
 const adminLoad = async(req,res)=>{
    try {
-    // console.log('admin reached.......')
     const userData = await users.find()
     res.render('admin/login',{admin:userData})
    } catch (error) {
@@ -18,15 +17,10 @@ const adminLoad = async(req,res)=>{
 }
 const adminVerify = async(req,res)=>{
     try {
-        // console.log('admin verify...');
         const email = req.body.email
-        // console.log(email,'email');
         const password = req.body.password
-        // console.log(password,'password');
-
 
         const adminData = await users.findOne({email:email, is_admin:1})
-        // console.log(adminData,' is adminData');
 
         if(adminData){
             const matchPassword = await bcrypt.compare(password,adminData.password);
@@ -62,7 +56,6 @@ const adminLogin = async(req,res)=>{
 
 const dashboard = async(req,res,next)=>{
     try {
-        // console.log(req.session,' is the session contents   ')
 
         const orders = await orderModel
         .find().populate({
@@ -96,9 +89,7 @@ const dashboard = async(req,res,next)=>{
             { $sort: { count: -1 } },
             { $limit: 5 }
           ]);
-      
-        //   console.log('Top 5 Categories:', top5Categories);
-      
+            
           // Step 2: Extract the category ObjectIds from top5Categories
           const categoryIds = top5Categories.map(item => item._id);
       
@@ -116,8 +107,6 @@ const dashboard = async(req,res,next)=>{
           });
       
           top5catgry = top5CategoriesWithNames.sort((a, b) => b.count - a.count);
-        //   console.log('Top 5 Categories with Names:', top5catgry);
-
   
 
           // Step 1: Aggregate the orders to get the top 5 products based on total count or total revenue
@@ -133,8 +122,6 @@ const dashboard = async(req,res,next)=>{
         { $sort: { totalIncome: -1 } }, 
         { $limit: 5 }
       ]);
-  
-    //   console.log('Top 5 Products:', top5Products);
   
       // Step 2: Extract the product ObjectIds from the top5Products
       const productIds = top5Products.map(item => item._id);
@@ -154,11 +141,6 @@ const dashboard = async(req,res,next)=>{
 
         // Step 5: Sort the final array by count (descending)
     top5Prdt = top5ProductsWithNames.sort((a, b) => b.count - a.count);
-  
-    //   console.log('Top 5 Products with Names:', top5Prdt);
-  
-
-  
 
         res.render('admin/dashboard',{orders,totalSale,products,usersNo,top5catgry,top5Prdt})
     } catch (error) {
@@ -170,7 +152,6 @@ const dashboard = async(req,res,next)=>{
 const costumers = async (req,res)=>{
     try{
         const customers= await users.find()
-        // console.log(customers,'customers');
         res.render('admin/customers',{customers});
     }catch(error){
         console.log(error);
@@ -180,20 +161,14 @@ const costumers = async (req,res)=>{
 // handle blocking and unblocking users
 const UserBlock = async (req, res) => {
     try {
-        // console.log('reached at userblock!!!!!!!!!!!');
-
         const userId = req.query.id; // Get the user ID from the request
-        // console.log(userId,'  userId');
         const user = await users.findById(userId); // Find the user by ID
-
       
        if(!user.is_blocked){
         await users.findByIdAndUpdate({_id:user._id},{$set:{is_blocked:true}}) 
        }else{
         await users.findByIdAndUpdate({_id:user._id},{$set:{is_blocked:false}})
        }
-
-
         return res.status(200).json({ message: "User block status updated successfully", user: user });
     } catch (error) {
         console.error("Error toggling user block status:", error);
@@ -205,7 +180,7 @@ const UserBlock = async (req, res) => {
 const products = async (req,res)=>{
     try{
         let product  = await  productModel.find().populate('category')
-      
+
         res.render('admin/products',{product})
     }catch(error){
         console.log(error)
@@ -224,17 +199,13 @@ const category = async (req,res)=>{
 const loadaddCategory = async(req,res)=>{
     try {
         res.render('admin/addCategory')
-        // console.log('reached to addcattegory.....');
-
     } catch (error) {
         console.log(error);
-        // res.render()
     }
 }
 
 const addCategory = async(req,res)=>{
     try {
-        // console.log('started to adding cattegory.....');
         const {categoryName,description} = req.body
         const regex = new RegExp(categoryName,"i")
         const exstingCategory = await categoryModel.findOne({categoryName:regex})
@@ -242,17 +213,13 @@ const addCategory = async(req,res)=>{
             req.flash('error','Category is already existed!')
             return res.redirect('/admin/loadaddCategory')
         }
-        // console.log('existing section overxxx')
 
         const newCategory =new categoryModel({
             categoryName:categoryName,
             description:description  
         })
-        // console.log('newCategory section also passed');
 
         const savedCategory = await newCategory.save()
-        // console.log(savedCategory,'  savedCategory');
-
         if(savedCategory){
             req.flash('success','Category added.')
             res.redirect('/admin/loadaddCategory')
@@ -272,17 +239,12 @@ const addCategory = async(req,res)=>{
 const updateCategory = async(req,res)=>{
     try {
         const {categoryId,editName,editDescription}=req.body
-        // console.log(editDescription,' is editedDescription');
-        // console.log(categoryId,'id',editName,'editName',editDescription,'editedDescription');
+
         const currentCategory = await categoryModel.findOne({_id:categoryId})
-        // console.log(currentCategory.description,' is the description ');
-        // console.log(editDescription, 'is the edited description');
 
         const regex = new RegExp(`^${editName}$`, "i");
-        // console.log(regex,'regex');
         const existingCategory = await categoryModel.findOne({categoryName:regex})
-
-        
+    
         if(existingCategory&&currentCategory.description!=editDescription){
             req.flash('success','description successfully changed')
             return res.redirect('/admin/category')
@@ -291,16 +253,11 @@ const updateCategory = async(req,res)=>{
            return res.redirect('/admin/category')
             
         }
-        // const editCategory = new categoryModel({
-        //     categoryName:editName,
-        //     description:editDescription
-        // })
 
         const updateDetails = await categoryModel.updateOne({_id:categoryId},{$set:{
             categoryName:editName,
             description:editDescription
         }})
-        // console.log(updateCategory,' is the updated data');
 
         if(updateDetails){
             req.flash('success', 'Category updated successfully.');
@@ -318,13 +275,10 @@ const updateCategory = async(req,res)=>{
 const categoryListing = async (req, res) => {
     try {
         const categoryId = req.body.categoryId.trim(); // Trim any whitespace
-        // console.log(categoryId,'category category listing');
-        // console.log(categoryId, 'is the categoryId');
 
         // Find the category by its ID
         const category = await categoryModel.findById(categoryId);
         console.log(category,'category');
-        // console.log(category, 'category');
 
         if (!category) {
             return res.status(404).json({ message: 'Category not found' });
@@ -360,11 +314,8 @@ const addProduct = async(req,res)=>{
         const {productName,category,
             productPrice,productQuantity,                                
             description} = req.body
-        //  console.log(productName,'productName');
-            console.log(category,' category');
-            // console.log(image1,' is the image1')
+
             const categoryId = await categoryModel.findOne({categoryName:category})
-            console.log(categoryId,'catergoryId over .......!!!!')
 
             const regex = new RegExp(productName,"i")
             const existingProduct = await productModel.find({name:regex})
@@ -419,10 +370,8 @@ const loadEditProduct = async(req,res)=>{
 const updateProduct = async(req,res)=>{
     try {
         const productId=req.params.id
-        // console.log(productId, 'prodcut id in update product');
         const {productName,category,productPrice,productQuantity,description}=req.body
         const findCategory=await categoryModel.findOne({categoryName:category})
-        // console.log(productName ,'is the productName',category,productPrice,productQuantity,description);
         const existingProduct = await productModel.find({
             name: { $regex: `${productName}`, $options: 'i' },
             _id: { $ne: productId }
@@ -440,15 +389,7 @@ const updateProduct = async(req,res)=>{
             description: description
         };
 
-        // if (req.files) {
-        //     for (let i = 1; i <= 4; i++) {
-        //         if (req.files[`image${i}`]) {
-        //             updateFields[`image${i}`] = req.files[`image${i}`][0].filename;
-        //         }
-        //     }
-        // }
         const updateProduct = await productModel.findByIdAndUpdate(productId, { $set: updateFields }, { new: true });
-        // console.log(updateProduct,'updateProduct');
 
         req.flash('success','product updated successfully')
         res.redirect('/admin/products')
@@ -460,9 +401,7 @@ const updateProduct = async(req,res)=>{
 const productListing = async(req,res)=>{
     try {
         const productId = req.body.productId.trim()
-        // console.log(productId,' is the productId');
         const product = await productModel.findById(productId)
-        // console.log(product, ' is the product model shown')
 
         if(!product){
             return res.status(404).json({ message: 'Category not found' });

@@ -295,11 +295,6 @@ document.getElementById("applyDate").addEventListener("click", function () {
             const quantity = e.target.getAttribute('data-quantity');
             const revenue = e.target.getAttribute('data-revenue');
 
-            console.log("Order ID:", orderId);
-            console.log("User Name:", userName);
-            console.log("Product Name:", productName);
-            console.log("Quantity:", quantity);
-            console.log("Revenue:", revenue);
 
             // Ensure the values exist before displaying them
             if (orderId && userName && productName && quantity && revenue) {

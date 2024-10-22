@@ -27,15 +27,6 @@ userRoute.use(passport.session())
 
 
 app.set('views', './views/user')
-// app.set('views', path.join(__dirname, 'views', 'user'));
-
-// userRoute.use(session({secret:config.sessionSecret}))
-// userRoute.use(session({
-//     secret:'fjlsdflsdlfas',
-//     resave:false,
-//     saveUninitialized:true
-
-// }))
 
 
 //Auth
