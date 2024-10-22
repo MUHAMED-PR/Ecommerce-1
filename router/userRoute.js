@@ -17,11 +17,11 @@ const coupon = require('../models/coupon')
 
 
 
-// const passport = require('passport')
-// require('../passport')
+const passport = require('passport')
+require('../passport')
 
-// userRoute.use(passport.initialize());
-// userRoute.use(passport.session())
+userRoute.use(passport.initialize());
+userRoute.use(passport.session())
 
 
 
@@ -39,21 +39,21 @@ app.set('views', './views/user')
 
 
 //Auth
-// userRoute.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile']}))
+userRoute.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile']}))
 
-// //Aut Callback
-// userRoute.get('/auth/google/callback',
-//     passport.authenticate( 'google',{
-//        successRedirect: '/success',
-//        failureRedirect: '/failure' 
-//     })
-// );
+// //Auth Callback
+userRoute.get('/auth/google/callback',
+    passport.authenticate( 'google',{
+       successRedirect: '/success',
+       failureRedirect: '/failure' 
+    })
+);
 
 
-// userRoute.get('/success', userController.successGoogleLogin)
+userRoute.get('/success', userController.successGoogleLogin)
 
 // //failure
-// userRoute.get('/failure', userController.failureGoogleLogin)
+userRoute.get('/failure', userController.failureGoogleLogin)
 
 userRoute.get('/', userController.homePage)
 userRoute.get('/signIn', auth.isLogout, userController.signIn);

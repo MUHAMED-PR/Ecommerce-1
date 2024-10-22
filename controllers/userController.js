@@ -304,11 +304,16 @@ const verifyLogin = async (req, res) => {
 
 //Auth for Google with login
 const successGoogleLogin = async (req, res) => {
-    console.log('google')
+    try {
+        const productsAvailable = await product.find()
+        const top4ProductsByQuantity = productsAvailable
+        .sort((a, b) => b.quantity - a.quantity)
+        .slice(0, 4);
 
-    res.render('user/homePage')
-
-    // res.send('Welcome ',req.user.email)
+        res.render('user/homePage',{top4ProductsByQuantity})
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
