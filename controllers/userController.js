@@ -30,15 +30,21 @@ const securePassword = async (password) => {
 
 const homePage = async (req, res) => {
     try {
+        const productsAvailable = await product.find()
+        const top4ProductsByQuantity = productsAvailable
+        .sort((a, b) => b.quantity - a.quantity)
+        .slice(0, 4);
+
+        console.log(top4ProductsByQuantity); 
         const user = req.session.user_id
         if (user) {
             const userData = await users.findById(user)
             // console.log(userData);
-            res.render('user/homePage', {userData })
+            res.render('user/homePage', {userData,top4ProductsByQuantity })
 
         } else {
 
-            res.render('user/homePage')
+            res.render('user/homePage',{top4ProductsByQuantity})
         }
 
     } catch (error) {
