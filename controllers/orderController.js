@@ -246,6 +246,13 @@ const changeOrderStatus = async (req, res) => {
       { new: true }
     );
     // console.log(updateStatus, ' is the updatedStatus');
+    if(status == 'Delivered'){
+        const payStatus = await orderModel.findOneAndUpdate(
+          {_id:orderId},
+          {$set:{paymentStatus:'Paid'}},
+          {new:true}
+        )
+    }
 
     if (updateStatus) {
       res.json({ success: true });

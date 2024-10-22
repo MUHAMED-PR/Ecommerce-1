@@ -162,6 +162,9 @@
                                     <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                         <div class="product">
                                             <figure class="product-media">
+                                                <% if(product.quantity <= 0){ %>
+                                                <span class="product-label label-out">Out of Stock</span>
+                                                <% } %>
                                                 <a href="/productDetails/<%= product._id %>">
                                                     <img src="<%= product.images[0] %>" alt="Product image" class="product-image">
                                                 </a>

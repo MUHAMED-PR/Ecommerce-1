@@ -113,7 +113,14 @@
 									</div><!-- End .product -->
 								</td>
 								<td class="price-col">₹<%= data.productId.price  %></td>
-								<td class="stock-col"><span class="in-stock">In stock</span></td>
+								<td class="stock-col">
+									<% if(data.productId.quantity > 0 ){ %>
+									<span class="in-stock">In stock</span>
+									<% }else{ %>
+										<span style="color: red;">Stock Out</span>
+
+										<% } %>
+								</td>
 								<td class="action-col">
 									<button class="btn btn-block btn-outline-primary-2" onclick="moveToCart('<%= data.productId._id %>')"><i class="icon-cart-plus"></i>Move to Cart</button>
 								</td>
