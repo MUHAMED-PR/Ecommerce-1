@@ -155,7 +155,7 @@ const dashboard = async(req,res,next)=>{
         // Step 5: Sort the final array by count (descending)
     top5Prdt = top5ProductsWithNames.sort((a, b) => b.count - a.count);
   
-      console.log('Top 5 Products with Names:', top5Prdt);
+    //   console.log('Top 5 Products with Names:', top5Prdt);
   
 
   

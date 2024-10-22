@@ -35,26 +35,21 @@
                 <!-- Header Section -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="fw-bold text-dark">📊 Sales Dashboard</h3>
-                  
+                
                     <div>
-                      <!-- Button to toggle the date inputs -->
-                      <button class="btn btn-primary shadow-sm rounded-pill" id="selectDateBtn">Select Date</button>
-                      
-                      <!-- Date input fields (hidden by default) -->
-                      <div id="dateInputs" style="display: none; margin-top: 10px;">
-                        <div class="d-flex">
-                          <!-- "From" date input -->
-                          <input type="date" class="form-control me-2 shadow-sm" placeholder="From" id="fromDate">
-                  
-                          <!-- "End" date input -->
-                          <input type="date" class="form-control shadow-sm" placeholder="End" id="endDate">
-                  
-                          <!-- Apply button -->
-                          <button id="applyDate" class="btn btn-success ms-2 shadow-sm">Apply</button>
+                        <button class="btn btn-primary shadow-sm rounded-pill" id="selectDateBtn">Select Date</button>
+                
+                        <!-- Date input fields (hidden by default) -->
+                        <div id="dateInputs" style="display: none; margin-top: 10px;">
+                            <div class="d-flex">
+                                <input type="date" class="form-control me-2 shadow-sm" placeholder="From" id="fromDate">
+                                <input type="date" class="form-control shadow-sm" placeholder="End" id="endDate">
+                                <button id="applyDate" class="btn btn-success ms-2 shadow-sm">Apply</button>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
+                
                   
                   
 
@@ -92,67 +87,70 @@
                 </div>
 
                 <!-- Detailed Sales Table -->
-                <div class="card border-0 shadow-lg mb-4">
-                    <div class="card-header bg-primary text-white py-3">
-                        <h5 class="mb-0">📝 Sales Details</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <% if (orders.length > 0) { %>
-                            <!-- Table displaying orders -->
-                            <table class="table table-hover table-borderless mb-0">
-                                <thead class="table-light">
-                                    <tr class="text-center">
-                                        <th>Sl No.</th>
-                                        <th>Date</th>
-                                        <th>User Name</th>
-                                        <th>Order ID</th>
-                                        <th>Order Details</th>
-                                        <th>Revenue</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% let totalRevenue = 0; %>
-                                    <% orders.forEach((order, i) => { %>
-                                        <tr class="text-center">
-                                            <td><%= i + 1 %></td>
-                                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
-                                            <td><%= order.userId.userName %></td>
-                                            <td><%= order._id %></td>
-                                            <td>
-                                                <!-- Product Name with data attributes -->
-                                                <span class="product-name" 
-                                                      data-order-id="<%= order._id %>" 
-                                                      data-user-name="<%= order.userId.userName %>" 
-                                                      data-product-name="<%= order.products[0].productId.name %>" 
-                                                      data-quantity="<%= order.products[0].quantity %>" 
-                                                      data-revenue="<%= order.totalAmount %>">
-                                                    <%= order.products[0].productId.name %>
-                                                </span>
-                                                <!-- Icon to indicate more details available -->
-                                                <a href="#" class="details-icon" 
-                                                   title="Click here to see more details" 
-                                                   data-bs-toggle="modal" 
-                                                   data-bs-target="#orderDetailsModal">
-                                                   <i class='bx bx-info-circle'></i>
-                                                </a>
-                                            </td>
-                                            <td>₹<%= order.totalAmount %></td>
-                                        </tr>
-                                        <% totalRevenue += order.totalAmount; %>
-                                    <% }) %>
-                                </tbody>
-                                <tfoot>
-                                    <tr class="text-center">
-                                        <td colspan="5"><strong>Total Revenue</strong></td>
-                                        <td><strong>₹<%= totalRevenue %></strong></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        <% } else { %>
-                            <p class="text-center my-3">No sales available for the selected date range.</p>
-                        <% } %>
-                    </div>
-                </div>
+<div class="card border-0 shadow-lg mb-4">
+    <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">📝 Sales Details</h5>
+        <div>
+            <button class="btn btn-light" id="downloadPdfBtn">Download as PDF</button>
+            <button class="btn btn-light" id="downloadCsvBtn">Download as CSV</button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <% if (orders.length > 0) { %>
+            <!-- Table displaying orders -->
+            <table class="table table-hover table-borderless mb-0" id="salesTable">
+                <thead class="table-light">
+                    <tr class="text-center">
+                        <th>Sl No.</th>
+                        <th>Date</th>
+                        <th>User Name</th>
+                        <th>Order ID</th>
+                        <th>Order Details</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let totalRevenue = 0; %>
+                    <% orders.forEach((order, i) => { %>
+                        <tr class="text-center">
+                            <td><%= i + 1 %></td>
+                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                            <td><%= order.userId.userName %></td>
+                            <td><%= order._id %></td>
+                            <td>
+                                <span class="product-name" 
+                                      data-order-id="<%= order._id %>" 
+                                      data-user-name="<%= order.userId.userName %>" 
+                                      data-product-name="<%= order.products[0].productId.name %>" 
+                                      data-quantity="<%= order.products[0].quantity %>" 
+                                      data-revenue="<%= order.totalAmount %>">
+                                    <%= order.products[0].productId.name %>
+                                </span>
+                                <a href="#" class="details-icon" 
+                                   title="Click here to see more details" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#orderDetailsModal">
+                                   <i class='bx bx-info-circle'></i>
+                                </a>
+                            </td>
+                            <td>₹<%= order.totalAmount %></td>
+                        </tr>
+                        <% totalRevenue += order.totalAmount; %>
+                    <% }) %>
+                </tbody>
+                <tfoot>
+                    <tr class="text-center">
+                        <td colspan="5"><strong>Total Revenue</strong></td>
+                        <td><strong>₹<%= totalRevenue %></strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        <% } else { %>
+            <p class="text-center my-3">No sales available for the selected date range.</p>
+        <% } %>
+    </div>
+</div>
+
             </div>
         </div>
     </div>
@@ -322,7 +320,53 @@ document.getElementById("applyDate").addEventListener("click", function () {
     });
 });
 
+
+
+//Download:
+// Function to download table as PDF
+document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+    const element = document.getElementById('salesTable');
+    const opt = {
+        margin: 1,
+        filename: 'Sales_Details.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    // Use html2pdf to create the PDF
+    html2pdf().from(element).set(opt).save();
+});
+
+// Function to download table as CSV
+document.getElementById('downloadCsvBtn').addEventListener('click', function () {
+    const table = document.getElementById('salesTable');
+    const rows = Array.from(table.querySelectorAll('tr'));
+    const csvContent = rows.map(row => {
+        const cols = Array.from(row.querySelectorAll('td, th'))
+                          .map(col => col.innerText)
+                          .join(',');
+        return cols;
+    }).join('\n');
+
+    // Create a link element and trigger a download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'Sales_Details.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+
+
 </script>
+
+<!-- pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<!-- exel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 
 
 <%- include('../layouts/adminFooter.ejs') %>
