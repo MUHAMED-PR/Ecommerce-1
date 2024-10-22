@@ -69,6 +69,8 @@ userRoute.post('/userlogin', userController.verifyLogin)
 userRoute.get('/productPage', productController.loadProductPage)
 userRoute.get('/productDetails/:productId', productController.loadProductDetails)
 userRoute.get('/searchProduct', productController.searchProduct)
+//FILTER
+userRoute.get('/filterProducts',productController.filteredProduct)
 
 //forgot password
 userRoute.get('/forgot-password', userController.forgotPassword)

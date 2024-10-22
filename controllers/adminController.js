@@ -97,7 +97,7 @@ const dashboard = async(req,res,next)=>{
             { $limit: 5 }
           ]);
       
-          console.log('Top 5 Categories:', top5Categories);
+        //   console.log('Top 5 Categories:', top5Categories);
       
           // Step 2: Extract the category ObjectIds from top5Categories
           const categoryIds = top5Categories.map(item => item._id);
@@ -130,11 +130,11 @@ const dashboard = async(req,res,next)=>{
             totalIncome: { $sum: { $multiply: ["$products.price", "$products.quantity"] } } // Calculate total income for each product
           }
         },
-        { $sort: { totalIncome: -1 } }, // Sort by total income (or use { count: -1 } to sort by number of orders)
-        { $limit: 5 } // Limit to the top 5 products
+        { $sort: { totalIncome: -1 } }, 
+        { $limit: 5 }
       ]);
   
-      console.log('Top 5 Products:', top5Products);
+    //   console.log('Top 5 Products:', top5Products);
   
       // Step 2: Extract the product ObjectIds from the top5Products
       const productIds = top5Products.map(item => item._id);

@@ -135,10 +135,40 @@ const searchProduct = async (req, res) => {
 };
 
 
+const filteredProduct = async (req, res) => {
+    const { minPrice, maxPrice, categories } = req.query; // Get query parameters
+
+    try {
+        const query = {};
+
+        // Add price filters if provided
+        if (minPrice) {
+            query.price = { ...query.price, $gte: minPrice };
+        }
+        if (maxPrice) {
+            query.price = { ...query.price, $lte: maxPrice };
+        }
+
+        // Add category filters if provided
+        if (categories) {
+            query.category = { $in: categories.split(',') }; // Convert comma-separated string to array
+        }
+
+        // Fetch products based on the filters
+        const filteredProducts = await product.find(query);
+
+        // Send back the filtered products
+        res.json(filteredProducts);
+    } catch (error) {
+        console.error('Error filtering products:', error);
+        res.status(500).send('Server error');
+    }
+}
 
 
 module.exports = {
     loadProductPage,
     loadProductDetails,
-    searchProduct
+    searchProduct,
+    filteredProduct
 };
