@@ -62,7 +62,18 @@ const adminLogin = async(req,res)=>{
 const dashboard = async(req,res,next)=>{
     try {
         // console.log(req.session,' is the session contents   ')
-        res.render('admin/dashboard')
+
+        const orders = await orderModel
+        .find().populate({
+          path: 'products.productId',  
+          select: 'name'  // Only selects the 'name' field from the Product model
+        }) .populate('userId').sort({ orderDate: -1 }); 
+ 
+         const totalSale = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+
+         const products = await productModel.find()
+         const usersNo = await users.find()
+        res.render('admin/dashboard',{orders,totalSale,products,usersNo})
     } catch (error) {
         console.log(error);
     }

@@ -102,7 +102,7 @@
                 <button type="button" class="btn btn-warning btn-lg" onclick="returnOrder('<%= orderDetails._id %>','<%=infoOfProduct._id %>')">Return Order</button>
             <% }else if(['Pending', 'Processing'].includes(infoOfProduct.orderStatus)){ %>
                 <!-- Cancel Order Button -->
-                <button type="button" class="btn btn-lg" style="background-color: #dc3545; color: white;" onclick="cancelOrder()">Cancel Order</button>
+                <button type="button" class="btn btn-lg" style="background-color: #dc3545; color: white;" onclick="cancelOrder('<%= orderDetails._id %>','<%=infoOfProduct._id %>')">Cancel Order</button>
 
                 <% } %>
         </div>
@@ -216,8 +216,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     
-    <!-- Return Order Script -->
+    
     <script>
+    // Return Order Script 
+
        function returnOrder(orderId, itemId) {
     // Show SweetAlert confirmation dialog
     Swal.fire({
@@ -246,6 +248,51 @@
                 })
                 .catch(error => {
                     console.error('Error returning order:', error); // Handle error response
+                    Swal.fire(
+                        'Error!',
+                        'Failed to return the order. Please try again.',
+                        'error'
+                    );
+                });
+        } else {
+            // If the user cancels, you can handle it here (optional)
+            console.log('Order return canceled.');
+        }
+    });
+}
+        
+
+
+     // Cancel Order Script 
+
+     function cancelOrder(orderId, itemId) {
+    // Show SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to cancel this order?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user confirms, proceed with the return order request
+            axios.patch(`/order/cancelOrder/${orderId}/${itemId}`)
+                .then(response => {
+                    console.log('the reponse in the cancelOrder fetch',response.data); // Handle success response
+                    Swal.fire(
+                        'Cancelled!',
+                        'Your order has been Cancelled.',
+                        'success'
+                    ).then(() => {
+                     // Reload the page after the user clicks 'OK'
+                     window.location.reload();
+                  });
+                })
+                .catch(error => {
+                    console.error('Error cancelling order:', error); // Handle error response
                     Swal.fire(
                         'Error!',
                         'Failed to return the order. Please try again.',

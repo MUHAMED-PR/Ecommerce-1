@@ -7,6 +7,7 @@ const walletModel = require("../models/wallet");
 const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
+const wallet = require("../models/wallet");
 
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -382,6 +383,92 @@ const orderReturned = async (req, res) => {
   }
 };
 
+
+const orderCancelled = async(req,res) => {
+  try {
+    const { orderId, itemId } = req.params;
+
+    // Find the order by orderId and update the orderStatus for the specific product
+    const orderedProduct = await orderModel.findOneAndUpdate(
+      { _id: orderId, "products._id": itemId },
+      { $set: { "products.$.orderStatus": "Cancelled" } },
+      { new: true, projection: { products: 1, userId: 1 } } // Return only the products and userId fields
+    );
+
+    if (!orderedProduct) {
+      return res.status(404).json({ message: "Order or item not found" });
+    }
+
+    // Find the specific product that was Cancelled
+    const cancelledProduct = orderedProduct.products.find(
+      (item) => item._id.toString() === itemId
+    );
+
+    if (!cancelledProduct) {
+      return res.status(404).json({ message: "Cancelled product not found" });
+    }
+
+    // Update the stock for the returned product
+    await productModel.findByIdAndUpdate(cancelledProduct.productId, {
+      $inc: { quantity: cancelledProduct.quantity }, // Increment stock by the returned quantity
+    });
+ 
+    const orders = await orderModel.findOne({_id: orderId}) 
+    const paymentStatus = orders.paymentStatus
+    if(paymentStatus=='Paid'){
+       // Fetch the user's wallet to update the balance and transactions
+    let wallet = await walletModel.findOne({ userId: orderedProduct.userId });
+
+    const transactionAmount = cancelledProduct.price;
+
+    if (wallet) {
+      // If the wallet exists, update the balance and add the new transaction
+      wallet.balance += transactionAmount;
+
+      wallet.transactions.push({
+        method: "Credit",
+        reason: "Refund",
+        transactionAmount: transactionAmount,
+        date: Date.now(),
+      });
+    } else {
+      // If no wallet exists, create a new one with an initial balance and transaction
+      wallet = new walletModel({
+        userId: orderedProduct.userId,
+        balance: transactionAmount,
+        transactions: [
+          {
+            method: "Credit",
+            reason: "Refund",
+            transactionAmount: transactionAmount,
+            date: Date.now(),
+          },
+        ],
+      });
+    }
+
+    // Save the wallet update
+    await wallet.save();
+    console.log("Wallet updated:", wallet);
+    }
+
+    return res
+      .status(200)
+      .json({
+        message:
+          "Order status updated to Cancelled, stock updated, and also updated wallet",
+          orderedProduct,
+          wallet
+      });
+
+  } catch (error) {
+    console.error("Error in orderCancelled:", error);
+    return res.status(500).json({ message: "Server error", error });
+  }
+}
+
+
+
 const updateOrderPaymentStatus = async (req, res) => {
   try {
     const { id, status } = req.body;
@@ -399,16 +486,72 @@ const updateOrderPaymentStatus = async (req, res) => {
   }
 };
 
+
+
+const yearlySalesReport = async (req,res) => {
+  try {
+      let yearlyReport = await orderModel.aggregate([
+          {
+              $group: {
+                  _id: {
+                      year: { $year: '$orderDate' },
+                  }, totalIncome: { $sum: '$totalAmount' }
+              }
+          }
+      ])
+      console.log("aggreagate value:::yearlyReport",yearlyReport)
+      return res.json({ yearlyReport })
+  } catch (error) {
+    console.log(error)
+    res.status(400).send(error.message)
+  }
+}
+
+
+const monthlySalesReport = async (req,res) => {
+  try {
+    let orderMonth = await orderModel.aggregate([
+        {
+            $group: {
+                _id: { $month: '$orderDate' },
+                totalIncome: { $sum: '$totalAmount' }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                month: '$_id',
+                totalIncome: 1,
+                monthName: {
+                    $arrayElemAt: [
+                        ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                        { $subtract: ["$_id", 1] }
+                    ]
+                }
+            }
+        }
+    ]);
+
+    return res.json({ orderMonth })
+} catch (error) {
+    console.log(error, 'from report in admin side');
+}
+}
 module.exports = {
-  updateOrderPaymentStatus,
+ 
   //User Controller:
   placeOrder,
   orderSuccessfulPage,
   orderDetails,
   orderReturned,
+  orderCancelled,
   creatRazorpayInstence,
+  updateOrderPaymentStatus,
+
   //Admin Controller:
   adminOrderDetails,
   changeOrderStatus,
   viewOrderDetails,
+  yearlySalesReport,
+  monthlySalesReport
 };

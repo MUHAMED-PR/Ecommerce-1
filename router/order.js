@@ -17,7 +17,7 @@ orderRoute.get('/orderSuccessfulPage', auth.isLogin, orderController.orderSucces
 orderRoute.get('/orderDetailsPage/:val',auth.isLogin,userController.userProfile)
 orderRoute.get('/viewDetails',auth.isLogin,orderController.orderDetails)
 orderRoute.patch('/returnOrder/:orderId/:itemId',auth.isLogin,orderController.orderReturned)
-
+orderRoute.patch('/cancelOrder/:orderId/:itemId',auth.isLogin,orderController.orderCancelled)
 
 // update order : payment status
 orderRoute.put('/updatePaymentStatus',auth.isLogin,orderController.updateOrderPaymentStatus);
@@ -29,5 +29,7 @@ orderRoute.put('/creatRazorpayInstence',auth.isLogin,orderController.creatRazorp
 orderRoute.get('/orderDetails',adminAuth.isLogin,orderController.adminOrderDetails)
 orderRoute.post('/changeOrderStatus',adminAuth.isLogin,orderController.changeOrderStatus)
 orderRoute.get('/viewOrderDetails/:orderId/:productId',adminAuth.isLogin,orderController.viewOrderDetails)
+orderRoute.get('/yearlyReport',adminAuth.isLogin,orderController.yearlySalesReport)
+orderRoute.get('/monthlyReport',adminAuth.isLogin,orderController.monthlySalesReport)
 
 module.exports = orderRoute
