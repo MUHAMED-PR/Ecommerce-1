@@ -499,7 +499,7 @@ const yearlySalesReport = async (req,res) => {
               }
           }
       ])
-      console.log("aggreagate value:::yearlyReport",yearlyReport)
+      // console.log("aggreagate value:::yearlyReport",yearlyReport)
       return res.json({ yearlyReport })
   } catch (error) {
     console.log(error)

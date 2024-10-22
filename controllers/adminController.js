@@ -4,6 +4,7 @@ const productModel = require('../models/product')
 const orderModel = require('../models/order')
 const bcrypt = require('bcrypt')
 const flash = require('express-flash')
+const order = require('../models/order')
 
 
 const adminLoad = async(req,res)=>{
@@ -73,7 +74,93 @@ const dashboard = async(req,res,next)=>{
 
          const products = await productModel.find()
          const usersNo = await users.find()
-        res.render('admin/dashboard',{orders,totalSale,products,usersNo})
+
+         const top5Categories = await orderModel.aggregate([
+            { $unwind: "$products" },
+            {
+              $lookup: {
+                from: "products",
+                localField: "products.productId",
+                foreignField: "_id",
+                as: "productDetails"
+              }
+            },
+            { $unwind: "$productDetails" },
+            {
+              $group: {
+                _id: "$productDetails.category", // Group by category ObjectId
+                count: { $sum: 1 },
+                totalIncome: { $sum: { $multiply: ["$products.price", "$products.quantity"] } }
+              }
+            },
+            { $sort: { count: -1 } },
+            { $limit: 5 }
+          ]);
+      
+          console.log('Top 5 Categories:', top5Categories);
+      
+          // Step 2: Extract the category ObjectIds from top5Categories
+          const categoryIds = top5Categories.map(item => item._id);
+      
+          // Step 3: Use Mongoose to find the category names for those ObjectIds
+          const categories = await categoryModel.find({ _id: { $in: categoryIds } });
+      
+          // Step 4: Map the category names to the top5Categories array
+          const top5CategoriesWithNames = top5Categories.map(category => {
+            const matchedCategory = categories.find(cat => cat._id.toString() === category._id.toString());
+            return {
+              categoryName: matchedCategory ? matchedCategory.categoryName : "Unknown", // Ensure the name is found
+              count: category.count,
+              totalIncome: category.totalIncome
+            };
+          });
+      
+          top5catgry = top5CategoriesWithNames.sort((a, b) => b.count - a.count);
+        //   console.log('Top 5 Categories with Names:', top5catgry);
+
+  
+
+          // Step 1: Aggregate the orders to get the top 5 products based on total count or total revenue
+    const top5Products = await orderModel.aggregate([
+        { $unwind: "$products" }, // Unwind the products array to process each product separately
+        {
+          $group: {
+            _id: "$products.productId", // Group by productId (which refers to the ObjectId of the product)
+            count: { $sum: "$products.quantity" }, // Sum up the quantity of each product
+            totalIncome: { $sum: { $multiply: ["$products.price", "$products.quantity"] } } // Calculate total income for each product
+          }
+        },
+        { $sort: { totalIncome: -1 } }, // Sort by total income (or use { count: -1 } to sort by number of orders)
+        { $limit: 5 } // Limit to the top 5 products
+      ]);
+  
+      console.log('Top 5 Products:', top5Products);
+  
+      // Step 2: Extract the product ObjectIds from the top5Products
+      const productIds = top5Products.map(item => item._id);
+  
+      // Step 3: Find the product names and details for those ObjectIds
+      const productsAvail = await productModel.find({ _id: { $in: productIds } });
+  
+      // Step 4: Map the product names to the top5Products array
+      const top5ProductsWithNames = top5Products.map(product => {
+        const matchedProduct = productsAvail.find(prod => prod._id.toString() === product._id.toString());
+        return {
+          productName: matchedProduct ? matchedProduct.name : "Unknown", // Map the product name
+          count: product.count,
+          totalIncome: product.totalIncome
+        };
+      });
+
+        // Step 5: Sort the final array by count (descending)
+    top5Prdt = top5ProductsWithNames.sort((a, b) => b.count - a.count);
+  
+      console.log('Top 5 Products with Names:', top5Prdt);
+  
+
+  
+
+        res.render('admin/dashboard',{orders,totalSale,products,usersNo,top5catgry,top5Prdt})
     } catch (error) {
         console.log(error);
     }
@@ -411,6 +498,32 @@ const SalesReport = async(req,res)=>{
 }
 
 
+const dateSortedSales = async (req, res) => {
+    try {
+        // Extracting the 'from' and 'to' dates from the request query
+        const { fromDate, endDate } = req.query;
+
+        // Convert the dates to Date objects
+        const start = new Date(fromDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999); // Set the end date to the end of the day
+
+        // Find orders within the date range
+        const orders = await orderModel.find({
+            orderDate: {
+                $gte: start,
+                $lte: end
+            }
+        }).populate('userId').populate('products.productId');
+
+        res.json({ success: true, orders }); // Send the orders back to the client
+    } catch (error) {
+        console.error('Error fetching date-sorted sales:', error);
+        res.status(500).json({ success: false, message: 'Error fetching sales data' });
+    }
+};
+
+
 module.exports ={
     adminLoad,
     adminLogin,
@@ -429,5 +542,6 @@ module.exports ={
     loadEditProduct,
     updateProduct,
     productListing,
-    SalesReport
+    SalesReport,
+    dateSortedSales
 }

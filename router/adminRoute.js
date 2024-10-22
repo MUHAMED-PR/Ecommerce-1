@@ -62,6 +62,7 @@ adminRoute.put('/toggleOffer/:id',adminAuth.isLogin,offerController.offerUpdate)
 
 //Sales Report:
 adminRoute.get('/Salesreport',adminAuth.isLogin,adminController.SalesReport)
+adminRoute.get('/dateSortedSales',adminAuth.isLogin,adminController.dateSortedSales)
 
 
 

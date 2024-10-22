@@ -115,7 +115,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt1">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" href="/admin/Salesreport">View More</a>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt2">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" href="/order/orderDetails">View More</a>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +163,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                    <a class="dropdown-item" href="/admin/products">View More</a>
                                 </div>
                             </div>
                         </div>
@@ -183,11 +183,11 @@
                               <img src="/admin/assets/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded" />
                           </div>
                           <div class="dropdown">
-                              <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button class="btn p-0" type="button" id="cardOpt4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <i class="bx bx-dots-vertical-rounded"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                  <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                                  <a class="dropdown-item" href="/admin/customer;">View More</a>
                               </div>
                           </div>
                       </div>
@@ -238,21 +238,69 @@
           <div class="row mb-4">
             <div class="col-5">
               <div class="card shadow-sm">
-                <h5 class="card-header">Order Statistics</h5>
+                <h5 class="card-header">Top 5 Categories</h5>
                 <div class="card-body">
-                  <canvas id="orderStatsChart" style="height: 400px; width: 100%;"></canvas>
+                  <div class="table-responsive">
+                    <table id="top5categories" class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Orders</th>
+                          <th scope="col">Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(top5catgry.length>0){ %>
+                          <% top5catgry.forEach((val,i)=>{ %>
+                        <tr>
+                          <th scope="row"><%= i+1 %></th>
+                          <td><%= val.categoryName %></td>
+                          <td><%= val.count %></td>
+                          <td>₹<%= val.totalIncome %></td>
+                        </tr>
+                        <% }) %>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
+            
 
             <div class="col-5">
               <div class="card shadow-sm">
-                <h5 class="card-header">Order Statistics</h5>
+                <h5 class="card-header">Top 5 Products</h5>
                 <div class="card-body">
-                  <canvas id="orderStatsChart" style="height: 400px; width: 100%;"></canvas>
+                  <div class="table-responsive">
+                    <table id="top5products" class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Orders</th>
+                          <th scope="col">Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(top5Prdt.length>0){ %>
+                          <% top5Prdt.forEach((val,i)=>{ %>
+                        <tr>
+                          <th scope="row"><%= i+1 %></th>
+                          <td><%= val.productName %></td>
+                          <td><%= val.count %></td>
+                          <td><%= val.totalIncome %></td>
+                        </tr>
+                        <% }) %>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
+            
           </div>
         </div>
         <!-- /Main Content -->
