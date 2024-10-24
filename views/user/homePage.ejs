@@ -278,7 +278,7 @@
                                     <!-- End .banner-subtitle -->
                                     <h3 class="banner-title text-white"><a href="#"><strong>Women’s</strong></h3>
                                     <!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
+                                    <a href="/productPage" class="btn btn-outline-white banner-link underline">Shop Now</a>
                                 </div><!-- End .banner-content -->
                             </div><!-- End .banner -->
                         </div><!-- End .col-sm-6 -->
@@ -294,7 +294,7 @@
                                     <!-- End .banner-subtitle -->
                                     <h3 class="banner-title text-white"><a href="#"><strong>Men’s</strong></a></h3>
                                     <!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
+                                    <a href="/productPage" class="btn btn-outline-white banner-link underline">Shop Now</a>
                                 </div><!-- End .banner-content -->
                             </div><!-- End .banner -->
                         </div><!-- End .col-sm-6 -->
@@ -317,8 +317,8 @@
                                     <div class="product">
                                         <figure class="product-media">
                                             <% if(product.quantity <= 0){ %>
-                                            <span class="product-label label-out">Out of Stock</span>
-                                            <% } %>
+                                                <span class="product-label label-out">Out of Stock</span>
+                                                <% } %>
                                             <a href="/productDetails/<%= product._id %>">
                                                 <img src="<%= product.images[0] %>" alt="Product image" class="product-image">
                                             </a>
@@ -481,7 +481,7 @@
                                             <span class="old-price">Was ₹3099.00</span>
                                         </div><!-- End .product-price -->
                                     </div><!-- End .product-body -->
-                                    <a href="#" class="action">shop now</a>
+                                    <a href="/productPage" class="action">shop now</a>
                                 </div>
                                 <div class="col-6 deal-product text-center">
                                     <figure class="product-media">
@@ -500,7 +500,7 @@
                                             <span class="old-price">Was ₹1799.00</span>
                                         </div><!-- End .product-price -->
                                     </div><!-- End .product-body -->
-                                    <a href="#" class="action">shop now</a>
+                                    <a href="/productPage" class="action">shop now</a>
                                 </div>
                             </div>
                         </div><!-- End .col-lg-5 -->
@@ -639,7 +639,7 @@
                                     <!-- End .banner-subtitle -->
                                     <h3 class="banner-title text-white"><a href="#">End of Season<br>save 50% off</a>
                                     </h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
+                                    <a href="/productPage" class="btn btn-outline-white banner-link underline">Shop Now</a>
                                 </div><!-- End .banner-content -->
                             </div><!-- End .banner -->
                         </div><!-- End .col-lg-6 -->

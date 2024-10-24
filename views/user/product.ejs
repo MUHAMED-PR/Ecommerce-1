@@ -164,7 +164,9 @@
                                             <figure class="product-media">
                                                 <% if(product.quantity <= 0){ %>
                                                 <span class="product-label label-out">Out of Stock</span>
-                                                <% } %>
+                                                <% }else if(product.quantity > 0 && product.quantity <=5){ %>
+                                                    <span class="product-label label-limited">Limited Stock</span>
+                                                    <% } %>
                                                 <a href="/productDetails/<%= product._id %>">
                                                     <img src="<%= product.images[0] %>" alt="Product image" class="product-image">
                                                 </a>
@@ -492,6 +494,22 @@ function updateProductList(products) {
 
         </script>
         
+        <style>
+         .product-label {
+    padding: 5px 10px;
+    color: white; /* Text color */
+    border-radius: 4px;
+    font-weight: 300; /* Slim font */
+    font-size: 14px;
+    font-family: Arial, sans-serif; /* Slim, clean font */
+}
+
+.label-limited {
+    background-color: red; /* Red background */
+}
+
+
+        </style>
 
 
     <!-- Plugins JS File -->
