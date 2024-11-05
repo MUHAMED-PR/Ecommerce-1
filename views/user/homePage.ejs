@@ -137,15 +137,22 @@
                     <div class="header-right">
                         <a href="/loadwishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
-                            <!-- <span class="wishlist-count">2</span> -->
-                            <span class="wishlist-txt">My Wishlist</span>
+                            <% if(wishlistNo && wishlistNo.length > 0){ %>
+                                <span class="wishlist-count"><%= wishlistNo.length %></span>
+                            <% } else { %>
+                                <span class="wishlist-txt">My Wishlist</span>
+                            <% } %>
                         </a>
+                        
 
                         <div class="dropdown cart-dropdown">
                             <a href="/cartPage" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
                                 data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <!-- <span class="cart-count">2</span> -->
+                                <% if(cartNo.length > 0){ %>
+
+                                <span class="cart-count"><%= cartNo.length %></span>
+                                <% } %>
                                 <!-- <span class="cart-txt">₹ 40.00,00</span> -->
                             </a>
 

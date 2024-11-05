@@ -30,25 +30,29 @@ const securePassword = async (password) => {
 
 const homePage = async (req, res) => {
     try {
-        const productsAvailable = await product.find()
+        const productsAvailable = await product.find();
         const top4ProductsByQuantity = productsAvailable
-        .sort((a, b) => b.quantity - a.quantity)
-        .slice(0, 4);
+            .sort((a, b) => b.quantity - a.quantity)
+            .slice(0, 4);
 
-        const user = req.session.user_id
+        const user = req.session.user_id;
         if (user) {
-            const userData = await users.findById(user)
-            res.render('user/homePage', {userData,top4ProductsByQuantity })
-
+            const userData = await users.findById(user);
+            const cartItems = await cartModel.findOne({ userId: userData._id });
+            const cartNo = cartItems ? cartItems.product : []; 
+            const wishlistItems = await wishlistModel.findOne({userId:userData._id})
+            const wishlistNo = wishlistItems ? wishlistItems.products : [];
+            
+            res.render('user/homePage', { userData, top4ProductsByQuantity, cartNo, wishlistNo});
         } else {
-
-            res.render('user/homePage',{top4ProductsByQuantity})
+            res.render('user/homePage', { top4ProductsByQuantity, cartNo: [], wishlistNo: [] }); 
         }
 
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 
 
 const signIn = (req, res) => {
@@ -84,7 +88,11 @@ const otpGenerate = (req, res) => {
 const logout = async(req,res)=>{
     try {
         req.session.user_id = null; // Clear email from session
-        res.render('user/homePage')
+        const wishlistNo = []
+        const cartNo = []
+        const top4ProductsByQuantity = []
+
+        res.render('user/homePage',{wishlistNo,cartNo,top4ProductsByQuantity})
 
     } catch (error) {
         console.log(error);

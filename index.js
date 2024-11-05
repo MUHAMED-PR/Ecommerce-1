@@ -13,7 +13,7 @@ dotenv.config();
 
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/Ecom_1');
+mongoose.connect(process.env.MONGODB_URL);
 
 const app = express();
 app.use(nocache())

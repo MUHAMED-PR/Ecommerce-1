@@ -77,6 +77,7 @@ const searchProduct = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const itemsPerPage = 4;
         const skip = (page - 1) * itemsPerPage;
+        const categories = await categoryModel.find()
 
         let searchCriteria = {};
 
@@ -127,7 +128,9 @@ const searchProduct = async (req, res) => {
             }
         });
 
-        res.render('user/product', { products, currentPage: page, totalPages, sortBy, search });
+        
+
+        res.render('user/product', { products, currentPage: page, totalPages, sortBy, search, categories });
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
