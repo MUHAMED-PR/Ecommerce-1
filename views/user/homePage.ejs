@@ -150,7 +150,8 @@
                             <a href="/cartPage" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
                                 data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <% if(cartNo.length > 0){ %>
+                                <% let cartNo = '' %>
+                                <% if(cartNo && cartNo.length > 0){ %>
 
                                 <span class="cart-count"><%= cartNo.length %></span>
                                 <% } %>
