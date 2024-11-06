@@ -38,21 +38,11 @@ const userRoute = require("./router/userRoute");
 const adminRoute = require('./router/adminRoute');
 const orderRoute = require('./router/order')
 
-console.log('aakkakaka');
-
-app.get("/hello",(req,res)=>{
-    res.send("hellloooo")
-})
 
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 app.use('/order',orderRoute);
 
-
-
-app.get("*",(req,res)=>{
-    res.send("helloooo is page is note availble");
-})
 
 app.listen(3000, () => {
     console.log(`server is listening at http://localhost:3000`);

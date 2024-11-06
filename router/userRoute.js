@@ -1,10 +1,6 @@
 const express = require('express')
 const userRoute = express.Router()
-// const path = require('path')
-// const session = require('express-session')
 
-// const app = express()
-// const config = require('../config/config')
 const auth = require('../middleware/auth')
 const userController = require("../controllers/userController");
 const productController = require('../controllers/productController')
@@ -22,9 +18,6 @@ require('../passport')
 
 userRoute.use(passport.initialize());
 userRoute.use(passport.session())
-
-
-
 
 
 

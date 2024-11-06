@@ -30,6 +30,7 @@ const securePassword = async (password) => {
 
 const homePage = async (req, res) => {
     try {
+        console.log('welcome to the hommee page..')
         const productsAvailable = await product.find();
         const top4ProductsByQuantity = productsAvailable
             .sort((a, b) => b.quantity - a.quantity)
