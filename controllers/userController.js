@@ -57,6 +57,7 @@ const homePage = async (req, res) => {
 
 const signIn = (req, res) => {
     try {
+        console.log("helloooo")
         res.render('user/signIn', { message: '' });
     } catch (error) {
         console.log(error);

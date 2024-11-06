@@ -38,6 +38,8 @@ const userRoute = require("./router/userRoute");
 const adminRoute = require('./router/adminRoute');
 const orderRoute = require('./router/order')
 
+console.log('aakkakaka');
+
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 app.use('/order',orderRoute);

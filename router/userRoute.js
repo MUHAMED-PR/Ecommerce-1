@@ -45,7 +45,7 @@ userRoute.get('/success', userController.successGoogleLogin)
 // //failure
 userRoute.get('/failure', userController.failureGoogleLogin)
 
-userRoute.get('/', userController.homePage)
+userRoute.get('/', userController.homePage);
 userRoute.get('/signIn', auth.isLogout, userController.signIn);
 userRoute.get('/signUp', auth.isLogout,userController.signUp);
 userRoute.get('/logout', auth.isLogin, userController.logout)
