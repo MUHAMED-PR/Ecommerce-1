@@ -40,6 +40,10 @@ const orderRoute = require('./router/order')
 
 console.log('aakkakaka');
 
+app.get("/hello",(req,res)=>{
+    res.send("hellloooo")
+})
+
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 app.use('/order',orderRoute);
