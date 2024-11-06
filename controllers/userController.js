@@ -78,6 +78,7 @@ const otpGenerate = (req, res) => {
         for (let i = 0; i < 4; i++) {
             OTP += digits[Math.floor(Math.random() * 10)];
         }
+        console.log("OTP is:",OTP)
         return OTP;
 
     } catch (error) {
