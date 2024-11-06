@@ -1,9 +1,9 @@
 const express = require('express')
 const userRoute = express.Router()
-const path = require('path')
+// const path = require('path')
 // const session = require('express-session')
 
-const app = express()
+// const app = express()
 // const config = require('../config/config')
 const auth = require('../middleware/auth')
 const userController = require("../controllers/userController");
@@ -26,7 +26,6 @@ userRoute.use(passport.session())
 
 
 
-app.set('views', './views/user')
 
 
 //Auth

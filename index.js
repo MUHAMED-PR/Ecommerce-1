@@ -18,6 +18,7 @@ mongoose.connect(process.env.MONGODB_URL);
 const app = express();
 app.use(nocache())
 
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
@@ -40,6 +41,12 @@ const orderRoute = require('./router/order')
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 app.use('/order',orderRoute);
+
+
+
+app.get("*",(req,res)=>{
+    res.send("helloooo is page is note availble");
+})
 
 app.listen(3000, () => {
     console.log(`server is listening at http://localhost:3000`);
