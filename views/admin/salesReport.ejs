@@ -198,7 +198,14 @@
     const endDate = document.getElementById('endDate').value;
 
     if (!fromDate || !endDate) {
-        alert("Please select both start and end dates.");
+        Swal.fire({
+          icon: 'warning',
+          title: 'Incomplete Selection',
+          text: 'Please select both start and end dates.',
+          timer: 3000, 
+          showConfirmButton: false // Hides the confirm button since it will auto-close
+        });
+
         return;
     }
 
@@ -357,6 +364,10 @@ document.getElementById('downloadCsvBtn').addEventListener('click', function () 
 
 
 </script>
+
+
+<!-- sweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- pdf -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>

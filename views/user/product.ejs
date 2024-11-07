@@ -101,12 +101,14 @@
                     </div><!-- End .compare-dropdown -->
 
                     <div class="dropdown cart-dropdown">
-                        <a href="/cartPage" class="dropdown-toggle" role="button" aria-haspopup="true"
-                            aria-expanded="false" data-display="static">
-                            <i class="icon-shopping-cart"></i>
-                            <!-- <span class="cart-count">2</span> -->
-
-                        </a>
+                        <a href="/cartPage" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
+                                data-display="static">
+                                <i class="icon-shopping-cart"></i>
+                                <% if(cartNo && cartNo.length > 0){ %>
+                                <span class="cart-count"><%= cartNo.length %></span>
+                                <% } %>
+                                <!-- <span class="cart-txt">₹ 40.00,00</span> -->
+                            </a>
 
 
                     </div><!-- End .cart-dropdown -->

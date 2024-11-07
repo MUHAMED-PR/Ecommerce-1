@@ -137,7 +137,6 @@
                     <div class="header-right">
                         <a href="/loadwishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
-                            <% let wishlistNo = '' %>
                             <% if(wishlistNo && wishlistNo.length > 0){ %>
                                 <span class="wishlist-count"><%= wishlistNo.length %></span>
                             <% } else { %>
@@ -150,7 +149,6 @@
                             <a href="/cartPage" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
                                 data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <% let cartNo = '' %>
                                 <% if(cartNo && cartNo.length > 0){ %>
 
                                 <span class="cart-count"><%= cartNo.length %></span>
@@ -320,7 +318,6 @@
                 </div><!-- End .heading -->
                 <div class="products">
                     <div class="row">
-                        <% let top4ProductsByQuantity = '' %>
                         <% if(top4ProductsByQuantity.length > 0) { %>
                             <% top4ProductsByQuantity.forEach(product => { %>
                                 <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">

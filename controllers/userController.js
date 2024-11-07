@@ -30,15 +30,16 @@ const securePassword = async (password) => {
 
 const homePage = async (req, res) => {
     try {
-        console.log('welcome to the hommee page..')
         const productsAvailable = await product.find();
         const top4ProductsByQuantity = productsAvailable
             .sort((a, b) => b.quantity - a.quantity)
             .slice(0, 4);
 
-        const user = req.session.user_id;
+            const user = req.session.user_id;
         if (user) {
+            // console.log("usersisi:",user)
             const userData = await users.findById(user);
+            
             const cartItems = await cartModel.findOne({ userId: userData._id });
             const cartNo = cartItems ? cartItems.product : []; 
             const wishlistItems = await wishlistModel.findOne({userId:userData._id})
@@ -58,7 +59,6 @@ const homePage = async (req, res) => {
 
 const signIn = (req, res) => {
     try {
-        console.log("helloooo")
         res.render('user/signIn', { message: '' });
     } catch (error) {
         console.log(error);
@@ -202,12 +202,19 @@ const verifyOTP = async (req, res) => {
     try {
 
         let storedotp = await OTP.findOne({email:req.session.email})
+        const productsAvailable = await product.find();
+        const top4ProductsByQuantity = productsAvailable
+            .sort((a, b) => b.quantity - a.quantity)
+            .slice(0, 4);
+
+            let wishlistNo = ''
+            let cartNo = ''
 
         if(storedotp.otp==req.body.otp){ 
         
             const updateInfo = await users.updateOne({ email: req.session.email }, { $set: { is_verified: 1 } })
             
-            res.render("user/homePage",{message :''})
+            res.render("user/homePage",{message :'', top4ProductsByQuantity, wishlistNo, cartNo})
             
         }else {
             // Render the OTP page with the error message

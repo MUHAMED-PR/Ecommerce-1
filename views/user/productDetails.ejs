@@ -146,8 +146,10 @@
                             <a href="/cartPage" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
                                 data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                               
-                               
+                                <% if(cartNo && cartNo.length > 0){ %>
+                                <span class="cart-count"><%= cartNo.length %></span>
+                                <% } %>
+                                <!-- <span class="cart-txt">₹ 40.00,00</span> -->
                             </a>
 
                             
@@ -264,11 +266,17 @@
                         
                                         <!-- <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
                                     </div>End .details-filter-row -->
-                        
+                                    
+                                    <% console.log("productDDDetails is ;:",productdetails) %>
+
                                     <div class="product-details-action">
+                                        <% if(productdetails.quantity > 0){ %>
                                         <a href="#" class="btn-product btn-cart" onclick="addToCart('<%= productdetails._id %>')">
                                             <span>Add to Cart</span>
                                         </a>
+                                        <% }else{ %>
+                                            <span class="product-label label-out">Out of Stock</span>
+                                            <% } %>
                                         <div class="details-action-wrapper">
                                             <button id="wishListId" onclick="addToWishlist('<%= productdetails._id %>')" class="btn-product btn-wishlist border-0" title="Wishlist">
                                                 <span>Add to Wishlist</span>

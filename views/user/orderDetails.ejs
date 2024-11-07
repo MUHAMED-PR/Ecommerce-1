@@ -62,7 +62,8 @@
                     <p><strong>Total Amount:</strong> ₹<%= orderDetails.totalAmount %></p>
                     <p><strong>Payment Status:</strong><%= orderDetails.paymentStatus %></p>
                     <% if(orderDetails.paymentStatus == 'Not Paid'){ %>
-                        <a onclick="rzr('<%=orderDetails._id %>','<%= orderDetails.totalAmount %>')">Re-payment</a>
+                        <a onclick="rzr('<%= orderDetails._id %>', '<%= orderDetails.totalAmount %>')" class="small-button">Re-payment</a>
+
                         <% } %>
                     
                 </div>
@@ -184,12 +185,25 @@
                 const rzp1 = new Razorpay(options);
                 rzp1.on('payment.failed', async() => {
                     await axios.put('/order/updatePaymentStatus',{id:data._id,status:"Not Paid"})
-                    alert("payment failed");
+                    Swal.fire({
+                     icon: 'error',
+                     title: 'Payment Failed',
+                     text: 'There was an issue processing your payment. Please try again.',
+                     timer: 3000, // Closes after 3 seconds
+                     showConfirmButton: false // Hides the confirm button since it will auto-close
+                    });
                         
                  })
                 rzp1.open();
             } else {
-                alert(data.message);
+                Swal.fire({
+  icon: 'info', // You can change this based on the content of data.message (e.g., 'success', 'warning', 'error')
+  title: 'Notification',
+  text: data.message,
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
             }
         }
     </script>
@@ -220,8 +234,8 @@
     <script>
     // Return Order Script 
 
-       function returnOrder(orderId, itemId) {
-    // Show SweetAlert confirmation dialog
+    function returnOrder(orderId, itemId) {
+    // Show SweetAlert confirmation dialog with an input for reason
     Swal.fire({
         title: 'Are you sure?',
         text: 'Do you really want to return this order?',
@@ -230,21 +244,36 @@
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, return it!',
-        cancelButtonText: 'Cancel'
+        cancelButtonText: 'Cancel',
+        input: 'textarea', // Input type is textarea for the reason
+        inputPlaceholder: 'Please provide a reason for returning the order...',
+        inputAttributes: {
+            'aria-label': 'Type your reason here'
+        },
+        showLoaderOnConfirm: true, // Show loading animation while processing the return
+        preConfirm: (reason) => {
+            if (!reason) {
+                Swal.showValidationMessage('You need to provide a reason for the return!');
+                return false; // Don't proceed if no reason is provided
+            }
+            return reason; // Return the reason to be used in the request
+        }
     }).then((result) => {
         if (result.isConfirmed) {
+            const reason = result.value; // The reason entered by the user
+
             // If the user confirms, proceed with the return order request
-            axios.patch(`/order/returnOrder/${orderId}/${itemId}`)
+            axios.patch(`/order/returnOrder/${orderId}/${itemId}`, { reason })
                 .then(response => {
-                    console.log('the reponse in the returnOrder fetch',response.data); // Handle success response
+                    console.log('The response in the returnOrder fetch', response.data); // Handle success response
                     Swal.fire(
                         'Returned!',
                         'Your order has been returned.',
                         'success'
                     ).then(() => {
-                     // Reload the page after the user clicks 'OK'
-                     window.location.reload();
-                  });
+                        // Reload the page after the user clicks 'OK'
+                        window.location.reload();
+                    });
                 })
                 .catch(error => {
                     console.error('Error returning order:', error); // Handle error response
@@ -260,6 +289,7 @@
         }
     });
 }
+
         
 
 
@@ -307,6 +337,27 @@
 }
 
     </script>
+    <style>
+        .small-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff; /* You can change this to any color */
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #007bff; /* Border color same as background */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.small-button:hover {
+  background-color: #0056b3; /* Darker shade for hover effect */
+  border-color: #0056b3;
+}
+
+    </style>
     
     </body>
     </html>

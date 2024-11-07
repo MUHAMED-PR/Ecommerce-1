@@ -1,15 +1,27 @@
+const userModel = require('../models/users')
 const product = require('../models/product');
 const offerModel = require('../models/offers')
 const categoryModel = require('../models/category')
+const cartModel = require('../models/cart')
 
 const loadProductPage = async (req, res) => {
     try {
+        const user = req.session.user_id;
         const search = req.query.search || ''
         const sortBy = req.query.sortby || 'alphabetical';
         const page = parseInt(req.query.page) || 1;
         const itemsPerPage = 4;
         const skip = (page - 1) * itemsPerPage;
         const categories = await categoryModel.find() 
+        
+        let cartNo = []
+
+        if(user){
+            
+            const userData = await userModel.findById(user);
+            const cartItems = await cartModel.findOne({ userId: userData._id });
+             cartNo = cartItems ? cartItems.product : []; 
+        }
 
         let sortCriteria;
         switch (sortBy) {
@@ -43,7 +55,7 @@ const loadProductPage = async (req, res) => {
 
         
         // Render the user product page
-        res.render('user/product', { products, currentPage: page, totalPages, sortBy, categories});
+        res.render('user/product', { products, currentPage: page, totalPages, sortBy, categories, cartNo});
     } catch (error) {
         console.error('Error loading product page:', error);
         res.status(500).send('Internal Server Error');
@@ -57,12 +69,22 @@ const loadProductPage = async (req, res) => {
 const loadProductDetails = async (req, res) => {
     try {
         const productId = req.params.productId;
+        const user = req.session.user_id;
 
         // Fetch the product with its category populated
         const productdetails = await product.findOne({ _id: productId }).populate('category');
 
+        let cartNo = []
 
-        res.render('user/productDetails', { productdetails });
+        if(user){
+            
+            const userData = await userModel.findById(user);
+            const cartItems = await cartModel.findOne({ userId: userData._id });
+             cartNo = cartItems ? cartItems.product : []; 
+        }
+
+
+        res.render('user/productDetails', { productdetails, cartNo});
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');

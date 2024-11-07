@@ -729,7 +729,14 @@ let openstatus=document.getElementById('openOrderStatus');
 
     // Validate the amount
     if (amount < 100 || amount % 100 !== 0) {
-        alert('Please enter an amount that is a multiple of ₹100 and at least ₹100.');
+        Swal.fire({
+  icon: 'warning',
+  title: 'Invalid Amount',
+  text: 'Please enter an amount that is a multiple of ₹100 and at least ₹100.',
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
         return;
     }
 
@@ -758,12 +765,26 @@ let openstatus=document.getElementById('openOrderStatus');
             // Clear the input field
             amountInput.value = '';
         } else {
-            alert('Failed to add cash to wallet.');
+            Swal.fire({
+  icon: 'error',
+  title: 'Failed',
+  text: 'Failed to add cash to wallet.',
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while adding cash to the wallet.');
+        Swal.fire({
+  icon: 'error',
+  title: 'Error',
+  text: 'An error occurred while adding cash to the wallet.',
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
     });
 }
 

@@ -468,11 +468,24 @@ form.addEventListener('submit', async function (event) {
                 if (response.data.orderId) {
                     window.location.href = '/order/orderSuccessfulPage';
                 } else {
-                    alert(response.data.message);
+                    Swal.fire({
+                    icon: 'info', // Choose the icon based on the message type: 'success', 'error', 'warning', or 'info'
+                     title: 'Notice',
+                     text: response.data.message,
+                    timer: 3000, // Closes after 3 seconds
+                     showConfirmButton: false // Hides the confirm button for auto-close
+                    });
+
                 }
             } catch (error) {
                 console.error('Error placing order:', error);
-                alert('Something went wrong, please try again.');
+                Swal.fire({
+              icon: 'error',
+              title: 'Oops!',
+              text: 'Something went wrong, please try again.',
+              timer: 3000, // Closes after 3 seconds
+              showConfirmButton: false // Hides the confirm button for auto-close
+        });
             }
             return;
         }
@@ -513,16 +526,37 @@ form.addEventListener('submit', async function (event) {
                 rzp1.on('payment.failed', async() => {
                     await axios.put('/order/updatePaymentStatus',{id:data._id,status:"Not Paid"})
                     window.location.href="/"
-                    alert("payment failed");
+                    Swal.fire({
+                     icon: 'error',
+                     title: 'Payment Failed',
+                     text: 'There was an issue processing your payment. Please try again.',
+                     timer: 3000, // Closes after 3 seconds
+                     showConfirmButton: false // Hides the confirm button since it will auto-close
+                    });
+
                         
                  })
                 rzp1.open();
             } else {
-                alert(data.message);
+                Swal.fire({
+  icon: 'info', // You can adjust this depending on the message type: 'success', 'error', 'warning', or 'info'
+  title: 'Notification', // Optional, can be replaced with something more specific
+  text: data.message,
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
             }
         } catch (error) {
             console.error('Error placing order:', error);
-            alert('Something went wrong, please try again.');
+            Swal.fire({
+  icon: 'error',
+  title: 'Oops!',
+  text: 'Something went wrong, please try again.',
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
         }
     } 
     // Handle Wallet payment
@@ -531,14 +565,35 @@ form.addEventListener('submit', async function (event) {
 
             const response = await axios.post('/order/placeOrder', Object.fromEntries(formData));
             if (response.data.success) {
-                alert('Order placed successfully using wallet!');
+                Swal.fire({
+                icon: 'success',
+                title: 'Order Successful!',
+                text: 'Order placed successfully using wallet!',
+                timer: 3000, // Closes after 3 seconds
+                showConfirmButton: false // Hides the confirm button for auto-close
+                });
+
                 window.location.href = '/order/orderSuccessfulPage';
             } else {
-                alert(response.data.message);
+                Swal.fire({
+  icon: 'info', // Adjust this based on the message type, e.g., 'success', 'error', 'warning', or 'info'
+  title: 'Notification', // Optional: you can use a custom title if necessary
+  text: response.data.message,
+  timer: 3000, // Closes after 3 seconds
+  showConfirmButton: false // Hides the confirm button for auto-close
+});
+
             }
         } catch (error) {
             console.error('Error placing order:', error);
-            alert('Something went wrong, please try again.');
+            Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Something went wrong, please try again.',
+            timer: 3000, // Closes after 3 seconds
+            showConfirmButton: false // Hides the confirm button for auto-close
+        });
+
         }
     } 
     else {
@@ -555,4 +610,5 @@ form.addEventListener('submit', async function (event) {
     
     
     </script>
+    <!-- sweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
