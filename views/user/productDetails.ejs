@@ -562,9 +562,15 @@
                     showConfirmButton: false
                 });  
             }
-
-            
-
+            if(data.status == 'user not found'){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Login',
+                    html: '<strong>Please Login and try!</strong>',
+                    timer: 2000,
+                    showConfirmButton: false
+                });  
+            }         
 
             })
             .catch(error =>{
