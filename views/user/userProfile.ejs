@@ -109,7 +109,7 @@
 								        <a class="nav-link" id="tab-Password-link" data-toggle="tab" href="#tab-Password" role="tab" aria-controls="tab-Password" aria-selected="false">Change Password</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" href="#">Sign Out</a>
+                                        <a class="nav-link" id="signOut-btn" href="#" onclick="signOut()">Sign Out</a>
 								    </li>
 								</ul>
 	                		</aside><!-- End .col-lg-3 -->
@@ -789,6 +789,32 @@ let openstatus=document.getElementById('openOrderStatus');
 }
 
 </script>
+
+
+<script>
+    // Function to handle sign-out action
+    function signOut() {
+        
+        Swal.fire({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",  
+            confirmButtonText: "Yes, Logout",
+            cancelButtonText: "Cancel",
+            reverseButtons: true  // Reverses the order of the buttons (Cancel first, Yes last)
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                // Redirect the user to the logout endpoint or login page
+                window.location.href = "/logout";  // Change to your actual logout URL or login page
+            }
+        });
+    }
+</script>
+
+
 
 
 </body>
